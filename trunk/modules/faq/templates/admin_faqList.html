@@ -1,0 +1,52 @@
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(#Faq list#)}</h3>
+  </div>
+  <div class="topbtns">
+	  <a type="button" href="{makeUrl(#add#,#adminfaq#,#faq#)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(#New Faq#)}</a>
+	  <a type="button" href="{makeUrl(#reorder#,#adminfaq#,#faq#)}" class="btn btn-info"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
+  </div>
+		{msgGet()}
+		<form name="frmFaqMgr" method="post" flexy:ignore id="frmFaqMgr">
+		    <input type="hidden" name="action" value="delete" />
+						
+		    <table class="table table-bordered selectable">
+		    	<tr>
+		    		{if:pager}<flexy:include src="admin_pager_table.html" />{end:}	
+		    	</tr>
+		    	<thead>
+			        <tr>
+			            <th width="3%">
+	                        <span class="tipOwner">
+	                            <input type="checkbox" name="checkAll" id="checkAll" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="{translate(#Be Careful!#)}" onClick="javascript:applyToAllCheckboxes('frmFaqMgr', 'frmDelete[]', this.checked)" />
+	                        </span>
+	                    </th>
+						<th>question</th>
+						<th>answer</th>
+						<th>date_created</th>
+			            <th>action</th>
+			        </tr>
+				</thead>
+				<tbody>
+			        <tr flexy:foreach="aPagedData[data],key,aValue">
+			            <td align="center"><input type="checkbox" name="frmDelete[]" value="{aValue[faq_id]}" /></td>
+						<td nowrap>{aValue[question]}</td>
+						<td nowrap>{aValue[answer]}</td>
+						<td nowrap>{formatDate(aValue[date_created])}</td>
+			            <td width="10%" nowrap>
+			            <a href="{makeUrl(#edit#,#adminfaq#,#faq#,aPagedData[data],#frmFaqID|faq_id#,key)}" />
+			                <span class="glyphicon glyphicon-edit"></span> {translate(#edit#)}
+			            </a> 
+			            </td>
+			        </tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="5">{if:pager}<flexy:include src="admin_pager_table.html" />{end:}</td>
+					</tr>
+				</tfoot>
+		    </table>
+						
+			<button type="submit" class="btn btn-danger" name="Delete" onclick="return confirmSubmit('faq', 'frmFaqMgr')" /><span class="glyphicon glyphicon-trash"></span> {translate(#delete selected#)} </button>
+		</form>
+</div>

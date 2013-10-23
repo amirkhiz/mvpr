@@ -1,0 +1,73 @@
+<div class="imageOption" style="display:none;">
+	<div class="options">
+		<div class="option-columns leftclm">
+			<input type="hidden" class="title-popover" value="{translate(#File options#)}">
+			<div class="form-group">
+				<label for="label">{translate(#Label#)}</label>
+			    <input type="text" class="form-control input-sm cu-label" style="width: 220px;" placeholder="{translate(#Label text#)}" value="New field: ">
+			</div>
+			<div class="form-group">
+				<label for="defaultValue">{translate(#Valid files#)}</label>
+			    <input type="text" class="form-control input-sm cu-valids" style="width: 220px;" placeholder="Ex:( jpg,png,gif )">
+			</div>
+			<div class="form-group">
+				<label for="help">{translate(#Help text#)}</label>
+			    <input type="text" class="form-control input-sm cu-help" style="width: 220px;" placeholder="{translate(#Help#)}" value="help">
+			</div>
+			<div class="form-group">
+				<label for="help">{translate(#Costum height#)}</label>
+			    <select class="form-control input-sm height cu-height" style="width: 220px;">
+					<option value="">Default</option>
+					<option value="input-lg">Larg</option>
+					<option value="input-sm">Small</option>
+				</select>
+			</div>
+				
+		</div> <!-- leftclm end -->
+		
+		<div class="option-columns rightclm">
+			<div class="form-group">
+				<label for="label">{translate(#Button label#)}</label>
+			    <input type="text" class="form-control input-sm cu-blabel" style="width: 220px;" placeholder="{translate(#Button label#)}">
+			</div>
+			<div class="form-group">
+				<label for="label">{translate(#Max file size#)}</label>
+			    <input type="text" class="form-control input-sm cu-maxsize" style="width: 220px;" placeholder="{translate(#Max file size#)}">
+			</div>
+			<div class="form-group">
+				<label for="help">{translate(#Costum sizing#)}: <span class="amount cu-width" style="color: #f6931f; font-weight: bold;"></span></label>
+				<div class="slider wslide" style="width: 220px;"></div>
+			</div>
+			<script>
+				$(function() {
+				    $( ".slider" ).slider({
+				      value:8,
+				      min: 1,
+				      max: 8,
+				      step: 1,
+				      slide: function( event, ui ) {
+				        $( ".amount" ).html( ui.value );
+				      }
+				    });
+				    $( ".amount" ).html( $( ".slider" ).slider( "value" ));
+				  });	
+			</script>
+			
+			<div class="form-group" style="margin-top: 15px;">
+				<label for="label" style="width: 100px;">{translate(#Image width#)}: </label>
+			    <input type="text" class="form-control input-sm cu-imagew" style="width: 115px; display: inline;" placeholder="{translate(#Width in pixel#)}">
+			</div>
+			
+			<div class="form-group" style="margin-top: 15px;">
+				<label for="label" style="width: 100px;">{translate(#Image height#)}: </label>
+			    <input type="text" class="form-control input-sm cu-imageh" style="width: 115px; display: inline;" placeholder="{translate(#Height in pixel#)}">
+			</div>
+			
+			
+		</div> <!-- rightclm end -->
+		<div style="clear: both;">
+			<button type="button" class="btn btn-info input-sm saveOption">{translate(#Save#)}</button>
+			<button type="button" class="btn btn-danger input-sm closeOption">{translate(#Cancel#)}</button>
+		</div>
+	</div> <!-- options end -->
+</div> <!-- textboxOption end -->

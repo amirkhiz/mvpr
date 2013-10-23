@@ -1,0 +1,350 @@
+<div class="panel panel-info" style="margin: 10px;">
+	<div class="panel-heading">
+    	<h3 class="panel-title">{translate(pageTitle)}</h3>
+	</div>
+	<form method="post" flexy:ignore class="form-horizontal" id="form-group">
+	
+		<div class="topbtns">
+			<button type="submit" class="btn btn-primary" name="submitted"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
+		    <button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#adminproduct#,#product#):h}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+		</div>
+		
+		{msgGet()}
+		
+		<input type="hidden" name="action" value="{action}" />
+		<input type="hidden" name="product[product_id]" value="{product.product_id}" />
+		
+		<div class="row">
+    
+			<!-- tabs left -->
+			<div class="tabbable tabs-left">
+			
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#general" data-toggle="tab">General</a></li>
+					<li><a href="#data1" data-toggle="tab">Data</a></li>
+					<li><a href="#data2" data-toggle="tab">Data</a></li>
+					<li><a href="#links" data-toggle="tab">Links</a></li>
+					<li><a href="#attribute" data-toggle="tab">Attribute</a></li>
+					<li><a href="#option" data-toggle="tab">Option</a></li>
+					<li><a href="#discount" data-toggle="tab">Discount</a></li>
+					<li><a href="#special" data-toggle="tab">Special</a></li>
+					<li><a href="#image" data-toggle="tab">Image</a></li>
+					<li><a href="#rewardPoints" data-toggle="tab">Points</a></li>
+					<li><a href="#design" data-toggle="tab">Design</a></li>
+				</ul>
+				
+				<div class="tab-content">
+				
+					<div class="tab-pane active" id="general">
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Product Name#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[title]" value="{product.title}" placeholder="{translate(#Product Name#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-4 control-label">{translate(#Meta Tag Description#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<textarea class="form-control" name="product[meta_desc]" placeholder="{translate(#Meta Tag Description#,#ucfirst#)}">{product.meta_desc}</textarea>
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Meta Tag Keywords#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<textarea class="form-control" name="product[meta_keyword]" placeholder="{translate(#Meta Tag Keywords#,#ucfirst#)}">{product.meta_keyword}</textarea>
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Description#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<textarea class="form-control" name="product[description]" placeholder="{translate(#Description#,#ucfirst#)}">{product.description}</textarea>
+							</div>
+				    	</div>
+				    	
+					</div><!-- General END -->
+					
+					<div class="tab-pane" id="data1">
+	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Model#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[model]" value="{product.model}" placeholder="{translate(#Model#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#SKU#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[sku]" value="{product.sku}" placeholder="{translate(#Stock Keeping Unit#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Price#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[price]" value="{product.price}" placeholder="{translate(#Price#,#ucfirst#)}" />
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Currency#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+								<select name="product[currency_id]" class="form-control">
+                                    {generateSelect(aCurrency,product.currency_id):h} 
+                                </select>
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Tax Class#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+								<select name="product[tax]" class="form-control">
+									<option value="0"> --- None --- </option>
+                                    {generateSelect(aTax,product.tax):h} 
+                                </select>
+							</div>
+				    	</div>
+			    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Quantity#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[quantity]" value="{product.quantity}" value="1" placeholder="{translate(#Quantity#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-10 control-label">{translate(#Dimensions#,#ucfirst#)}: </label>
+							<div class="col-lg-3">
+				      			<input type="text" class="form-control" id="inputError" name="product[dim_l]" value="{product.dim_l}" placeholder="{translate(#Length#,#ucfirst#)}" />
+							</div>
+							<div class="col-lg-3">
+								<input type="text" class="form-control" id="inputError" name="product[dim_w]" value="{product.dim_w}" placeholder="{translate(#Width#,#ucfirst#)}" />
+							</div>
+							<div class="col-lg-3">
+								<input type="text" class="form-control" id="inputError" name="product[dim_h]" value="{product.dim_h}" placeholder="{translate(#Height#,#ucfirst#)}" />
+							</div>
+							<div class="col-lg-10">
+				      			<span class="help-block">(L , W , H) Comma separated</span>
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Dimension Class#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+								<select name="product[dim_id]" class="form-control">
+                                    {generateSelect(aDim,product.dim_id):h} 
+                                </select>
+							</div>
+				    	</div>
+						
+					</div><!-- Data1 END -->
+			    	
+					<div class="tab-pane" id="data2">
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Weight#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[weight]" value="{product.weight}" placeholder="{translate(#Weight#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Weight Class#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+								<select name="product[weight_id]" class="form-control">
+                                    {generateSelect(aWeight,product.weight_id):h} 
+                                </select>
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#SEO Keyword#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[seo]" value="{product.seo}" placeholder="{translate(#SEO Keyword#,#ucfirst#)}" />
+				      			<span class="help-block">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Image#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="file" class="form-control" id="inputError" name="product[image]" value="{product.image}" placeholder="{translate(#Image#,#ucfirst#)}" />
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Status#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+				      			<input type="checkbox" class="" id="inputError" name="product[status]" value="{product.status}" />
+							</div>
+				    	</div>
+				    	
+			    	</div><!-- Data2 END -->
+			    	
+					<div class="tab-pane" id="links">
+	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Manufacturer#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[manufacturer_id]" value="{product.manufacturer_id}" placeholder="{translate(#Manufacturer#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Categories#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[category_id]" value="{product.category_id}" placeholder="{translate(#Categories#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+					</div>
+					
+					<div class="tab-pane" id="attribute">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Attribute</th>
+								<th>Text</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td>
+									<div class="col-lg-7">
+						      			<input type="text" class="form-control" id="inputError" name="product[]" value="{product.title}" placeholder="{translate(#Attribute#,#ucfirst#)}" />
+									</div>
+								</td>
+								<td>
+									<div class="col-lg-7">
+						      			<textarea class="form-control" placeholder="{translate(#Text#,#ucfirst#)}"></textarea>
+									</div>
+								</td>
+								<td>
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Attribute#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="option">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Option Value</th>
+								<th>Quantity</th>
+								<th>Subtract Stock</th>
+								<th>Price</th>
+								<th>Points</th>
+								<th>Weight</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td colspan="7">
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Option#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="discount">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Customer Group</th>
+								<th>Quantity</th>
+								<th>Priority</th>
+								<th>Price</th>
+								<th>Date Start</th>
+								<th>Date End</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td colspan="7">
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Discount#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="special">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Customer Group</th>
+								<th>Priority</th>
+								<th>Price</th>
+								<th>Date Start</th>
+								<th>Date End</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td colspan="6">
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Special#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="image">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Image</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Image#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="rewardPoints">
+	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#question#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[]" value="{product.title}" placeholder="{translate(#question#,#ucfirst#)}" />
+							</div>
+				    	</div>
+	
+					</div>
+					
+					<div class="tab-pane" id="design">
+	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#question#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" id="inputError" name="product[]" value="{product.title}" placeholder="{translate(#question#,#ucfirst#)}" />
+							</div>
+				    	</div>
+	
+					</div>
+					
+				</div>
+			</div>
+			<!-- /tabs -->
+		</div>
+		
+	</form>
+	
+</div>

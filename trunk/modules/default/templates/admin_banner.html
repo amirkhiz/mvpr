@@ -1,0 +1,34 @@
+<!--  Main wrapper holding the page -->
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+    	<div class="container">
+    		<ul class="nav pull-right">
+	          <li class="dropdown pull-right">
+	            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+	              <span class="glyphicon glyphicon-user"></span> {loggedOnUser} <b class="caret"></b>              
+	            </a>
+	            
+	            <!-- Dropdown menu -->
+	            <ul class="dropdown-menu">
+	              <li><a href="{makeUrl(##,#account#,#user#)}"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+				  <li><a href="{makeUrl(#viewProfile#,#account#,#user#)}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+	              <li><a href="{makeUrl(##,#userpreference#,#user#)}"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+	              <li><a href="{makeUrl(#logout#,#login#,#user#)}" title="{translate(#logout#)}"><span class="glyphicon glyphicon-off"></span> {translate(#logout#)}</a></li>
+	            </ul>
+	          </li>
+	        </ul>
+		</div>
+	</div>
+</div>
+<div id="header">
+	<div id="left">
+		<div class="logo">
+        	<h1><a href="{webRoot}/{conf[site][frontScriptName]}" title="Back to the frontend home page">{conf[site][name]}</a></h1>
+			<p class="meta">{conf[site][description]}</p>
+		</div>
+    </div>
+</div>
+<div id="outer-wrapper">
+    <!-- Wrapper for rest of page -->
+    <div id="inner-wrapper">
+        <div id="container">

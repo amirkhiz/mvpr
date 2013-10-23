@@ -1,0 +1,39 @@
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+<form method="post" flexy:ignore class="form-horizontal" id="form-group">
+	<div class="topbtns">
+		<button type="submit" class="btn btn-primary" name="submitted"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
+	    <button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#adminfaq#,#faq#):h}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+	</div>
+  {msgGet()}
+	<input type="hidden" name="action" value="{action}" />
+	<input type="hidden" name="faq_id" value="{faq.faq_id}" />
+		{if:error[question]}
+	    <div class="form-group has-error">
+	      <label class="col-lg-2 control-label">{translate(#question#,#ucfirst#)}: </label>
+		  <span class="label label-danger">{translate(error[question])}</span>
+		{else:}
+		<div class="form-group">
+	      <label class="col-lg-2 control-label">{translate(#question#,#ucfirst#)}: </label>
+		{end:}
+		  <div class="col-lg-10">
+	      	<input type="text" class="form-control" id="inputError" name="faq[question]" value="{faq.question}" placeholder="{translate(#question#,#ucfirst#)}">
+		  </div>
+	    </div>
+		
+		{if:error[answer]}
+	    <div class="form-group has-error">
+	      <label class="col-lg-2 control-label">{translate(#answer#,#ucfirst#)}: </label>
+		  <span class="label label-danger">{translate(error[answer])}</span>
+		{else:}
+		<div class="form-group">
+	      <label class="col-lg-2 control-label">{translate(#answer#,#ucfirst#)}: </label>
+		{end:}
+		  <div class="col-lg-10">
+		  	<textarea class="form-control" name="faq[answer]" placeholder="{translate(#answer#,#ucfirst#)}">{faq.answer}</textarea>
+		  </div>
+	    </div>
+</form>
+</div>

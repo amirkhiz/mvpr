@@ -1,0 +1,12 @@
+		<span class="added-tags">
+			{if:items}
+				{items:h}
+			{else:}
+				<label class="radio-inline"><input type="radio" title="radio"> Label 1 </label>
+			{end:}
+		</span>
+		<span class="help-block">{options[help]}</span>
+		<input type="hidden" name="type[radio][label][]" class="h-label" value="{options[label]}" flexy:ignore>
+		<input type="hidden" name="type[radio][help][]" class="h-help" value="{options[help]}" flexy:ignore>
+		<input type="hidden" name="type[radio][radios][]" class="h-radios" value="{this.plugin(#setDefaultValue#,options[radios],#0|Label 1#):h}" flexy:ignore>
+		<input type="hidden" name="type[radio][order][]" class="h-order" value="{options[order]}" flexy:ignore>

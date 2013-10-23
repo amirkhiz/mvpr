@@ -1,0 +1,67 @@
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+<form method="post" flexy:ignore class="form-horizontal" id="form-group">
+	<div class="topbtns">
+		<button type="submit" class="btn btn-primary" name="submitted"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
+	    <button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#content#,#content#):h}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+	</div>
+  {msgGet()}
+	<input type="hidden" name="action" value="{action}" />
+	<input type="hidden" name="content_id" value="{content.content_id}" />
+		{if:error[title]}
+<div class="form-group has-error">
+  <label class="col-lg-2 control-label">{translate(#title#,#ucfirst#)}: </label>
+  <span class="label label-danger">{translate(error[title])}</span>
+{else:}
+<div class="form-group">
+  <label class="col-lg-2 control-label">{translate(#title#,#ucfirst#)}: </label>
+{end:}
+  <div class="col-lg-10">
+  	<input type="text" class="form-control" id="inputError" name="content[title]" value="{content.title}" placeholder="{translate(#title#,#ucfirst#)}">
+  </div>
+</div>
+
+{if:error[metakeys]}
+<div class="form-group has-error">
+  <label class="col-lg-2 control-label">{translate(#metakeys#,#ucfirst#)}: </label>
+  <span class="label label-danger">{translate(error[metakeys])}</span>
+{else:}
+<div class="form-group">
+  <label class="col-lg-2 control-label">{translate(#metakeys#,#ucfirst#)}: </label>
+{end:}
+  <div class="col-lg-10">
+  	<input type="text" class="form-control" id="inputError" name="content[metakeys]" value="{content.metakeys}" placeholder="{translate(#metakeys#,#ucfirst#)}">
+  </div>
+</div>
+
+{if:error[is_active]}
+<div class="form-group has-error">
+  <label class="col-lg-2 control-label">{translate(#is_active#,#ucfirst#)}: </label>
+  <span class="label label-danger">{translate(error[is_active])}</span>
+{else:}
+<div class="form-group">
+  <label class="col-lg-2 control-label">{translate(#is_active#,#ucfirst#)}: </label>
+{end:}
+  <div class="col-lg-10">
+  	<input type="text" class="form-control" id="inputError" name="content[is_active]" value="{content.is_active}" placeholder="{translate(#is_active#,#ucfirst#)}">
+  </div>
+</div>
+
+{if:error[status]}
+<div class="form-group has-error">
+  <label class="col-lg-2 control-label">{translate(#status#,#ucfirst#)}: </label>
+  <span class="label label-danger">{translate(error[status])}</span>
+{else:}
+<div class="form-group">
+  <label class="col-lg-2 control-label">{translate(#status#,#ucfirst#)}: </label>
+{end:}
+  <div class="col-lg-10">
+  	<input type="text" class="form-control" id="inputError" name="content[status]" value="{content.status}" placeholder="{translate(#status#,#ucfirst#)}">
+  </div>
+</div>
+
+
+</form>
+</div>

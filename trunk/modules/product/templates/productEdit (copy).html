@@ -1,0 +1,731 @@
+<div class="panel panel-info" style="margin: 10px;">
+	<div class="panel-heading">
+    	<h3 class="panel-title">{translate(pageTitle)}</h3>
+	</div>
+	<form method="post" flexy:ignore class="form-inline" id="form-group">
+	
+		<div class="topbtns">
+			<button type="submit" class="btn btn-primary" name="submitted">
+			<span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
+		    <button class="btn btn-info" type="button" name="cancel">
+		    <span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+		</div>
+		
+		{msgGet()}
+		
+		<input type="hidden" name="action" value="{action}" />
+		<input type="hidden" name="faq_id" value="{faq.faq_id}" />
+		
+		<div class="row">
+    
+			<!-- tabs left -->
+			<div class="tabbable tabs-left">
+			
+				<ul class="nav nav-tabs">
+					<li><a href="#general" data-toggle="tab">General</a></li>
+					<li><a href="#data1" data-toggle="tab">Data</a></li>
+					<li><a href="#data2" data-toggle="tab">Data</a></li>
+					<li><a href="#data3" data-toggle="tab">Data</a></li>
+					<li><a href="#links" data-toggle="tab">Links</a></li>
+					<li><a href="#attribute" data-toggle="tab">Attribute</a></li>
+					<li><a href="#option" data-toggle="tab">Option</a></li>
+					<li><a href="#discount" data-toggle="tab">Discount</a></li>
+					<li><a href="#special" data-toggle="tab">Special</a></li>
+					<li><a href="#image" data-toggle="tab">Image</a></li>
+					<li><a href="#rewardPoints" data-toggle="tab">Points</a></li>
+					<li><a href="#design" data-toggle="tab">Design</a></li>
+				</ul>
+				
+				<div class="tab-content">
+				
+					<div class="tab-pane active" id="general">
+					
+						{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Product Name#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Product Name#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Product Name#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+						{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Meta Tag Description#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Meta Tag Description#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<textarea type="text" class="form-control" placeholder="{translate(#Meta Tag Description#,#ucfirst#)}">{faq.question}</textarea>
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Meta Tag Keywords#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Meta Tag Keywords#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<textarea type="text" class="form-control" placeholder="{translate(#Meta Tag Keywords#,#ucfirst#)}">{faq.question}</textarea>
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Description#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Description#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<textarea type="text" class="form-control" placeholder="{translate(#Description#,#ucfirst#)}">{faq.question}</textarea>
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Product Tags#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Product Tags#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Product Tags#,#ucfirst#)}">
+				      			<span class="help-block">comma separated</span>
+							</div>
+				    	</div>
+				    	
+					</div><!-- General END -->
+					<div class="tab-pane" id="data1">
+	
+						{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Model#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Model#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Model#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#SKU#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#SKU#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Stock Keeping Unit#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#UPC#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#UPC#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Universal Product Code#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#EAN#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#EAN#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#European Article Number#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#ISBN#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#ISBN#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#International Standard Book Number#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#MPN#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#MPN#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Manufacturer Part Number#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Location#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Location#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Location#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Price#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Price#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Price#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+			    	</div><!-- Data1 END -->
+			    	<div class="tab-pane" id="data2">
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Tax Class#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Tax Class#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<select name="tax_class_id" class="form-control">
+                  					<option value="0"> --- None --- </option>
+                                    <option value="9">Taxable Goods</option>
+                                    <option value="10">Downloadable Products</option>
+                                </select>
+							</div>
+				    	</div>
+			    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Quantity#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Quantity#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" value="1" placeholder="{translate(#Quantity#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Minimum Quantity#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Minimum Quantity#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" value="1" placeholder="{translate(#Minimum Quantity#,#ucfirst#)}">
+				      			<span class="help-block">Force a minimum ordered amount</span>
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Subtract Stock#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Subtract Stock#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<select name="subtract"  class="form-control">
+                                    <option value="1" selected="selected">Yes</option>
+                  					<option value="0">No</option>
+                                </select>
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Out Of Stock Status#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Out Of Stock Status#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<select name="stock_status_id" class="form-control">
+		          					<option value="6">2 - 3 Days</option>
+		                            <option value="7">In Stock</option>
+		                            <option value="5" selected="selected">Out Of Stock</option>
+		                            <option value="8">Pre-Order</option>
+                                </select>
+				      			<span class="help-block">Status shown when a product is out of stock</span>
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Requires Shipping#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Requires Shipping#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="radio" name="shipping" value="1" checked="checked" />Yes
+				      			<input type="radio" name="shipping" value="0" />No
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#SEO Keyword#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#SEO Keyword#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#SEO Keyword#,#ucfirst#)}">
+				      			<span class="help-block">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>
+							</div>
+				    	</div>
+				    	
+			    	</div><!-- Data2 END -->
+			    	<div class="tab-pane" id="data3">
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Image#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Image#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="file" class="form-control" placeholder="{translate(#Image#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Date Available#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Date Available#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Date Available#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Dimensions (L x W x H)#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-10 control-label">{translate(#Dimensions (L x W x H)#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-3">
+				      			<input type="text" class="form-control">
+							</div>
+							<div class="col-lg-3">
+				      			<input type="text" class="form-control">
+							</div>
+							<div class="col-lg-3">
+				      			<input type="text" class="form-control">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Length Class#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Length Class#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<select name="length_class_id" class="form-control">
+	                                <option value="1" selected="selected">Centimeter</option>
+	                                <option value="2">Millimeter</option>
+	                                <option value="3">Inch</option>
+								</select>
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Weight#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Weight#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Weight#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Weight Class#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Weight Class#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<select name="weight_class_id" class="form-control">
+	                                <option value="1" selected="selected">Kilogram</option>
+	                                <option value="2">Gram</option>
+	                                <option value="5">Pound </option>
+	                                <option value="6">Ounce</option>
+                                </select>
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Status#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Status#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<select name="status" class="form-control">
+                                    <option value="1" selected="selected">Enabled</option>
+              						<option value="0">Disabled</option>
+                                </select>
+							</div>
+				    	</div>
+				    	
+					</div><!-- Data3 END -->
+					<div class="tab-pane" id="links">
+	
+						{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Manufacturer#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Manufacturer#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Manufacturer#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Categories#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Categories#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Categories#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Filters#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Filters#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Filters#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Stores#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Stores#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Stores#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Downloads#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Downloads#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Downloads#,#ucfirst#)}">
+							</div>
+				    	</div>
+				    	
+				    	{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#Related Products#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Related Products#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#Related Products#,#ucfirst#)}">
+							</div>
+				    	</div>
+					
+					</div>
+					
+					<div class="tab-pane" id="attribute">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Attribute</th>
+								<th>Text</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td>
+									<div class="col-lg-7">
+						      			<input type="text" class="form-control" placeholder="{translate(#Attribute#,#ucfirst#)}">
+									</div>
+								</td>
+								<td>
+									<div class="col-lg-7">
+						      			<textarea type="text" class="form-control" placeholder="{translate(#Text#,#ucfirst#)}"></textarea>
+									</div>
+								</td>
+								<td>
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Attribute#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="option">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Option Value</th>
+								<th>Quantity</th>
+								<th>Subtract Stock</th>
+								<th>Price</th>
+								<th>Points</th>
+								<th>Weight</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Option#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="discount">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Customer Group</th>
+								<th>Quantity</th>
+								<th>Priority</th>
+								<th>Price</th>
+								<th>Date Start</th>
+								<th>Date End</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Discount#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="special">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Customer Group</th>
+								<th>Priority</th>
+								<th>Price</th>
+								<th>Date Start</th>
+								<th>Date End</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Special#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="image">
+	
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Image</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Image#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+	
+					</div>
+					
+					<div class="tab-pane" id="rewardPoints">
+	
+						{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#question#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#question#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#question#,#ucfirst#)}">
+							</div>
+				    	</div>
+	
+					</div>
+					
+					<div class="tab-pane" id="design">
+	
+						{if:error[question]}
+					    <div class="form-group has-error">
+							<label class="col-lg-3 control-label">{translate(#question#,#ucfirst#)}: </label>
+							<span class="label label-danger">{translate(error[question])}</span>
+						{else:}
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#question#,#ucfirst#)}: </label>
+						{end:}
+							<div class="col-lg-10">
+				      			<input type="text" class="form-control" placeholder="{translate(#question#,#ucfirst#)}">
+							</div>
+				    	</div>
+	
+					</div>
+					
+				</div>
+			</div>
+			<!-- /tabs -->
+		</div>
+
+	</form>
+	
+</div>
