@@ -1,0 +1,79 @@
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+  <div class="topbtns">
+	  <a type="button" href="{makeUrl(#add#,#admincategory#,#category#,##,#frmLevelID|levelId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(btnTitle)}</a>
+	  <a type="button" href="{makeUrl(#reorder#,#admincategory#,#category#,##,#frmLevelID|levelId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
+	  {if:parentLevel}<a type="button" href="{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|parentLevel#)}" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> {translate(#Up#)}</a>{end:}
+  </div>
+	<div class="col-lg-7">
+	  <div class="input-group">
+	      <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+	      <input type="text" class="form-control" placeholder="{translate(#Search Title#)}" id="searchBox">
+		  <input type="hidden" id="levelBox" value="{levelId}" />
+		  {if:parentLevel}
+		  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+	      <input type="text" class="form-control" placeholder="{translate(searchCategory)}" id="parentBox" value="{parentBox}">
+		  {end:}
+	    </div>
+	  </div>
+	  <div style="clear: both;"></div>
+		{msgGet()}
+		<form name="frmCategoryMgr" method="post" flexy:ignore id="frmCategoryMgr">
+		    <input type="hidden" name="action" value="delete" />
+			<div id="page-data">
+			<!-- ~~||~~ -->
+			{if:pager}<flexy:include src="admin_pager_table.html" />{end:}
+		    <table class="table table-bordered selectable">
+		    	<thead>
+			        <tr>
+			            <th width="3%">
+	                        <span class="tipOwner">
+	                            <input type="checkbox" name="checkAll" id="checkAll" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="{translate(#Be Careful!#)}" onClick="javascript:applyToAllCheckboxes('frmCategoryMgr', 'frmDelete[]', this.checked)" />
+	                        </span>
+	                    </th>
+						<th width="10">{translate(#ID#)}</th>
+						<th>{translate(#Title#)}</th>
+						<th>{translate(parentTitle)}</th>
+						<th>{translate(#Created date#)}</th>
+						<th width="20">{translate(#Status#)}</th>
+			            <th width="20">{translate(#Action#)}</th>
+			        </tr>
+				</thead>
+				<tbody>
+			        <tr flexy:foreach="aPagedData[data],key,aValue">
+			    		<td align="center"><input type="checkbox" name="frmDelete[]" value="{aValue[category_id]}" /></td>
+						<td nowrap>{aValue[category_id]}</td>
+						<td class="left">
+							{if:childLevel}
+							<a href="{makeUrl(#list#,#admincategory#,#category#,aPagedData[data],#frmParentId|category_id#,key)}frmLevelID/{childLevel}">
+								{aValue[title]}
+							</a>
+							{else:}
+								{aValue[title]}
+							{end:}
+						</td>
+						<td class="left">{aValue[pTitle]}</td>
+						<td nowrap>{formatDate(aValue[created_date])}</td>
+						<td nowrap>
+			    			{if:aValue[status]}
+			    				<span class="btn btn-xs btn-primary">&nbsp;&nbsp;{translate(#Active#)}&nbsp;&nbsp;</span>
+			    			{else:}
+			    				<span class="btn btn-xs btn-danger">{translate(#inactive#)}</span>
+			    			{end:}
+						</td>
+		    			<td width="10%" nowrap>
+				            <a href="{makeUrl(#edit#,#admincategory#,#category#,aPagedData[data],#frmCategoryID|category_id#,key)}">
+				                <span class="glyphicon glyphicon-edit"></span>{translate(#edit#)}
+				            </a> 
+			            </td>
+		    		</tr>
+				</tbody>
+		    </table>
+			{if:pager}<flexy:include src="admin_pager_table.html" />{end:}
+			<!-- ~~||~~ -->
+			</div>
+			<button type="submit" class="btn btn-danger" name="Delete" onclick="return confirmSubmit('category', 'frmCategoryMgr')" /><span class="glyphicon glyphicon-trash"></span> {translate(#delete selected#)} </button>
+		</form>
+</div>

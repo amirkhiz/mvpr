@@ -1,0 +1,46 @@
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+<form method="post" flexy:ignore class="form-horizontal" id="form-group">
+	<div class="topbtns">
+		<button type="submit" class="btn btn-primary" name="submitted"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
+	    <button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|levelId#):h}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+	</div>
+  {msgGet()}
+	<input type="hidden" name="action" value="{action}" />
+	<input type="hidden" name="category_id" value="{category.category_id}" />
+	<input type="hidden" name="category[level_id]" value="{levelId}" />
+	
+	{if:categories}
+		<div class="form-group">
+	      <label class="col-lg-2 control-label">{translate(#Parent Category#,#ucfirst#)}: </label>
+		  <div class="col-lg-10">
+	      	<select class="form-control chosen" name="category[parent_id]" placeholder="{translate(#Parent category#,#ucfirst#)}">
+				{generateSelect(categories,category.parent_id):h}
+			</select>
+		  </div>
+	    </div>
+	{end:}
+		<div class="form-group">
+	      <label class="col-lg-2 control-label">{translate(#Title#,#ucfirst#)}: </label>
+		  <div class="col-lg-10">
+	      	<input type="text" class="validate[required] form-control" name="category[title]" value="{category.title}" placeholder="{translate(#Title#,#ucfirst#)}" data-prompt-position="topLeft:+10">
+		  </div>
+	    </div>
+		
+		<div class="form-group">
+	      <label class="col-lg-2 control-label">{translate(#Description#,#ucfirst#)}: </label>
+		  <div class="col-lg-10">
+		  	<textarea class="form-control" name="category[description]" placeholder="{translate(#description#,#ucfirst#)}">{category.description}</textarea>
+		  </div>
+	    </div>
+		
+		<div class="form-group">
+		  <label class="col-lg-2 control-label" style="margin-right: 15px;">{translate(#Publish#,#ucfirst#)}: </label>
+		  <div class="col-lg-1 make-switch switch-small" data-on-label="{translate(#Active#)}" data-off-label="{translate(#Inactive#)}" style="height: 24px; padding-right: 0px; padding-left: 0px;">
+		  	<input type="checkbox" class="form-control" name="category[status]" flexy:raw="{isPublished}"  style="height: 14px;" />
+		  </div>
+		</div>
+</form>
+</div>

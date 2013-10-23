@@ -1,0 +1,28 @@
+{if:isMulti}
+	{foreach:aOptions,key,value}
+
+		<div class="form-group">
+			<label class="col-lg-3 control-label">{value[title]}: </label>
+			<div class="col-lg-7">
+				<select class="form-control" name="product[prop][{key}][]" id="pOptMulti{key}" multiple="multiple">
+	                {generateSelect(value[ops]):h}
+	            </select>
+			</div>
+		</div>
+		
+		{scriptOpen:h}
+			$(document).ready(function(){
+			   $("#pOptMulti{key}").multiselect();
+			});
+		{scriptClose:h}
+		
+	{end:}
+
+{else:}
+		
+	<select class="form-control" name="product[{title}]" id="p-{title}">
+		<option>Select</option>
+        {generateSelect(aCats):h}
+    </select>
+	
+{end:}

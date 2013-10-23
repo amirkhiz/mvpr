@@ -1,0 +1,315 @@
+<div class="panel panel-info" style="margin: 10px;">
+	<div class="panel-heading">
+    	<h3 class="panel-title">{translate(pageTitle)}</h3>
+	</div>
+	<form method="post" flexy:ignore class="form-inline" id="form-group">
+	
+		<div class="topbtns">
+			<button type="submit" class="btn btn-primary" name="submitted">
+				<span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}
+			</button>
+		    <button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#product#,#product#):h}'">
+		    	<span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}
+			</button>
+		</div>
+		
+		{msgGet()}
+		
+		<input type="hidden" name="action" value="{action}" />
+		<input type="hidden" name="product[product_id]" value="{product.product_id}" />
+		
+		<div class="row">
+    
+			<!-- tabs left -->
+			<div class="tabbable tabs-left">
+			
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#general" data-toggle="tab">General</a></li>
+					<li><a href="#data1" data-toggle="tab">Data</a></li>
+					<li><a href="#data2" data-toggle="tab">Data</a></li>
+					<li><a href="#property" data-toggle="tab">Property</a></li>
+					<li><a href="#image" data-toggle="tab">Image</a></li>
+					<li><a href="#seo" data-toggle="tab">SEO</a></li>
+				</ul>
+				
+				<div class="tab-content">
+				
+					<div class="tab-pane active" id="general">
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Product Name#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+				      			<input type="text" id="productTitle" class="validate[required] form-control" name="product[title]" value="{product.title}" placeholder="{translate(#Product Name#,#ucfirst#)}"  data-prompt-position="topLeft:+100"/>
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Product Groups#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+								<select name="product[pGroups]" id="pGroups" class="form-control">
+									<option>Select</option>
+                                    {generateSelect(aGroup,aCats[group]):h} 
+                                </select>
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Product Options#,#ucfirst#)}: </label>
+							<div class="col-lg-7" id="p-optionsDiv">
+								<select name="product[options]" id="p-options" class="form-control">
+									<option>Select</option>
+                                    {generateSelect(aOptions,aCats[option]):h} 
+                                </select>
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Product Brands#,#ucfirst#)}: </label>
+							<div class="col-lg-7" id="p-brandsDiv">
+								<select name="product[brands]" id="p-brands" class="form-control">
+									<option>Select</option>
+                                    {generateSelect(aBrands,aCats[brand]):h} 
+                                </select>
+							</div>
+				    	</div>
+						
+					</div><!-- General END -->
+					
+					<div class="tab-pane" id="data1">
+	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Model#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+				      			<input type="text" class="validate[required] form-control" name="product[model]" value="{product.model}" placeholder="{translate(#Model#,#ucfirst#)}"  data-prompt-position="topLeft:+100"/>
+							</div>
+				    	</div> 
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#SKU#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+				      			<input type="text" class="form-control" name="product[sku]" value="{product.sku}" placeholder="{translate(#Stock Keeping Unit#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Price#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+				      			<input type="text" class="form-control" name="product[price]" value="{product.price}" placeholder="{translate(#Price#,#ucfirst#)}" />
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Currency#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+								<select name="product[currency_id]" class="form-control">
+                                    {generateSelect(aCurrency,product.currency_id):h} 
+                                </select>
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Tax Class#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+								<select name="product[tax]" class="form-control">
+									<option value="0"> --- None --- </option>
+                                    {generateSelect(aTax,product.tax):h} 
+                                </select>
+							</div>
+				    	</div>
+						
+					</div><!-- Data1 END -->
+			    	
+					<div class="tab-pane" id="data2">
+			    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Quantity#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+				      			<input type="text" class="form-control" name="product[quantity]" value="{product.quantity}" value="1" placeholder="{translate(#Quantity#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Dimensions#,#ucfirst#)}: </label>
+							<div class="col-lg-2">
+				      			<input type="text" class="form-control" name="product[dim_l]" value="{product.dim_l}" placeholder="{translate(#Length#,#ucfirst#)}" />
+							</div>
+							<div class="col-lg-2">
+								<input type="text" class="form-control" name="product[dim_w]" value="{product.dim_w}" placeholder="{translate(#Width#,#ucfirst#)}" />
+							</div>
+							<div class="col-lg-2">
+								<input type="text" class="form-control" name="product[dim_h]" value="{product.dim_h}" placeholder="{translate(#Height#,#ucfirst#)}" />
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Dimension Class#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+								<select name="product[dim_id]" class="form-control">
+                                    {generateSelect(aDim,product.dim_id):h} 
+                                </select>
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Weight#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+				      			<input type="text" class="form-control" name="product[weight]" value="{product.weight}" placeholder="{translate(#Weight#,#ucfirst#)}" />
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Weight Class#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+								<select name="product[weight_id]" class="form-control">
+                                    {generateSelect(aWeight,product.weight_id):h} 
+                                </select>
+							</div>
+				    	</div>
+						
+			    	</div><!-- Data2 END -->
+					
+					<div class="tab-pane" id="property">
+						{foreach:aOptList,key,value}
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{value[title]}: </label>
+								<div class="col-lg-7">
+									<select class="form-control" name="product[prop][{key}][]" id="pOptMulti{key}" multiple="multiple">
+						                {generateSelect(value[ops],aOpts[selected],#true#):h}
+						            </select>
+								</div>
+							</div>
+							
+							{scriptOpen:h}
+								$(document).ready(function(){
+								   $("#pOptMulti{key}").multiselect();
+								});
+							{scriptClose:h}
+							
+						{end:}
+					</div>
+					
+					<div class="tab-pane" id="image">
+	
+						<!--
+						<table class="table-bordered col-lg-10">
+							<tr>
+								<th>Image</th>
+								<th>&nbsp;</th>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button type="submit" class="btn btn-primary" name="submitted">
+										<span class="glyphicon glyphicon-plus"></span> {translate(#Add Image#)}
+									</button>
+								</td>
+							</tr>
+						</table>
+						-->
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Image#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<input type="file" class="form-control" name="product[image]" value="{product.image}" placeholder="{translate(#Image#,#ucfirst#)}" />
+							</div>
+				    	</div>
+	
+					</div>
+					
+					<div class="tab-pane" id="seo">
+	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#SEO Keyword#,#ucfirst#)}: </label>
+							<div class="col-lg-7">
+				      			<input type="text" class="form-control" name="product[seo]" value="{product.seo}" placeholder="{translate(#SEO Keyword#,#ucfirst#)}" />
+				      			<span class="help-block">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>
+							</div>
+				    	</div>
+						
+						<div class="form-group">
+							<label class="col-lg-4 control-label">{translate(#Meta Tag Description#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<textarea class="form-control" name="product[meta_desc]" placeholder="{translate(#Meta Tag Description#,#ucfirst#)}">{product.meta_desc}</textarea>
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Meta Tag Keywords#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<textarea class="form-control" name="product[meta_keyword]" placeholder="{translate(#Meta Tag Keywords#,#ucfirst#)}">{product.meta_keyword}</textarea>
+							</div>
+				    	</div>
+				    	
+						<div class="form-group">
+							<label class="col-lg-3 control-label">{translate(#Description#,#ucfirst#)}: </label>
+							<div class="col-lg-10">
+				      			<textarea class="form-control" name="product[description]" placeholder="{translate(#Description#,#ucfirst#)}">{product.description}</textarea>
+							</div>
+				    	</div>
+	
+					</div>
+					
+				</div>
+			</div>
+			<!-- /tabs -->
+		</div>
+		
+	</form>
+	
+</div>
+
+<script>
+	$("#pGroups").change(function(){
+		
+		var pGroupId	= $("#pGroups").val();
+		var ajaxurl 	= makeUrl({module: "product", manager: "product",  action: "getCat", frmCatLevel:"3", frmParentId:pGroupId, frmTitle:"options"});
+		
+		$.ajax({
+			url: ajaxurl,
+			cache: false,
+            type: 'POST',
+			success: function(data){
+				$("#p-optionsDiv").html(data);
+			},
+			error: function(){
+				console.log('Error');
+			}
+		});
+	});
+	
+	$(document).on('change', '#p-options', function(){
+		
+		var pOptionId 	= $("#p-options").val();
+		var ajaxurl 	= makeUrl({module: "product", action: "getCat", frmCatLevel:"4", frmParentId:pOptionId, frmTitle:"brands"});
+		
+		$.ajax({
+			url: ajaxurl,
+			cache: false,
+            type: 'POST',
+			success: function(data){
+				$("#p-brandsDiv").html(data);
+			},
+			error: function(){
+				console.log('Error');
+			}
+		});
+		
+		var ajaxurl = makeUrl({module: "product", action: "getProperty", frmCatId:pOptionId})
+		
+		$.ajax({
+			url: ajaxurl,
+			cache: false,
+            type: 'POST',
+			success: function(data){
+				$("#property").html(data);
+			},
+			error: function(){
+				console.log('Content Type Error');
+			}
+		});
+	});
+</script>
+<script>
+	$(document).ready(function() {
+		$("#form-group").validationEngine();
+	});	
+</script>

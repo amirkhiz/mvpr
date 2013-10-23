@@ -1,0 +1,15 @@
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+<form method="post" flexy:ignore class="form-horizontal" id="form-group">
+	<div class="topbtns">
+		<button type="submit" class="btn btn-primary" name="submitted"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
+	    <button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#%mgrName%#,#%moduleName%#):h}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+	</div>
+  {msgGet()}
+	<input type="hidden" name="action" value="{action}" />
+	<input type="hidden" name="%mgrName%_id" value="{%mgrName%.%mgrName%_id}" />
+		%field_html%
+</form>
+</div>

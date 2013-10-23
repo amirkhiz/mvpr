@@ -1,0 +1,24 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+  <div class="topbtns">
+	<button class="btn btn-primary" onclick="javascript:doSub();formSubmit('fm','submitted',1,1)"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
+	<button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#admincategory#,#category#):h}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+  </div>
+    <form name="fm" method="post" flexy:ignore id="fm">
+        <input type="hidden" name="action" value="{action}" /> 
+        <input type="hidden" name=".items" /> 
+
+        <div id="categorySelector">
+            <select name="item" size="15" multiple class="form-control">
+                {generateSelect(aCategorys):h}
+            </select>
+        </div>
+        <div class="reorder-btns">
+            <button type="button" class="btn btn-primary btn-mini" onclick="return orderModule(0)"><span class="glyphicon glyphicon-arrow-up"></span>{translate(#move up#)}</button>
+  			<button type="button" class="btn btn-default btn-mini" onclick="return orderModule(1)"><span class="glyphicon glyphicon-arrow-down"></span>{translate(#move down#)}</button>
+        </div>
+    </form>
+    <div class="spacer"></div>
+</div>

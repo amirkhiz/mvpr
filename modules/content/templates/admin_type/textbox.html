@@ -1,0 +1,81 @@
+<div class="textboxOption" style="display:none;">
+	<div class="options">
+		<div class="option-columns leftclm">
+			<input type="hidden" class="title-popover" value="{translate(#Text input#)}">
+			<div class="form-group">
+				<label for="label">{translate(#Label#)}</label>
+			    <input type="text" class="form-control input-sm cu-label" style="width: 220px;" placeholder="{translate(#Label text#)}" value="New field: ">
+			</div>
+			<div class="form-group">
+				<label for="placeHolder">{translate(#Placeholder#)}</label>
+			    <input type="text" class="form-control input-sm cu-place" style="width: 220px;" placeholder="{translate(#Placeholder#)}">
+			</div>
+			<div class="form-group">
+				<label for="defaultValue">{translate(#Default value#)}</label>
+			    <input type="text" class="form-control input-sm cu-deval" style="width: 220px;" placeholder="{translate(#Default value#)}">
+			</div>
+			<div class="form-group">
+				<label for="help">{translate(#Help text#)}</label>
+			    <input type="text" class="form-control input-sm cu-help" style="width: 220px;" placeholder="{translate(#Help#)}" value="help">
+			</div>
+			<div class="form-group">
+				<label for="help">{translate(#Costum height#)}</label>
+			    <select class="form-control input-sm height cu-height" style="width: 220px;">
+					<option value="">Default</option>
+					<option value="input-lg">Larg</option>
+					<option value="input-sm">Small</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="help">{translate(#Costum sizing#)}: <span class="amount cu-width" style="color: #f6931f; font-weight: bold;"></span></label>
+				<div class="slider" style="width: 220px;"></div>
+			</div>
+				 
+				<script>
+					$(function() {
+					    $( ".slider" ).slider({
+					      value:8,
+					      min: 1,
+					      max: 8,
+					      step: 1,
+					      slide: function( event, ui ) {
+					        $( ".amount" ).html( ui.value );
+					      }
+					    });
+					    $( ".amount" ).html( $( ".slider" ).slider( "value" ));
+					  });	
+				</script>
+				
+			<div class="form-group">
+				<label for="help">{translate(#Validation#)}</label>
+				<select class="form-control input-sm validation cu-valid" style="width: 220px;">
+					<option value=""></option>
+					<option value="notEmpty">Required</option>
+					<option value="alpha">Alpha Characters</option>
+					<option value="alphaSpace">Alpha Characters with Space</option>
+					<option value="numeric">Numeric Characters</option>
+					<option value="alphaNumeric">Alpha-Numeric Characters</option>
+					<option value="alphaNumericSpace">Alpha-Numeric Characters with Space</option>
+					<option value="date">Date</option>
+					<option value="email">Email</option>
+					<option value="url">URL</option>
+				</select>
+			</div>
+			
+		  <button type="button" class="btn btn-info input-sm saveOption">{translate(#Save#)}</button>
+		  <button type="button" class="btn btn-danger input-sm closeOption">{translate(#Cancel#)}</button>
+		</div> <!-- leftclm end -->
+		
+		<div class="option-columns rightclm">
+			<div class="form-group">
+				<label for="label">{translate(#Mask#)}</label>
+			    <input type="text" class="form-control input-sm cu-mask" style="width: 220px;" placeholder="{translate(#Make mask for fields#)}">
+			</div>
+			
+			<div class="form-group">
+				<label for="label">{translate(#Pattern#)}</label>
+			    <input type="text" class="form-control input-sm cu-pattern" style="width: 220px;" placeholder="{translate(#Regular expression#)}">
+			</div>
+		</div> <!-- rightclm end -->
+	</div> <!-- options end -->
+</div> <!-- textboxOption end -->

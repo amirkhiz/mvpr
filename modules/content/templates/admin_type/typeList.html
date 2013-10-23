@@ -1,0 +1,40 @@
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+  <div class="topbtns">
+	  <a type="button" href="{makeUrl(#add#,#type#,#content#)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(#New content type#)}</a>
+  </div>
+	{msgGet()}
+	<form name="frmContent_typeMgr" method="post" flexy:ignore id="frmContent_typeMgr">
+	    <input type="hidden" name="action" value="delete" />
+		{if:pager}<flexy:include src="pager.html" />{end:}	
+	    <table class="table table-bordered selectable">
+	    	<thead>
+		        <tr>
+	               	<th>
+	                	<span class="tipOwner">
+	                        <input type="checkbox" name="checkAll" id="checkAll" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="{translate(#Be Careful!#)}" onClick="javascript:applyToAllCheckboxes('frmcontentMgr', 'frmDelete[]', this.checked)" />
+	                    </span>
+	                </th>
+					<th>{translate(#Title#)}</th>
+		            <th>action</th>
+		        </tr>
+			</thead>
+			<tbody>
+		        <tr flexy:foreach="aPagedData[data],key,aValue">
+		            <td align="center"><input type="checkbox" name="frmDelete[]" value="{aValue[content_type_id]}" /></td><td nowrap>{aValue[type_name]}</td>
+	                
+		            <td width="10%" nowrap>
+			            <a href="{makeUrl(#edit#,#type#,#content#,aPagedData[data],#frmTypeID|content_type_id#,key)}" />
+			                <span class="glyphicon glyphicon-edit"></span> {translate(#edit#)}
+			            </a> 
+		            </td>
+		        </tr>
+			</tbody>
+			{if:pager}<flexy:include src="pager.html" />{end:}
+	    </table>
+					
+		<button type="submit" class="btn btn-danger" name="Delete" onclick="return confirmSubmit('content_type', 'frmContentMgr')" /><span class="glyphicon glyphicon-trash"></span> {translate(#delete selected#)} </button>
+	</form>
+</div>

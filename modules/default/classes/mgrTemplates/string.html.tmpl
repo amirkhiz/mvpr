@@ -1,0 +1,13 @@
+{if:error[%field%]}
+<div class="form-group has-error">
+  <label class="col-lg-2 control-label">{translate(#%field%#,#ucfirst#)}: </label>
+  <span class="label label-danger">{translate(error[%field%])}</span>
+{else:}
+<div class="form-group">
+  <label class="col-lg-2 control-label">{translate(#%field%#,#ucfirst#)}: </label>
+{end:}
+  <div class="col-lg-10">
+  	<input type="text" class="form-control" id="inputError" name="%mgrName%[%field%]" value="{%mgrName%.%field%}" placeholder="{translate(#%field%#,#ucfirst#)}">
+  </div>
+</div>
+

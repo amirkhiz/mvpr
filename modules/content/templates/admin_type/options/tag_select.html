@@ -1,0 +1,8 @@
+		<select class="form-control added-tag" title="select">{items:h}</select>
+		<span class="help-block">{options[help]}</span>
+		<input type="hidden" name="type[select][label][]" class="h-label" value="{options[label]}" flexy:ignore>
+		<input type="hidden" name="type[select][help][]" class="h-help" value="{options[help]}" flexy:ignore>
+		<input type="hidden" name="type[select][height][]" class="h-height" value="{options[height]}" flexy:ignore>
+		<input type="hidden" name="type[select][width][]" class="h-width" value="{this.plugin(#setDefaultValue#,options[width],#8#):h}" flexy:ignore>
+		<input type="hidden" name="type[select][selects][]" class="h-selects" value="{this.plugin(#setDefaultValue#,options[selects],#0|Option 1#):h}" flexy:ignore>
+		<input type="hidden" name="type[select][order][]" class="h-order" value="{options[order]}" flexy:ignore>

@@ -1,0 +1,35 @@
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+  <div class="topbtns">
+	  <a type="button" href="{makeUrl(#add#,#%mgrName%#,#%moduleName%#)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(#New %mgrName%#)}</a>
+	  <a type="button" href="{makeUrl(#reorder#,#%mgrName%#,#%moduleName%#)}" class="btn btn-info"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
+  </div>
+		{msgGet()}
+		<form name="frm%MgrName%Mgr" method="post" flexy:ignore id="frm%MgrName%Mgr">
+		    <input type="hidden" name="action" value="delete" />
+    		{if:pager}<flexy:include src="pager.html" />{end:}	
+		    <table class="table table-bordered">
+		    	<thead>
+			        <tr>
+			            %table_header%
+			            <th>action</th>
+			        </tr>
+				</thead>
+				<tbody>
+			        <tr class="{switchRowClass()}" flexy:foreach="aPagedData[data],key,aValue">
+			            %table_body%
+			            <td width="10%" nowrap>
+				            <a href="{makeUrl(#edit#,#%mgrName%#,#%moduleName%#,aPagedData[data],#frm%MgrName%ID|%mgrName%_id#,key)}" />
+				                <span class="glyphicon glyphicon-edit"></span> {translate(#edit#)}
+				            </a> 
+			            </td>
+			        </tr>
+				</tbody>
+				{if:pager}<flexy:include src="pager.html" />{end:}
+		    </table>
+						
+			<button type="submit" class="btn btn-danger" name="Delete" onclick="return confirmSubmit('%mgrName%', 'frm%ModuleName%Mgr')" /><span class="glyphicon glyphicon-trash"></span> {translate(#delete selected#)} </button>
+		</form>
+</div>

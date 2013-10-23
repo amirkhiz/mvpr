@@ -1,0 +1,12 @@
+		<span class="added-tags">
+			{if:items}
+				{items:h}
+			{else:}
+				<label class="checkbox-inline"><input type="checkbox" title="checkbox"> Label 1 </label>
+			{end:}
+		</span>
+		<span class="help-block">{options[help]}</span>
+		<input type="hidden" name="type[checkbox][label][]" class="h-label" flexy:ignore>
+		<input type="hidden" name="type[checkbox][help][]" class="h-help" flexy:ignore>
+		<input type="hidden" name="type[checkbox][checkes][]" class="h-checkes" value="{this.plugin(#setDefaultValue#,options[checkes],#0|Label 1#):h}" flexy:ignore>
+		<input type="hidden" name="type[checkbox][order][]" class="h-order" flexy:ignore>
