@@ -104,7 +104,7 @@ class TypeMgr extends SGL_Manager
     function _cmd_add(&$input, &$output)
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
-        $output->template  = 'type/typeEdit.html';
+        $output->template  = 'type/typeAdd.html';
         $output->pageTitle = 'TypeMgr :: Add';
         $output->action    = 'insert';
         
