@@ -34,10 +34,23 @@
 	  </div>
     </div>
 	
-	<ul class="sortable list" id="added-tags">
+	<ul class="list" id="added-tags">
+		{foreach:tags,tKey,tValue}
+		<li>
+				<b>{tValue[title]}</b>
+				<ul>
+					{foreach:tValue[data],tdKey,tdValue}
+						<li id="mData{tdKey}">{tdValue[title]}</li>
+					{end:}
+				</ul>
+				
+		</li>
+		{end:}
+		<!--
 		{foreach:tags,tKey,tValue}
 				{this.plugin(#makeTag#,tValue):h}
 		{end:}
+		-->
 	</ul>
 	
 	<div class="form-group newfield" id="new-field">

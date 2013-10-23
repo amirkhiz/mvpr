@@ -50,7 +50,8 @@ class ContentOutput
     		$output->items = $this->makeSelects($aOptions['selects']);
     	}
     	
-    	if($aOptions['multipleselects']){
+    	if($aOptions['multipleselects'])
+    	{
     		$output->items = $this->makeMultipleselects($aOptions['multipleselects']);
     	}
     	
