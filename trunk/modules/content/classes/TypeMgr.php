@@ -198,6 +198,7 @@ class TypeMgr extends SGL_Manager
         $output->type = $type;
         unset($type);
         
+        
         $type = DB_DataObject::factory($this->conf['table']['content_type_mapping']);
         $type->whereAdd("content_type_id='".$input->typeId."'");
         $type->orderBy("tag_order");
@@ -205,11 +206,25 @@ class TypeMgr extends SGL_Manager
 		$aTypes = array();
 		while($type->fetch())
 		{
-			$aTypes[]=$type->options;
+			$aTypes[$type->content_type_mapping_id]['title'] = $type->title;
+			$aTypes[$type->content_type_mapping_id]['tag_order'] = $type->tag_order;
 		}
+		
+		
+        $type = DB_DataObject::factory($this->conf['table']['content_type_mapping_data']);
+        $type->whereAdd("content_type_id='".$input->typeId."'");
+        $type->orderBy("order_id");
+        $type->find();
+		while($type->fetch())
+		{
+			$aTypes[$type->content_type_mapping_id]['data'][$type->content_type_mapping_data_id]['title'] = $type->title;
+			$aTypes[$type->content_type_mapping_id]['data'][$type->content_type_mapping_data_id]['order'] = $type->order_id;
+		}
+		
+		
 		$output->tags = $aTypes;
-		
-		
+		echo "<pre>"; print_r($aTypes); echo "</pre>";
+
 		$category = DB_DataObject::factory($this->conf['table']['category']);
         
         $category->whereAdd("level_id = 3");
@@ -219,7 +234,6 @@ class TypeMgr extends SGL_Manager
         	$aCategories[$category->category_id] = $category->title;
         }
         $output->categories = $aCategories;
-		
     }
 
     function _cmd_update(&$input, &$output)
