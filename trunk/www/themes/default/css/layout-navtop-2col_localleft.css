@@ -1,0 +1,31 @@
+
+/**
+ * - navigation bar at the top
+ * - 2 columns (local + main)
+ *
+ * @package    themes
+ * @subpackage default2
+ * @author     Dmitri Lakachauskis <lakiboy83@gmail.com>
+ */
+
+
+div#content {
+    position: relative;
+    width: 990px;
+
+}
+div#main {
+    float: right;
+    width: 790px;
+    display: inline;
+
+}
+div#sub {
+    display: none;
+}
+div#local {
+    float: left;
+    width: 200px;
+    display: inline;
+}
+<?php include('nav-vertical.css'); ?>

@@ -1,0 +1,97 @@
+
+/**
+ * - vertical navigation
+ * - toolbar
+ *
+ * @package    themes
+ * @subpackage default2
+ * @author     Dmitri Lakachauskis <lakiboy83@gmail.com>
+ */
+
+/* Main navigation */
+
+div#nav-main {
+    -webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	background-color: #3b86c9;
+	border-bottom: 1px solid #5697d0;
+	border-top: 1px solid #5697d0;
+	margin-bottom: 20px;
+}
+
+div#nav-main ul{
+	
+}
+
+div#nav-main ul li a{
+	display: block;
+	padding: 4px;
+	border-bottom: 1px solid #5697d0;
+	color: #ffffff;
+	text-decoration: none;
+	font-size: 13px;
+}
+
+div#nav-main ul li ul li a{
+	border-bottom: 1px solid #e6e6e6;
+	background: #f2f2f2;
+	color: #333333;
+	font-size: 12px;
+	padding: 6px 8px;
+}
+
+div#nav-main ul li a:hover{
+	background-color: rgb(97, 153, 204);
+}
+
+div#nav-main ul li ul li a:hover{
+	background-color: rgb(238, 235, 235);
+}	
+
+div#nav-main ul li {
+	list-style: none;
+	margin: none;
+}
+/*
+    div#nav-main div.inner {
+        border-bottom: 1px solid #bbb;
+        background-color: #eef7d4;
+    }
+    div#nav-main ul {
+        margin: 0;
+        list-style: none;
+        line-height: 1em;
+    }
+        div#nav-main ul li {
+            margin: 0;
+            _height: 1px;
+        }
+            div#nav-main ul li a {
+                display: block;
+                padding: 0.65em 1em 0.55em;
+                font-weight: bold;
+                color: #66a326;
+            }
+            div#nav-main ul li a:hover, div#nav-main ul li.current a {
+                background-color: #9c0;
+                color: #fff;
+                text-decoration: none;
+            }
+/* END main navigation */
+
+
+
+/* END toolbar */
+
+
+/* Lang switcher */
+div#langSwitcher {
+    float: none;
+}
+    div#langSwitcher a {
+        float: left;
+        margin-left: 0;
+        margin-right: 15px;
+        margin-bottom: 15px;
+    }

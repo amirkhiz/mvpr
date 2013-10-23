@@ -1,0 +1,173 @@
+.selectable .ui-selecting { background: #bce8f1; }
+.selectable .ui-selected { background: rgb(116, 166, 231); color: white; }
+  
+.popover {
+	max-width: none;
+}
+
+.option-columns{
+	float: left; 
+	width: 250px; 
+	padding: 20px; 
+	padding-top: 0px;
+	padding-bottom: 10px;
+}
+
+	.option-columns div.leftclm{
+		float: left;
+	}
+	
+	.option-columns div.rightclm{
+		float: right;
+	}
+
+.popover{
+	max-width: none;
+}
+.col-1,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12,
+.col-sm-1,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-5,
+.col-sm-6,
+.col-sm-7,
+.col-sm-8,
+.col-sm-9,
+.col-sm-10,
+.col-sm-11,
+.col-sm-12,
+.col-lg-1,
+.col-lg-2,
+.col-lg-3,
+.col-lg-4,
+.col-lg-5,
+.col-lg-6,
+.col-lg-7,
+.col-lg-8,
+.col-lg-9,
+.col-lg-10,
+.col-lg-11,
+.col-lg-12,
+.help-block{
+	margin-bottom: 2px;
+}
+
+.form-group label{
+	font-weight: bold;
+}
+
+.form-group {
+	margin-bottom: 5px;	
+}
+.sortable {
+	margin: auto;
+	padding: 0;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.sortable.grid {
+	overflow: hidden;
+}
+.connected li, .sortable li, .exclude li, .handles li {
+	list-style: none;
+	min-height: 50px;
+}
+.handles span {
+	cursor: move;
+}
+li.disabled {
+	opacity: 0.5;
+}
+.sortable.grid li {
+	line-height: 80px;
+	float: left;
+	width: 80px;
+	height: 80px;
+	text-align: center;
+}
+li.highlight {
+	background: #FEE25F;
+}
+#connected {
+	width: 440px;
+	overflow: hidden;
+	margin: auto;
+}
+.connected {
+	float: left;
+	width: 200px;
+}
+.connected.no2 {
+	float: right;
+}
+li.sortable-placeholder {
+	border: 1px dashed #CCC;
+	background: none;
+}
+
+
+#added-tags .tag-listHover{
+	border: 2px dashed #DDDDDD;
+	padding-top: 2px;
+	border-radius: 5px;
+	cursor: move;
+	background: #f4f4f4;
+}
+
+#added-tags .tag-list{
+	border: 2px dashed #fff;
+	padding-top: 2px;
+	border-radius: 5px;
+	cursor: move;
+	background: #fff;
+}
+
+
+#new-field {
+	border: 2px dashed #DDDDDD;
+	padding-top: 5px;
+	margin: 2px;
+	border-radius: 5px;
+	cursor: move;
+	background: #f4f4f4;
+}
+
+#new-field .new-tag{
+	float: left;	
+}
+
+#new-field .add-btn {
+	float: right; 
+	margin-right: 20px;
+}
+
+
+.f_text_dataProductPrice{
+	width: 80%; 
+	float: left; 
+	color: #999;
+}
+
+.f_button_dataProductPrice{
+	width: 20%;
+}
+
+.chosen-container-active .chosen-choices li.search-field input[type="text"]{
+	height: 30px;
+}
