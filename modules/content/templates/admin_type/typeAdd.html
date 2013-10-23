@@ -1,0 +1,63 @@
+{foreach:inputTypes,key,value}
+	<flexy:include src="admin_type/options/option_{key}.html" />
+{end:}
+
+<flexy:include src="admin_type/typeTags.html" />
+
+<div class="panel panel-info" style="margin: 10px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">{translate(pageTitle)}</h3>
+  </div>
+<form method="post" flexy:ignore class="form-horizontal" id="form-group">
+	<div class="topbtns">
+		<button type="submit" class="btn btn-primary" name="submitted"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
+	    <button class="btn btn-warning" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#type#,#content#):h}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+	</div>
+  {msgGet()}
+	<input type="hidden" name="action" value="{action}" />
+	<input type="hidden" name="content_type_id" value="{type.content_type_id}" />
+	
+	<div class="form-group">
+	  <label class="col-2 control-label">{translate(#Title#,#ucfirst#)}: </label>
+	  <div class="col-8">
+	  	<input type="text" class="validate[required] form-control" id="inputError" name="type[type_name]" value="{type.type_name}" placeholder="{translate(#Content type name#,#ucfirst#)}" data-prompt-position="topLeft:+100">
+	  </div>
+	</div>
+	
+	<div class="form-group">
+      <label class="col-lg-2 control-label">{translate(#Category#,#ucfirst#)}: </label>
+	  <div class="col-lg-8">
+      	<select class="validate[required] form-control" name="type[category_id]" placeholder="{translate(#Category#,#ucfirst#)}" data-prompt-position="topLeft:+100">
+			<option></option>
+			{generateSelect(categories,type.category_id):h}
+		</select>
+	  </div>
+    </div>
+	
+	<ul class="sortable list" id="added-tags">
+		{foreach:tags,tKey,tValue}
+				{this.plugin(#makeTag#,tValue):h}
+		{end:}
+	</ul>
+	
+	<div class="form-group newfield" id="new-field">
+		  <label class="col-2 control-label"></label>
+			<div class="add-btn">
+				<div class="btn-group dropup">
+		          <button type="button" class="btn btn-primary">{translate(#Add new Fields#)}</button>
+		          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+		          <ul class="dropdown-menu pull-right" role="menu" id="newtag">
+		          	{foreach:inputTypes,key,value}
+						<li><a alt="{key}">{value}</a></li>
+					{end:}
+		          </ul>
+		        </div>
+			</div>
+		</div>
+</form>
+</div>
+<script>
+$(document).ready(function() {
+	$('.sortable').sortable();
+});
+</script>
