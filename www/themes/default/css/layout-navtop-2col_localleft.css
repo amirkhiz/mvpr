@@ -11,7 +11,7 @@
 
 div#content {
     position: relative;
-    width: 990px;
+    width: 1000px;
 
 }
 div#main {
@@ -28,4 +28,4 @@ div#local {
     width: 200px;
     display: inline;
 }
-<?php include('nav-vertical.css'); ?>
+<?php include('nav-horizontal.css'); ?>
