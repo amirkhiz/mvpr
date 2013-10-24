@@ -4,7 +4,7 @@
 	</div>
 	{msgGet()}
 	<div class="row">
-		<form name="frmProductMgr" method="post" flexy:ignore id="frmProductMgr">
+		<form name="frmProductMgr" method="post" flexy:ignore id="proSearchList">
 		    
 			{foreach:searchFields,key,value}
 
@@ -17,30 +17,7 @@
 					</div>
 				</div>
 				
-				{scriptOpen:h}
-					$(document).ready(function(){
-						var aOptSelected = new Array();
-						$("#pOptMulti{key}").multiselect({
-							click: function(event, ui){
-								console.log(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked') );
-								aOptSelected = aOptSelected + ui.value + '~~||~~';
-								var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aOptSelected});
-								
-								$.ajax({
-									url: ajaxurl,
-									cache: false,
-						            type: 'POST',
-									success: function(data){
-										console.log(data);
-									},
-									error: function(){
-										console.log('Error');
-									}
-								});
-							}
-						});
-					});
-				{scriptClose:h}
+				
 				
 			{end:}
 			
