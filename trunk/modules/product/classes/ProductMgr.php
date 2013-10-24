@@ -213,7 +213,7 @@ class productMgr extends SGL_Manager
     	$product->get($productId);
     	
 		$query = "
-			SELECT c1.category_id AS `brandId`, c2.category_id AS `optionId`, c3.category_id AS `groupId`, c4.category_id AS `categoryId`, cmd.content_type_mapping_data_id AS cmdId, cm.content_type_mapping_id AS cmId, c.content_type_id AS cId,
+			SELECT c1.category_id AS `brandId`, c2.category_id AS `optionId`, c3.category_id AS `groupId`, c4.category_id AS `categoryId`, cmd.content_type_mapping_data_id AS cmdId, cm.content_type_mapping_id AS cmId, c.content_type_id AS cId, ca.content_addition_id AS caId,
 			c1.title AS `brand`, c2.title AS `option`, c3.title AS `group`, c4.title AS `category`, cmd.title AS cmdTitle, cm.title AS cmTitle, c.type_name AS cTitle
 			FROM {$this->conf['table']['product']} AS p
 			JOIN {$this->conf['table']['content_addition']} AS ca
@@ -250,7 +250,7 @@ class productMgr extends SGL_Manager
 
 			$aOpts['selected'][] 	= $value->cmdId;
 		}
-		//echo '<pre>'; print_r($aOpts); echo '</pre>';die;
+		//echo '<pre>'; print_r($aCAId); echo '</pre>';die;
 		
 		foreach ($aCats as $key => $value)
 		{
@@ -349,6 +349,31 @@ class productMgr extends SGL_Manager
     	$product->setFrom($input->product);
     	$product->last_updated = SGL_Date::getTime(true);
     	$product->usr_id = SGL_Session::getUid();
+    	
+    	//Delete Product Properties For Update in content addition table
+    	$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);
+    	$cAddition->whereAdd('product_id = ' . $input->product->product_id);
+    	$cAddition->find();
+    	while ($cAddition->fetch())
+    	{
+    		$cAddition->delete();
+    	}
+    	unset($cAddition);
+    	
+    	foreach ($input->product->prop as $key => $value)
+    	{
+    		foreach ($value as $opKey => $opValue)
+    		{
+    			//Insert Product New properties in content addition table
+    			$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);
+		    	$cAddition->setFrom($input->product->prop);
+		    	$cAddition->content_addition_id				= $this->dbh->nextId('content_addition');
+		    	$cAddition->product_id 						= $input->product->product_id;
+		    	$cAddition->content_type_mapping_data_id 	= $opValue;
+		    	
+		    	$cASuccess = $cAddition->insert();
+    		}
+    	}
     
     	$success = $product->update();
     	if ($success) {
@@ -419,6 +444,16 @@ class productMgr extends SGL_Manager
     			unlink(SGL_WEB_ROOT.$product->image1);
     			$product->delete();
     			unset($product);
+    			
+    			//Delete Product Properties from content addition table
+    			$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);
+    			$cAddition->whereAdd('product_id = ' . $productId);
+    			$cAddition->find();
+    			while ($cAddition->fetch())
+    			{
+    				$cAddition->delete();
+    			}
+    			unset($cAddition);
     		}
     		SGL::raiseMsg('product deleted successfully', true, SGL_MESSAGE_INFO);
     	} else {
