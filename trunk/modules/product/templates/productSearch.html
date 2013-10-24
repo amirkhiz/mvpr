@@ -1,0 +1,51 @@
+<div class="panel panel-info" style="margin: 10px;">
+	<div class="panel-heading">
+		<h3 class="panel-title">{translate(#Product list#)}</h3>
+	</div>
+	{msgGet()}
+	<div class="row">
+		<form name="frmProductMgr" method="post" flexy:ignore id="frmProductMgr">
+		    
+			{foreach:searchFields,key,value}
+
+				<div class="form-group">
+					<label class="col-lg-3 control-label">{value[title]}: </label>
+					<div class="col-lg-7">
+						<select class="form-control" name="product[prop][{key}][]" id="pOptMulti{key}" multiple="multiple">
+			                {generateSelect(value[ops]):h}
+			            </select>
+					</div>
+				</div>
+				
+				{scriptOpen:h}
+					$(document).ready(function(){
+					   $("#pOptMulti{key}").multiselect();
+					});
+				{scriptClose:h}
+				
+			{end:}
+			
+			<table class="table table-bordered selectable">
+		    	<thead>
+			        <tr>
+			            <th>{translate(#ID#)}</th>
+						<th>{translate(#Title#)}</th>
+						<th>{translate(#Model#)}</th>
+						<th>{translate(#Price#)}</th>
+						<th>{translate(#Quantity#)}</th>
+			        </tr>
+				</thead>
+				<tbody>
+			        <tr flexy:foreach="products,key,aValue">
+			            <td nowrap>{aValue.product_id}</td>
+						<td nowrap>{aValue.title}</td>
+						<td nowrap>{aValue.model}</td>
+						<td nowrap>{aValue.price}</td>
+						<td nowrap>{aValue.quantity}</td>
+			        </tr>
+				</tbody>
+		    </table>
+
+		</form>
+	</div>
+</div>

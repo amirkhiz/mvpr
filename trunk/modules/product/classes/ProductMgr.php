@@ -67,6 +67,7 @@ class productMgr extends SGL_Manager
             'reorderUpdate' => array('reorderUpdate', 'redirectToDefault'),
             'delete'        => array('delete', 'redirectToDefault'),
             'list'          => array('list'),
+        	'view'          => array('view'),
         );
         
     }
@@ -81,6 +82,7 @@ class productMgr extends SGL_Manager
         $input->masterTemplate = $this->masterTemplate;
         $input->template       = $this->template;
         
+        $input->categoryId  = $req->get('frmCategoryID');
         $input->productId   = $req->get('frmProductID');
         $input->items     	= $req->get('_items');
         $input->product     = (object)$req->get('product');
@@ -460,6 +462,71 @@ class productMgr extends SGL_Manager
     		SGL::raiseError('Incorrect parameter passed to ' . __CLASS__ . '::' .
     				__FUNCTION__, SGL_ERROR_INVALIDARGS);
     	}
+    }
+    
+    function _cmd_view(&$input, &$output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	
+    	/*
+    	 	SELECT c.content_type_id AS cId, c.type_name AS cTitle, cm.content_type_mapping_id AS cmId, cm.title AS cmTitle, cmd.content_type_mapping_data_id AS cmdId, cmd.title AS cmdTitle, ca.*
+			FROM `content_type` AS c
+			JOIN `content_type_mapping` AS cm
+			ON cm.content_type_id = c.content_type_id
+			JOIN `content_type_mapping_data` AS cmd
+			ON cmd.content_type_mapping_id = cm.content_type_mapping_id
+			JOIN `content_addition` AS ca
+			ON ca.content_type_mapping_data_id = cmd.content_type_mapping_data_id
+			WHERE c.category_id = 36
+    	 */
+    	
+    	$query = "
+    			SELECT c.content_type_id AS cId, c.type_name AS cTitle, cm.content_type_mapping_id AS cmId, cm.title AS cmTitle, 
+    			cmd.content_type_mapping_data_id AS cmdId, cmd.title AS cmdTitle, ca.*
+    			FROM {$this->conf['table']['content_type']} AS c
+    			JOIN {$this->conf['table']['content_type_mapping']} AS cm
+				ON cm.content_type_id = c.content_type_id
+				JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
+				ON cmd.content_type_mapping_id = cm.content_type_mapping_id
+				JOIN {$this->conf['table']['content_addition']} AS ca
+				ON ca.content_type_mapping_data_id = cmd.content_type_mapping_data_id
+				WHERE c.category_id = {$input->categoryId}
+    	";
+    	
+    	$result = $this->dbh->getAll($query);
+    	
+    	//echo '<pre>'; print_r($result); echo '</pre>';die;
+    	
+    	$searchFields = array();
+    	$proCounter = array();
+    	$aProductId = array();
+		foreach ($result as $key => $value)
+		{
+			
+			$proCounter[$value->cmdId]['title'] = $value->cmdTitle;
+			$proCounter[$value->cmdId]['count']++ ;
+			
+			$searchFields[$value->cmId]['title'] = $value->cmTitle;
+			$searchFields[$value->cmId]['ops'][$value->cmdId] = $value->cmdTitle . '(' .$proCounter[$value->cmdId]['count'] . ')';
+			
+			$aProductId[$value->product_id] = $value->product_id;
+			
+		}
+    	
+		echo $query = "
+				SELECT *
+				FROM {$this->conf['table']['product']}
+				WHERE product_id IN (" . implode(',',$aProductId) . ')'
+			;
+		$productcs = $this->dbh->getAll($query);
+		
+    	//echo '<pre>'; print_r($productcs); echo '</pre>';die;
+    	
+    	$output->pageTitle = $this->pageTitle . ' :: Reorder';
+    	$output->template  = 'productSearch.html';
+    	$output->searchFields = $searchFields;
+    	$output->products = $productcs;
+    	
     }
     
     function _cmd_reorder(&$input, &$output)
