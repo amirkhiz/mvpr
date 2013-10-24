@@ -1,23 +1,16 @@
 
 /**
  * - horizontal navigation
- * - toolbar
  *
- * @package    themes
- * @subpackage default2
- * @author     Dmitri Lakachauskis <lakiboy83@gmail.com>
+ * @author     Sina Saderi <sina.sadri@gmail.com>
  */
 
 /* Main navigation */
 div#nav-main {
-    border-bottom: 1px solid #bbb;
-    background-color: #fff;
 }
     div#nav-main div.inner {
         margin-bottom: 2px;
-        height: 2.2em;
-        border: 1px solid #bbb;
-        border-top: none;
+        height: 50px;
         background-color: #222222;
     }
     div#nav-main ul {
@@ -31,13 +24,23 @@ div#nav-main {
         }
             div#nav-main ul li a {
                 display: block;
-                border-right: 1px solid #fff;
+                border-right: 1px solid #444444;
+				border-left: 1px solid #000000;
                 padding: 0.65em 1em 0.55em;
                 color: #f0f0f0;
+				font-size: 13px;
+				line-height: 34px;
             }
             div#nav-main ul li a:hover, div#nav-main ul li.current a {
                 text-decoration: none;
+				background-color: #444444;
             }
+div.nav-bottom {
+	background: url(<?php echo $baseUrl ?>/images/bg/nav-shadow.jpg) no-repeat center top;
+	height: 25px;
+	margin-top: -2px;
+}
+
 /* END main navigation */
 
 

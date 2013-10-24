@@ -1,29 +1,21 @@
         <div id="nav-main">
-
-            <!-- top navigation -->
-            <div class="inner clearfix">
-                <h2 class="accessibility">Main navigation</h2>
-                {foreach:blocksMainNav,key,valueObj}
-                   {valueObj.content:h}
-                {end:}
+			
+            <div class="inner">
+				<ul><li style="background-color: #f86d18;"><a href="{webRoot}" style="color: #FFFFFF; padding-top: 7px; margin-bottom: 2px; border-right: none; border-left: none;"><span class="glyphicon glyphicon-home"></span> Anasayfa</a></li></ul>
+	                <h2 class="accessibility">Main navigation</h2>
+	                {foreach:blocksMainNav,key,valueObj}
+	                   {valueObj.content:h}
+	                {end:}
+				
+				<div style="float: right; height: 50px;">
+					 <div style="background-color: #f86d18; color: #FFFFFF; height: 50px; font-weight: bold; font-size: 15px; padding: 4px 10px 1px ; ">
+					 	<div style="float: left; line-height: 13px; height: 50px; font-size: 39px; color: rgb(235, 95, 16);"><span class="glyphicon glyphicon-search"></span></div> 
+						<div style="float: left; line-height: 15px; text-align: center; height: 50px;">Ürün <br />Bul<br /> <span class="glyphicon glyphicon-chevron-down"></span></div>
+					 </div>
+					 <div style="clear: both;"><!-- --></div> 
+				</div>
+				<div style="float: right; height: 50px; border-left: 1px solid #444444;"><input type="text" class="form-control" placeholder="Ürün Ara ..." style="background-color: #222222; border: 1px solid #222222; height: 50px; width: 240px; color:#f0f0f0;"></div>
             </div>
-            <!-- end top navigation -->
-
-            <div id="toolbar" class="clearfix">
-                <p id="breadcrumbs">
-                {foreach:blocksMainBreadcrumb,key,valueObj}
-                    {valueObj.content:h}
-                {end:}
-                </p>
-
-                <!-- Lang switcher -->
-                <h2 class="accessibility">Language switcher</h2>
-                <div id="langSwitcher">
-                {foreach:blocksBodyTop,key,valueObj}
-                    {valueObj.content:h}
-                {end:}
-                </div>
-            </div>
-
-            <hr />
+			
         </div>
+		<div class="nav-bottom"><!-- --></div>
