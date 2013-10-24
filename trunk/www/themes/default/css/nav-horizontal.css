@@ -18,8 +18,7 @@ div#nav-main {
         height: 2.2em;
         border: 1px solid #bbb;
         border-top: none;
-        background-color: #eef7d4;
-        padding-left: 200px;
+        background-color: #222222;
     }
     div#nav-main ul {
         margin: 0;
@@ -34,12 +33,9 @@ div#nav-main {
                 display: block;
                 border-right: 1px solid #fff;
                 padding: 0.65em 1em 0.55em;
-                font-weight: bold;
-                color: #66a326;
+                color: #f0f0f0;
             }
             div#nav-main ul li a:hover, div#nav-main ul li.current a {
-                background-color: #9c0;
-                color: #fff;
                 text-decoration: none;
             }
 /* END main navigation */
