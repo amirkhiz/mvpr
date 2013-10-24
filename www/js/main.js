@@ -2,6 +2,22 @@ $(document).ready(function() {
 	
 	$("#form-group").validationEngine();
 	$(".chosen").chosen();
+	
+	
+	$("select").multiselect({
+		selectedList: 5
+	});
+	
+	
+	$('#proSearchList').find("select").change(function(){
+		var aSelected = new Array();
+		$('#proSearchList').find("select").each(function(){
+			aThisSelect = $(this).val();
+			aSelected.push.apply(aSelected, aThisSelect);
+		});
+		alert(aSelected);
+	});
+	
 
 	var myFields=new Array("label","place","deval","help","height","width","rows","valid","mask","pattern", "checkes");
 	var callfunc = true;
