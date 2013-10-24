@@ -4,7 +4,7 @@ $(document).ready(function() {
 	$(".chosen").chosen();
 	
 	
-	$("select").multiselect({
+	$('#proSearchList').find("select").multiselect({
 		selectedList: 5
 	});
 	
@@ -15,7 +15,21 @@ $(document).ready(function() {
 			aThisSelect = $(this).val();
 			aSelected.push.apply(aSelected, aThisSelect);
 		});
-		alert(aSelected);
+		console.log(aSelected);
+		
+		var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected});
+		
+		$.ajax({
+			url: ajaxurl,
+			cache: false,
+            type: 'POST',
+			success: function(data){
+				console.log(data);
+			},
+			error: function(){
+				console.log('Error');
+			}
+		});
 	});
 	
 
