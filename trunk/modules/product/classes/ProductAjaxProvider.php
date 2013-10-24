@@ -178,6 +178,13 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	$output->data = $this->_renderTemplate($output, 'propertySelectbox.html');
     	
     }
+    
+    function search($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	
+    	$cAddition = $this->req->get('frmCAddition');
+    }
 
 }
 
