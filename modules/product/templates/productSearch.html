@@ -19,7 +19,26 @@
 				
 				{scriptOpen:h}
 					$(document).ready(function(){
-					   $("#pOptMulti{key}").multiselect();
+						var aOptSelected = new Array();
+						$("#pOptMulti{key}").multiselect({
+							click: function(event, ui){
+								console.log(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked') );
+								aOptSelected = aOptSelected + ui.value + '~~||~~';
+								var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aOptSelected});
+								
+								$.ajax({
+									url: ajaxurl,
+									cache: false,
+						            type: 'POST',
+									success: function(data){
+										console.log(data);
+									},
+									error: function(){
+										console.log('Error');
+									}
+								});
+							}
+						});
 					});
 				{scriptClose:h}
 				

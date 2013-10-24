@@ -513,7 +513,7 @@ class productMgr extends SGL_Manager
 			
 		}
     	
-		echo $query = "
+		$query = "
 				SELECT *
 				FROM {$this->conf['table']['product']}
 				WHERE product_id IN (" . implode(',',$aProductId) . ')'
