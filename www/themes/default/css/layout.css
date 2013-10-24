@@ -13,6 +13,7 @@
 <?php include('switch.css'); ?>
 <?php include('jquery-ui.css'); ?>
 <?php include('validationEngine.jquery.css'); ?>
+<?php include('jquery.multiselect.css'); ?>
 
 
 html { /* inforces screen to show scrollbar */
