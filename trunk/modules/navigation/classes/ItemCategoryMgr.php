@@ -48,7 +48,7 @@ require_once SGL_MOD_DIR . '/navigation/classes/MenuBuilder.php';
  * @author  Demian Turner <demian@phpkitchen.com>
  * @version $Revision: 1.27 $
  */
-class CategoryMgr extends SGL_Manager
+class ItemCategoryMgr extends SGL_Manager
 {
     var $_redirectCatId = 1;
     var $_category = null;
@@ -94,7 +94,7 @@ class CategoryMgr extends SGL_Manager
         $input->fromPublisher   = $req->get('frmFromPublisher');
 
         if ($input->action == 'update') {
-            $input->category_id         = $input->category['category_id'];
+            $input->item_category_id         = $input->category['item_category_id'];
             $input->label               = $input->category['label'];
             $input->parent_id           = $input->category['parent_id'];
             $input->perms               = $input->category['perms'];
@@ -102,7 +102,7 @@ class CategoryMgr extends SGL_Manager
         } elseif ($input->action =='insert') {
             $input->category['parent_id'] = $req->get('frmCatID');
         } else {
-            $input->category_id = ($req->get('frmCatID') == '') ? 1 : $req->get('frmCatID');
+            $input->item_category_id = ($req->get('frmCatID') == '') ? 1 : $req->get('frmCatID');
         }
 
     }
@@ -120,16 +120,16 @@ class CategoryMgr extends SGL_Manager
         SGL::logMessage(null, PEAR_LOG_DEBUG);
 
         //  load category
-        if (!$this->_category->load($input->category_id)) {
+        if (!$this->_category->load($input->item_category_id)) {
             $output->noEditForm = 1;
             return;
         }
         $output->category = $this->_category->getValues();
-        $output->breadCrumbs = $this->_category->getBreadCrumbs($output->category['category_id']);
+        $output->breadCrumbs = $this->_category->getBreadCrumbs($output->category['item_category_id']);
         $output->perms = $this->_category->getPerms();
 
         //  categories select box
-        $options = array('exclude' => $output->category['category_id']);
+        $options = array('exclude' => $output->category['item_category_id']);
         $menu = new MenuBuilder('SelectBox', $options);
         $aCategories = $menu->toHtml();
         $output->aCategories = $aCategories;
@@ -140,11 +140,11 @@ class CategoryMgr extends SGL_Manager
         SGL::logMessage(null, PEAR_LOG_DEBUG);
 
         $values = (array) $input->category;
-        $message = $this->_category->update($input->category_id, $values);
+        $message = $this->_category->update($input->item_category_id, $values);
 
         if ($message != '') {
             SGL::raiseMsg($message, true, SGL_MESSAGE_INFO);
-            $this->_redirectCatId = $input->category_id;
+            $this->_redirectCatId = $input->item_category_id;
         } else {
             SGL::raiseError('Problem updating category', SGL_ERROR_NOAFFECTEDROWS);
         }
@@ -156,7 +156,7 @@ class CategoryMgr extends SGL_Manager
         SGL::logMessage(null, PEAR_LOG_DEBUG);
 
         //  do not allow deletion of root category
-        if ($input->category_id == 1) {
+        if ($input->item_category_id == 1) {
             SGL::raiseMsg('do not delete root category', true, SGL_MESSAGE_WARNING);
 
             $aParams = array(
@@ -170,7 +170,7 @@ class CategoryMgr extends SGL_Manager
 
         //  delete categories
         $this->_category->delete($input->aDelete);
-        $output->category_id = 0;
+        $output->item_category_id = 0;
 
         SGL::raiseMsg('The category has successfully been deleted', true, SGL_MESSAGE_INFO);
     }
@@ -189,8 +189,8 @@ class CategoryMgr extends SGL_Manager
         SGL::logMessage(null, PEAR_LOG_DEBUG);
         $aMoveTo = array('BE' => 'up',
                          'AF' => 'down');
-        if (isset($input->category_id, $input->targetId) && ($pos = array_search($input->move, $aMoveTo))) {
-            $this->_category->move($input->category_id, $input->targetId, $pos);
+        if (isset($input->item_category_id, $input->targetId) && ($pos = array_search($input->move, $aMoveTo))) {
+            $this->_category->move($input->item_category_id, $input->targetId, $pos);
             SGL::raiseMsg('Categories reordered successfully', true, SGL_MESSAGE_INFO);
         } else {
             SGL::raiseError("Incorrect parameter passed to " . __CLASS__ . '::' .
