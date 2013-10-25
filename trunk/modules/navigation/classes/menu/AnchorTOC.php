@@ -42,10 +42,10 @@ class Menu_AnchorTOC extends SGL_Category
 {
     var $module = 'navigation';
 
-    function Menu_AnchorTOC($options, $conf)
+    function __construct($options, $conf)
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
-        parent::SGL_Category();
+        parent::__construct();
 
         $this->conf = $conf;
     }
@@ -58,15 +58,15 @@ class Menu_AnchorTOC extends SGL_Category
         $listString .= '<ul>';
         for ($x = 0; $x < count($result); $x++) {
             //  only generate link if node if leaf
-            if ($this->isBranch($result[$x]['category_id'])) {
+            if ($this->isBranch($result[$x]['item_category_id'])) {
                 $listString .= '<li>' . $result[$x]['label'] . "\n";
             } else {
                 $link = str_replace(' ', '_', $result[$x]['label']);
                 $listString .= "<li><a href='#" . $link . "'>" . $result[$x]['label'] . "</a>\n";
             }
             // if branch then recurse
-            if ($this->isBranch($result[$x]['category_id'])) {
-                $listString .= $this->render($result[$x]['category_id']);
+            if ($this->isBranch($result[$x]['item_category_id'])) {
+                $listString .= $this->render($result[$x]['item_category_id']);
             }
         }
         $listString .=  '</ul>';

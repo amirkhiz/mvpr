@@ -11,7 +11,7 @@ class DataObjects_Document extends DB_DataObject
 
     public $__table = 'document';            // table name
     public $document_id;                     // int(11)  not_null primary_key
-    public $category_id;                     // int(11)  multiple_key
+    public $item_category_id;                // int(11)  multiple_key
     public $document_type_id;                // int(11)  not_null multiple_key
     public $name;                            // string(128)  
     public $file_size;                       // int(11)  

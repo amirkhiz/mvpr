@@ -1,19 +1,12 @@
         <div id="footer">
-            <p flexy:if="showExecutionTimes">
-                {translate(#Execution Time#)} = {getExecutionTime()} {translate(#ms#)}
-            </p>
+            {foreach:blocksBottom,key,valueObj}
+                <div class="block {valueObj.body_class}">
+                    <h2>{valueObj.title}</h2>
+                    <div class="content">
+                        {valueObj.content:h}
+                    </div>
+                </div>
+            {end:}
         </div><!-- end footer -->
-
-    </div><!-- end wrapper-outer -->
-
-    {if:conf[debug][infoBlock]}
-    <flexy:include src="debug.html" />
-    {end:}
-
-    <div flexy:if="conf[site][broadcastMessage]" id="broadcastMessage">
-        {conf[site][broadcastMessage]}
-        <a href="#" title="{tr(#close#)}">X</a>
-    </div>
-
 </body>
 </html>

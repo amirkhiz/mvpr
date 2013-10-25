@@ -87,7 +87,11 @@ class SimpleRenderer
 
                 $accessKey  = !empty($section->access_key)
                     ? ' accesskey="' . $section->access_key . '"' : '';
-                $anchor     = '<a' . ' href="' . $url . '"' . $accessKey . '>' . $section->title . '</a>';
+                    
+                $relIcon  = !empty($section->rel)
+                    ? '<span class="glyphicon glyphicon-' . $section->rel . '"></span>' : '';
+                    
+                $anchor     = '<a' . ' href="' . $url . '"' . $accessKey . '>' . $relIcon . ' ' . $section->title . '</a>';
                 $listItems .= "<li" . $liAtts . '>' . $anchor;
 
                 // show children nodes

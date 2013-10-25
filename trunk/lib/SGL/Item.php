@@ -186,12 +186,12 @@ class SGL_Item
                         i.expiry_date,
                         i.item_type_id,
                         it.item_type_name,
-                        i.category_id,
+                        i.item_category_id,
                         i.status
             FROM        {$this->conf['table']['item']} i
             LEFT JOIN   {$this->conf['table']['item_type']} it ON i.item_type_id = it.item_type_id
             LEFT JOIN   {$this->conf['table']['user']} u ON i.created_by_id = u.usr_id
-            LEFT JOIN   {$this->conf['table']['category']} c ON i.category_id = c.category_id
+            LEFT JOIN   {$this->conf['table']['item_category']} c ON i.item_category_id = c.item_category_id
             WHERE       i.item_id = $itemID
             AND         $roleId NOT IN (COALESCE(c.perms, '-1'))
             $append
@@ -215,7 +215,7 @@ class SGL_Item
             $this->set('expiryDate', $itemObj->expiry_date);
             $this->set('typeID', $itemObj->item_type_id);
             $this->set('type', $itemObj->item_type_name);
-            $this->set('catID', $itemObj->category_id);
+            $this->set('catID', $itemObj->item_category_id);
             $this->set('statusID', $itemObj->status);
 
             //  language clause
@@ -250,7 +250,7 @@ class SGL_Item
                 expiry_date,
                 item_type_id,
                 status,
-                category_id
+                item_category_id
             ) VALUES (
                 $id,
                 $this->createdByID,
@@ -337,7 +337,7 @@ class SGL_Item
                 start_date = " . $this->dbh->quote($this->startDate) . ",
                 expiry_date = " . $this->dbh->quote($this->expiryDate) . ",
                 status = $this->statusID,
-                category_id = $this->catID
+                item_category_id = $this->catID
             WHERE item_id = $this->id
                 ";
         $result = $this->dbh->query($query);
@@ -691,7 +691,7 @@ class SGL_Item
 
             $constraint = $bPublished ? ' AND i.status  = ' . SGL_STATUS_PUBLISHED : '';
             $query = "
-                SELECT  ia.item_addition_id, itm.field_name, ia.addition, ia.trans_id, i.category_id
+                SELECT  ia.item_addition_id, itm.field_name, ia.addition, ia.trans_id, i.item_category_id
                 FROM    {$this->conf['table']['item']} i,
                         {$this->conf['table']['item_addition']} ia,
                         {$this->conf['table']['item_type']} it,
@@ -714,7 +714,7 @@ class SGL_Item
                     }
                     $html[$fieldName] = $this->generateItemOutput(
                         $fieldID, $fieldName, $fieldValue, $this->typeID);
-                    $html['category_id'] = $catId;
+                    $html['item_category_id'] = $catId;
                 }
                 return $html;
             } else {
@@ -942,7 +942,7 @@ class SGL_Item
             ' AND i.status  > ' . SGL_STATUS_DELETED ;
 
         //  if user only wants contents from current category, add where clause
-        $rangeWhereClause   = ($queryRange == 'all')?'' : " AND i.category_id = $catID";
+        $rangeWhereClause   = ($queryRange == 'all')?'' : " AND i.item_category_id = $catID";
         $roleId = SGL_Session::get('rid');
 
         //  dataTypeID 1 = all template types, otherwise only a specific one
@@ -961,7 +961,7 @@ class SGL_Item
             LEFT JOIN   {$this->conf['table']['item_type']} it ON i.item_type_id = it.item_type_id
             LEFT JOIN   {$this->conf['table']['item_type_mapping']} itm ON it.item_type_id = itm.item_type_id
             LEFT JOIN   {$this->conf['table']['user']} u ON i.updated_by_id = u.usr_id
-            LEFT JOIN   {$this->conf['table']['category']} c ON i.category_id = c.category_id
+            LEFT JOIN   {$this->conf['table']['item_category']} c ON i.item_category_id = c.item_category_id
             WHERE   ia.item_type_mapping_id = itm.item_type_mapping_id
             AND     itm.field_name = 'title'" .         /*  match item addition type, 'title'    */
             $typeWhereClause .                          //  match datatype
