@@ -1,3 +1,39 @@
+$(document).ready(function() {
+	$('body').on('click', '.mapping', function () {
+		$("#mappingTitle").val($(this).html());
+		mId = $(this).attr("id");
+		mId = mId.split("_");
+		$("#mappingId").val(mId[1]);
+		$("#mappingType").val(mId[0]);
+		//console.log(mId);
+	});
+	
+	$("#frmMappingData").submit(function(){
+		title = $("#mappingTitle").val();
+		id = $("#mappingId").val();
+		type = $("#mappingType").val();
+		
+		$url = makeUrl({module: "content", manager: "content", action: "updateMappingTitle", title: title, id: id, type: type});
+		$.ajax({
+	        url: $url,
+	        type: 'POST',
+			cache: false,
+			success: function(data){
+				//console.log(data + "---" + id);
+				if(data == 1){
+					$("#"+type+"_"+id).html(title);
+				}
+	        }
+		});
+		
+		//console.log(title);
+		$('#myModal').modal('hide');
+		
+		return false;
+	})
+});
+
+
 //  Allows to show/collapse any block element given its #id
 //  Usage: setup a checkbox and call this function with onclick event
 //  ex: <input type="checkbox" name="foo" id="foo" onclick="collapseElement(this.checked,'id_of_block_to_collapse')" />

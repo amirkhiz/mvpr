@@ -223,7 +223,7 @@ class TypeMgr extends SGL_Manager
 		
 		
 		$output->tags = $aTypes;
-		echo "<pre>"; print_r($aTypes); echo "</pre>";
+		#echo "<pre>"; print_r($aTypes); echo "</pre>";
 
 		$category = DB_DataObject::factory($this->conf['table']['category']);
         
