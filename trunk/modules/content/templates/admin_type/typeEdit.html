@@ -37,13 +37,12 @@
 	<ul class="list" id="added-tags">
 		{foreach:tags,tKey,tValue}
 		<li>
-				<b>{tValue[title]}</b>
-				<ul>
-					{foreach:tValue[data],tdKey,tdValue}
-						<li id="mData{tdKey}">{tdValue[title]}</li>
-					{end:}
-				</ul>
-				
+			<div><a data-toggle="modal" id="map_{tKey}" href="#myModal" style="min-width: 150px;" class="btn btn-primary btn-xs mapping">{tValue[title]}</a></div>
+			<ul>
+				{foreach:tValue[data],tdKey,tdValue}
+					<li><a data-toggle="modal" id="mapData_{tdKey}" style="min-width: 150px; margin: 5px 0px;" href="#myModal" class="btn btn-info btn-xs mapping">{tdValue[title]}</a></li>
+				{end:}
+			</ul>
 		</li>
 		{end:}
 		<!--
@@ -74,3 +73,4 @@ $(document).ready(function() {
 	$('.sortable').sortable();
 });
 </script>
+
