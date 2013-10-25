@@ -15,16 +15,19 @@ $(document).ready(function() {
 			aThisSelect = $(this).val();
 			aSelected.push.apply(aSelected, aThisSelect);
 		});
-		console.log(aSelected);
-		
-		var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected});
+
+		if (aSelected.length != 0)
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected});
+		else
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:"36"});
 		
 		$.ajax({
 			url: ajaxurl,
 			cache: false,
             type: 'POST',
 			success: function(data){
-				console.log(data);
+				//console.log(data);
+				$("#searchResult").html(data);
 			},
 			error: function(){
 				console.log('Error');

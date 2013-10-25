@@ -67,7 +67,7 @@ class productMgr extends SGL_Manager
             'reorderUpdate' => array('reorderUpdate', 'redirectToDefault'),
             'delete'        => array('delete', 'redirectToDefault'),
             'list'          => array('list'),
-        	'view'          => array('view'),
+        	'search'        => array('search'),
         );
         
     }
@@ -464,7 +464,7 @@ class productMgr extends SGL_Manager
     	}
     }
     
-    function _cmd_view(&$input, &$output)
+    function _cmd_search(&$input, &$output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	

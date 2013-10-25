@@ -183,7 +183,37 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
-    	$cAddition = $this->req->get('frmCAddition');
+    	if ($this->req->get('frmCAddition'))
+    	{
+    		$cAddition = explode(',', $this->req->get('frmCAddition'));
+	    	$query = "
+			    	SELECT *
+			    	FROM {$this->conf['table']['content_addition']} as ca
+			    	JOIN {$this->conf['table']['product']} as p
+			    	ON p.product_id = ca.product_id
+			    	WHERE ca.content_type_mapping_data_id IN (" . implode(',',$cAddition) . ')' . "
+			    	GROUP BY p.product_id
+	    		";
+    	}
+    	else
+    	{
+    		$categoryId = $this->req->get('frmCategoryID');
+    		echo $query = "
+		    		SELECT *
+		    		FROM {$this->conf['table']['content_addition']} as ca
+		    		JOIN {$this->conf['table']['product']} as p
+		    		ON p.product_id = ca.product_id
+		    		WHERE p.category_id = {$categoryId}
+    				GROUP BY p.product_id
+    			";
+    	}
+    	
+    	$result =  $this->dbh->getAll($query);
+    	
+    	$output->products = $result;
+    	$output->data = $this->_renderTemplate($output, 'searchView.html');
+    	
+    	//echo '<pre>' ;print_r($result); echo '</pre>';
     }
 
 }
