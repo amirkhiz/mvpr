@@ -1,6 +1,6 @@
 <div id="manager-actions">
     <span>{translate(#Action#)} :&nbsp;</span>
-    <a class="action cancel" href="{makeUrl(##,#category#,#navigation#)}">{translate(#Cancel#)}</a>
+    <a class="action cancel" href="{makeUrl(##,#itemcategory#,#navigation#)}">{translate(#Cancel#)}</a>
 </div>
 <div id="content">
     <div id="content-header">
@@ -22,24 +22,24 @@
             </thead>
             <tbody>
                 <tr class="{switchRowClass()}" flexy:foreach="categoryTree,k,category">
-                    <td>{category[category_id]}</td>
+                    <td>{category[item_category_id]}</td>
                     
                     <td>
                         {if:category[images][moveDownTarget]}
-                        <a href="{makeUrl(#reorderUpdate#,#category#,#navigation#)}frmCatID/{category[category_id]}/targetId/{category[images][moveDownTarget]}/move/down/">
+                        <a href="{makeUrl(#reorderUpdate#,#itemcategory#,#navigation#)}frmCatID/{category[item_category_id]}/targetId/{category[images][moveDownTarget]}/move/down/">
                             <img src="{webRoot}/themes/{theme}/{category[images][moveDownImg]:h}" alt="Move {category[label]} down" />
                         </a> 
                         {else:} <img src="{webRoot}/themes/{theme}/{category[images][moveDownImg]:h}" alt="" /> 
                         {end:} 
                         
                         {if:category[images][moveUpTarget]} 
-                        <a href="{makeUrl(#reorderUpdate#,#category#,#navigation#)}frmCatID/{category[category_id]}/targetId/{category[images][moveUpTarget]}/move/up/">
+                        <a href="{makeUrl(#reorderUpdate#,#itemcategory#,#navigation#)}frmCatID/{category[item_category_id]}/targetId/{category[images][moveUpTarget]}/move/up/">
                             <img src="{webRoot}/themes/{theme}/{category[images][moveUpImg]:h}" alt="Move {category[label]} up" />
                         </a> 
                         {else:} <img src="{webRoot}/themes/{theme}/{category[images][moveUpImg]:h}" alt=""/> 
                         {end:}
                     </td>
-                    <td class="left">{foreach:category[images][treePad],image}<img src="{webRoot}/themes/{theme}/{image:h}" alt="{category[label]}" />{end:} <a href="{makeUrl(#list#,#category#,#navigation#,categoryTree,#frmCatID|category_id#,k)}">{category[label]}</a></td>
+                    <td class="left">{foreach:category[images][treePad],image}<img src="{webRoot}/themes/{theme}/{image:h}" alt="{category[label]}" />{end:} <a href="{makeUrl(#list#,#itemcategory#,#navigation#,categoryTree,#frmCatID|item_category_id#,k)}">{category[label]}</a></td>
                     <td>{category[parent_id]}</td>
                     <td>{category[order_id]}</td>
                 </tr>

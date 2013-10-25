@@ -45,10 +45,10 @@ class Menu_SelectBox extends SGL_Category
     var $_depth         = 0;
     var $module         = 'navigation';
 
-    function Menu_SelectBox($options, $conf)
+    function __construct($options, $conf)
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
-        parent::SGL_Category();
+        parent::__construct();
 
         $this->conf = $conf;
         $this->_separator   = ($options['separator'])
@@ -63,14 +63,14 @@ class Menu_SelectBox extends SGL_Category
         $result = $this->getChildren($id);
         $maxElements = count($result);
         for ($x=0; $x < $maxElements; $x++) {
-            $index = $result[$x]['category_id'];
+            $index = $result[$x]['item_category_id'];
             $value = str_repeat($this->_separator, $this->_depth) . stripslashes($result[$x]['label']);
             $this->_ret[$index] = $value;
 
             //  if branch then recurse
-            if ($this->isBranch($result[$x]['category_id'])) {
+            if ($this->isBranch($result[$x]['item_category_id'])) {
                 $this->_depth ++;
-                $this->render($result[$x]['category_id']);
+                $this->render($result[$x]['item_category_id']);
                 $this->_depth --;
             }
         }

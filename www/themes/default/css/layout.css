@@ -17,11 +17,13 @@
 
 html { /* inforces screen to show scrollbar */
     height: 100%;
-    margin-bottom: 1px;
 }
 body {
-    padding-bottom: 10px;
     background: #fff;
+}
+
+h1, h2, h3 {
+	margin-top: 1px;
 }
 
 .option-columns{
@@ -410,12 +412,11 @@ div#headerTop div.site-name{
 
 /* Footer */
 div#footer {
-    background-color: #327199;
+    background-color: #212121;
 	height: 50px;
 }
     
     div#footer p {
-        margin-bottom: 0.1em;
         font-size: 0.8em;
         color: #ffffff;
 		line-height: 30px;
@@ -434,7 +435,7 @@ div#content {
     div#main {
         min-height: 350px;
         _height: 350px;  /* min height for ie6 */
-        padding: 0.6em 10px 5px;
+        padding: 0em 10px 5px;
         background-color: #fff;
     }
 

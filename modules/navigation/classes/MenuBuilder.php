@@ -74,7 +74,7 @@ class MenuBuilder
         SGL::logMessage(null, PEAR_LOG_DEBUG);
         $guiPath = SGL_MOD_DIR . "/navigation/classes/menu/$type.php";
         require_once $guiPath;
-        echo $guiClass = 'Menu_' . $type;
+        $guiClass = 'Menu_' . $type;
         if (!class_exists($guiClass)) {
             SGL::raiseError("$guiClass is not a valid classname", SGL_ERROR_NOCLASS);
         }

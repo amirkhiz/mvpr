@@ -62,7 +62,7 @@ class SGL_CategoryPerms extends SGL_Category
         } else {
             SGL::raiseError('No category ID passed', SGL_ERROR_INVALIDARGS);
         }
-        parent::SGL_Category();
+        parent::__construct();
     }
 
     function init($catID)
@@ -86,9 +86,9 @@ class SGL_CategoryPerms extends SGL_Category
         $permsStr = count($aKeys) ? "perms = '$this->sPerms'" : 'perms = NULL';
         $dbh = SGL_DB::singleton();
         $query = "
-                    UPDATE  " . SGL_Config::get('table.category') . "
+                    UPDATE  " . SGL_Config::get('table.item_category') . "
                     SET     $permsStr
-                    WHERE   category_id = $this->catID
+                    WHERE   item_category_id = $this->catID
                 ";
         $result = $dbh->query($query);
 
@@ -112,15 +112,15 @@ class SGL_CategoryPerms extends SGL_Category
         $dbh =  SGL_DB::singleton();
         for ($x=0; $x < count($childNodeArray); $x++) {
             $query = "
-                        UPDATE  " . SGL_Config::get('table.category') . "
+                        UPDATE  " . SGL_Config::get('table.item_category') . "
                         SET     $permsStr
-                        WHERE   category_id = {$childNodeArray[$x]['category_id']}
+                        WHERE   item_category_id = {$childNodeArray[$x]['item_category_id']}
                     ";
             $result = $dbh->query($query);
 
             //  recurse if child links detected
-            if ($this->isBranch($childNodeArray[$x]['category_id'])) {
-                $childNodeArrayInner = $this->getChildren($childNodeArray[$x]['category_id']);
+            if ($this->isBranch($childNodeArray[$x]['item_category_id'])) {
+                $childNodeArrayInner = $this->getChildren($childNodeArray[$x]['item_category_id']);
                 $this->_updateChildNodes($childNodeArrayInner);
             }
         }

@@ -38,7 +38,7 @@ class Menu_ExplorerBsd
 {
     var $module = 'navigation';
 
-    function Menu_ExplorerBsd($options, $conf)
+    function __construct($options, $conf)
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
         $this->conf = $conf;
@@ -109,9 +109,9 @@ class Menu_ExplorerBsd
 
         $dbh = SGL_DB::singleton();
         $roleId = SGL_Session::get('rid');
-        $query = "  SELECT  category_id as id, parent_id, label AS text
+        $query = "  SELECT  item_category_id as id, parent_id, label AS text
                     FROM
-                        {$this->conf['table']['category']}
+                        {$this->conf['table']['item_category']}
                     WHERE
                         $roleId NOT IN (COALESCE(perms, '-1'))
                     ORDER BY parent_id, order_id";
