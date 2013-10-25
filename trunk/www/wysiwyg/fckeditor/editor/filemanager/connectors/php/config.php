@@ -1,7 +1,7 @@
 <?php
 /*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2008 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -21,23 +21,35 @@
  *
  * Configuration file for the File Manager Connector for PHP.
  */
+$rootDir = realpath(dirname(__FILE__) . '/../../../../../../..');
+
+if (!empty($_SERVER['SERVER_NAME'])) {
+    $hostName = $_SERVER['SERVER_NAME'];
+} elseif (!empty($_SERVER['HTTP_HOST'])) {
+    $hostName = $_SERVER['HTTP_HOST'];
+}
+if (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+    $hostName .= '_' . $_SERVER['SERVER_PORT'];
+}
+
+$configFile = $rootDir . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . $hostName . '.conf.php';
+require_once $configFile;
 
 global $Config ;
 
 // SECURITY: You must explicitly enable this "connector". (Set it to "true").
 // WARNING: don't just set "$Config['Enabled'] = true ;", you must be sure that only
 //		authenticated users can access this file or use some kind of session checking.
-$Config['Enabled'] = false ;
-
+$Config['Enabled'] = true ;
 
 // Path to user files relative to the document root.
-$Config['UserFilesPath'] = '/userfiles/' ;
+$Config['UserFilesPath'] = $conf['site']['baseUrl'] . '/images/' ;
 
 // Fill the following value it you prefer to specify the absolute path for the
 // user files directory. Useful if you are using a virtual directory, symbolic
 // link or alias. Examples: 'C:\\MySite\\userfiles\\' or '/root/mysite/userfiles/'.
 // Attention: The above 'UserFilesPath' must point to the same directory.
-$Config['UserFilesAbsolutePath'] = '' ;
+$Config['UserFilesAbsolutePath'] = $conf['path']['webRoot'] . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR ;
 
 // Due to security issues with Apache modules, it is recommended to leave the
 // following setting enabled.
@@ -62,11 +74,11 @@ $Config['HtmlExtensions'] = array("html", "htm", "xml", "xsd", "txt", "js") ;
 // If possible, it is recommended to set more restrictive permissions, like 0755.
 // Set to 0 to disable this feature.
 // Note: not needed on Windows-based servers.
-$Config['ChmodOnUpload'] = 0777 ;
+$Config['ChmodOnUpload'] = 0744 ;
 
 // See comments above.
 // Used when creating folders that does not exist.
-$Config['ChmodOnFolderCreate'] = 0777 ;
+$Config['ChmodOnFolderCreate'] = 0755 ;
 
 /*
 	Configuration settings for each Resource Type
@@ -122,29 +134,29 @@ $Config['ChmodOnFolderCreate'] = 0777 ;
 
 $Config['AllowedExtensions']['File']	= array('7z', 'aiff', 'asf', 'avi', 'bmp', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip') ;
 $Config['DeniedExtensions']['File']		= array() ;
-$Config['FileTypesPath']['File']		= $Config['UserFilesPath'] . 'file/' ;
-$Config['FileTypesAbsolutePath']['File']= ($Config['UserFilesAbsolutePath'] == '') ? '' : $Config['UserFilesAbsolutePath'].'file/' ;
+$Config['FileTypesPath']['File']		= $Config['UserFilesPath'] . 'File/' ;
+$Config['FileTypesAbsolutePath']['File']= ($Config['UserFilesAbsolutePath'] == '') ? '' : $Config['UserFilesAbsolutePath'].'File/' ;
 $Config['QuickUploadPath']['File']		= $Config['UserFilesPath'] ;
 $Config['QuickUploadAbsolutePath']['File']= $Config['UserFilesAbsolutePath'] ;
 
 $Config['AllowedExtensions']['Image']	= array('bmp','gif','jpeg','jpg','png') ;
 $Config['DeniedExtensions']['Image']	= array() ;
-$Config['FileTypesPath']['Image']		= $Config['UserFilesPath'] . 'image/' ;
-$Config['FileTypesAbsolutePath']['Image']= ($Config['UserFilesAbsolutePath'] == '') ? '' : $Config['UserFilesAbsolutePath'].'image/' ;
+$Config['FileTypesPath']['Image']		= $Config['UserFilesPath'] . 'Image/' ;
+$Config['FileTypesAbsolutePath']['Image']= ($Config['UserFilesAbsolutePath'] == '') ? '' : $Config['UserFilesAbsolutePath'].'Image/' ;
 $Config['QuickUploadPath']['Image']		= $Config['UserFilesPath'] ;
 $Config['QuickUploadAbsolutePath']['Image']= $Config['UserFilesAbsolutePath'] ;
 
 $Config['AllowedExtensions']['Flash']	= array('swf','flv') ;
 $Config['DeniedExtensions']['Flash']	= array() ;
-$Config['FileTypesPath']['Flash']		= $Config['UserFilesPath'] . 'flash/' ;
-$Config['FileTypesAbsolutePath']['Flash']= ($Config['UserFilesAbsolutePath'] == '') ? '' : $Config['UserFilesAbsolutePath'].'flash/' ;
+$Config['FileTypesPath']['Flash']		= $Config['UserFilesPath'] . 'Flash/' ;
+$Config['FileTypesAbsolutePath']['Flash']= ($Config['UserFilesAbsolutePath'] == '') ? '' : $Config['UserFilesAbsolutePath'].'Flash/' ;
 $Config['QuickUploadPath']['Flash']		= $Config['UserFilesPath'] ;
 $Config['QuickUploadAbsolutePath']['Flash']= $Config['UserFilesAbsolutePath'] ;
 
 $Config['AllowedExtensions']['Media']	= array('aiff', 'asf', 'avi', 'bmp', 'fla', 'flv', 'gif', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'png', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'tif', 'tiff', 'wav', 'wma', 'wmv') ;
 $Config['DeniedExtensions']['Media']	= array() ;
-$Config['FileTypesPath']['Media']		= $Config['UserFilesPath'] . 'media/' ;
-$Config['FileTypesAbsolutePath']['Media']= ($Config['UserFilesAbsolutePath'] == '') ? '' : $Config['UserFilesAbsolutePath'].'media/' ;
+$Config['FileTypesPath']['Media']		= $Config['UserFilesPath'] . 'Media/' ;
+$Config['FileTypesAbsolutePath']['Media']= ($Config['UserFilesAbsolutePath'] == '') ? '' : $Config['UserFilesAbsolutePath'].'Media/' ;
 $Config['QuickUploadPath']['Media']		= $Config['UserFilesPath'] ;
 $Config['QuickUploadAbsolutePath']['Media']= $Config['UserFilesAbsolutePath'] ;
 

@@ -413,14 +413,26 @@ div#headerTop div.site-name{
 /* Footer */
 div#footer {
     background-color: #212121;
-	height: 50px;
+}
+
+div#footer div.inner {
+	width: 950px;
+	padding-top: 30px;
+	margin: 0px auto;	
+}
+
+div#footer div.inner div.block {
+	width: 270px;
+	float: left;
+}
+
+div#footer div.inner div.block h2{
+	color: #ffffff;
 }
     
     div#footer p {
         font-size: 0.8em;
         color: #ffffff;
-		line-height: 30px;
-		text-align: center;
     }
 /* END footer */
 
