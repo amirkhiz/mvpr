@@ -13,6 +13,11 @@
 <?php include('jquery-ui.css'); ?>
 <?php include('validationEngine.jquery.css'); ?>
 <?php include('jquery.multiselect.css'); ?>
+<?php include('jslider.css'); ?>
+<?php include('jslider.blue.css'); ?>
+<?php include('jslider.plastic.css'); ?>
+<?php include('jslider.round.css'); ?>
+<?php include('jslider.round.plastic.css'); ?>
 <?php include('bootstrap.css'); ?>
 
 html { /* inforces screen to show scrollbar */
@@ -491,3 +496,56 @@ div.block {
     color: <?php echo $primaryDark ?>;
 }
 
+/* Search Box Start*/
+.searchBox {
+	background-color: #f5f5f5;
+	padding: 20px 0;
+}
+	.searchBox .priceBox {
+		margin-left: 30px;
+		height: 50px;
+		overflow: hidden;
+		position: relative;
+	}
+		.searchBox .priceBox .priceSlider {
+			position: absolute;
+			top: 20px;
+			left: 50px;
+		}
+		.searchBox .priceBox .priceSelect {
+			position: absolute;
+			top: 20px;
+			right: 50px;
+		}
+	
+	.searchBox .searchLogo {
+		font-size: 30px;
+		float: left;
+	}
+	
+	.searchBox .control-label {
+		color: #F86D18;
+	}
+	
+	.searchBox .form-group {
+		overflow: hidden;
+	}
+	
+	.searchResult .table th {
+		color: #F86D18;
+	}
+	.searchResult .table tbody {
+		
+	}
+		.searchResult .table tbody tr {
+			border: 1px solid #c9c9c9;
+		}
+		.searchResult .table tbody tr td {
+			background: #e6e6e6 url("<?php echo $baseUrl ?>/images/ui-bg_glass_75_e6e6e6_1x400.png") 50% 50% repeat-x;
+			opacity: 0.7;
+		}
+
+/* Search Box End*/
+.center {
+	text-align: center;
+}	

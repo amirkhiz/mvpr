@@ -183,30 +183,44 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
+    	$searchCondition = '';
+    	$join = '';
+    	$fields = '';
+    	
     	if ($this->req->get('frmCAddition'))
     	{
     		$cAddition = explode(',', $this->req->get('frmCAddition'));
-	    	$query = "
-			    	SELECT *
-			    	FROM {$this->conf['table']['content_addition']} as ca
-			    	JOIN {$this->conf['table']['product']} as p
-			    	ON p.product_id = ca.product_id
-			    	WHERE ca.content_type_mapping_data_id IN (" . implode(',',$cAddition) . ')' . "
-			    	GROUP BY p.product_id
-	    		";
+	    	$searchCondition = " AND ca.content_type_mapping_data_id IN (" . implode(',',$cAddition) . ')' ;
     	}
-    	else
+    	if ($this->req->get('frmCategoryID'))
     	{
     		$categoryId = $this->req->get('frmCategoryID');
-    		echo $query = "
-		    		SELECT *
-		    		FROM {$this->conf['table']['content_addition']} as ca
-		    		JOIN {$this->conf['table']['product']} as p
-		    		ON p.product_id = ca.product_id
-		    		WHERE p.category_id = {$categoryId}
-    				GROUP BY p.product_id
-    			";
+    		$searchCondition = " AND p.category_id = {$categoryId}";
     	}
+    	if ($this->req->get('frmPrices'))
+    	{
+    		$aPrices = explode(';', $this->req->get('frmPrices'));
+    		$minPrice = $aPrices['0'];
+    		$maxPrice = $aPrices['1'];
+    		$cur = $this->req->get('frmCur');
+    		$fields = ", cur.currency_id AS curId, cur.title AS curTitle, cur.value AS curValue, cur.code AS curCode";
+    		$join = " 
+    				JOIN {$this->conf['table']['currency']} AS cur
+    				ON cur.currency_id = p.currency_id 
+    			";
+    		$searchCondition = " AND (p.price BETWEEN {$minPrice} AND {$maxPrice})";
+    	}
+    	
+    	$query = "
+		    	SELECT p.* {$fields}
+		    	FROM {$this->conf['table']['content_addition']} as ca
+		    	JOIN {$this->conf['table']['product']} as p
+		    	ON p.product_id = ca.product_id
+		    	{$join}
+		    	WHERE p.product_id = p.product_id
+    			{$searchCondition}
+		    	GROUP BY p.product_id
+    		";
     	
     	$result =  $this->dbh->getAll($query);
     	
