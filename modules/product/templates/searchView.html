@@ -1,7 +1,19 @@
 			        <tr flexy:foreach="products,key,aValue">
-			            <td nowrap>{aValue.product_id}</td>
-						<td nowrap>{aValue.title}</td>
-						<td nowrap>{aValue.model}</td>
-						<td nowrap>{aValue.price}</td>
-						<td nowrap>{aValue.quantity}</td>
+			            <td nowrap>{aValue[product_id]}</td>
+						<td nowrap>{aValue[title]}</td>
+						<td class="center" nowrap>
+							<a href="{aValue[image]}">
+								<span class="glyphicon glyphicon-camera"></span>
+							</a>
+						</td>
+						<td class="center" nowrap>
+							<input type="checkbox" name="compare" value="{aValue[product_id]}"/>
+						</td>
+						<td class="center" nowrap>{aValue[price]}</td>
+						<td class="center" nowrap>{aValue[price]}</td>
+						<td class="center" nowrap>{aValue[currency_id]}</td>
+						<td class="center" nowrap>{aValue[tax]}</td>
+						<td class="center" nowrap>{aValue[quantity]}</td>
+						<td class="center" nowrap>{aValue[quantity]}</td>
+						<td class="center" nowrap><input type="text" name="orderCount"/></td>
 			        </tr>

@@ -10,7 +10,7 @@ $(document).ready(function() {
 	
 	$('.jslider-pointer').click(function()
 	{
-		searchPrice()
+		searchPrice();
 	});
 
 	function searchPrice()

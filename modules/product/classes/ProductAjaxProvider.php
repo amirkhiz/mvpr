@@ -222,12 +222,27 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
 		    	GROUP BY p.product_id
     		";
     	
-    	$result =  $this->dbh->getAll($query);
+    	$result = $this->dbh->getAll($query);
+    	$result = $this->objectToArray($result);
     	
-    	$output->products = $result;
+    	$output->products = $this->objectToArray($result);
     	$output->data = $this->_renderTemplate($output, 'searchView.html');
     	
     	//echo '<pre>' ;print_r($result); echo '</pre>';
+    }
+    
+    function objectToArray( $data )
+    {
+    	if (is_array($data) || is_object($data))
+    	{
+    		$result = array();
+    		foreach ($data as $key => $value)
+    		{
+    			$result[$key] = $this->objectToArray($value);
+    		}
+    		return $result;
+    	}
+    	return $data;
     }
 
 }

@@ -536,9 +536,14 @@ class productMgr extends SGL_Manager
 		* */
     	
 		
-		echo $query = "  
-			SELECT *, MIN(p.price) AS minPrice, MAX(p.price) AS maxPrice
+		$query = "  
+			SELECT *
 			FROM {$this->conf['table']['product']} AS p,
+			(
+				SELECT MIN(price) AS minPrice, MAX(price) AS maxPrice
+				FROM {$this->conf['table']['product']}
+				WHERE product_id IN (" . implode(',',$aProductId) . ')' ."
+			) AS minmax
 			WHERE p.product_id IN (" . implode(',',$aProductId) . ')'
 		;
 		
@@ -555,7 +560,7 @@ class productMgr extends SGL_Manager
 		}
 		$output->aPagedData = $aPagedData;
 		$output->totalItems = $aPagedData['totalItems'];
-		
+
 		if (is_array($aPagedData['data']) && count($aPagedData['data'])) {
 			$output->pager = ($aPagedData['totalItems'] <= $limit) ? false : true;
 		}
@@ -576,8 +581,8 @@ class productMgr extends SGL_Manager
     	$output->catId			= $input->categoryId;
     	$output->searchFields 	= $searchFields;
     	$output->products 		= $productcs;
-    	$output->minPrice 		= $productcs['0']->minPrice;
-    	$output->maxPrice 		= $productcs['0']->maxPrice;
+    	$output->minPrice 		= $aPagedData['data']['0']['minPrice'];
+		$output->maxPrice 		= $aPagedData['data']['0']['maxPrice'];
     	$output->aCur 			= $aCur;
     	
     }
