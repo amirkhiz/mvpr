@@ -57,7 +57,7 @@ class ContentAjaxProvider extends SGL_AjaxProvider2
     function updateMappingTitle($input, $output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
-    	$this->responseFormat = SGL_RESPONSEFORMAT_HTML;
+    	$this->responseFormat = SGL_RESPONSEFORMAT_JSON;
     	$title	= $this->req->get('title');
     	$id 	= $this->req->get('id');
     	$type	= $this->req->get('type');
