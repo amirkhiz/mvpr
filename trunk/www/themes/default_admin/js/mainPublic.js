@@ -13,11 +13,12 @@ $(document).ready(function() {
 		id = $("#mappingId").val();
 		type = $("#mappingType").val();
 		
-		$url = makeUrl({module: "content", manager: "content", action: "updateMappingTitle", title: title, id: id, type: type});
+		$url = makeUrl({module: "content", manager: "content", action: "updateMappingTitle"});
 		$.ajax({
 	        url: $url,
-	        type: 'POST',
-			cache: false,
+	        type: "POST",
+	        data: {title: title, id: id, type: type},
+	        async:false,
 			success: function(data){
 				//console.log(data + "---" + id);
 				if(data == 1){
