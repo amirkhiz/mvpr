@@ -512,20 +512,73 @@ class productMgr extends SGL_Manager
 			$aProductId[$value->product_id] = $value->product_id;
 			
 		}
-    	
-		$query = "
-				SELECT *
-				FROM {$this->conf['table']['product']}
-				WHERE product_id IN (" . implode(',',$aProductId) . ')'
-			;
-		$productcs = $this->dbh->getAll($query);
 		
-    	//echo '<pre>'; print_r($productcs); echo '</pre>';die;
+		/*
+		 * 
+		SELECT *
+		FROM {$this->conf['table']['product']} AS p
+		JOIN(
+				SELECT MIN(pr.price) AS minPrice, MAX(pr.price) AS maxPrice, cur.value, (pr.price * cur.value) AS curPrice, cur.currency_id as curId
+				FROM {$this->conf['table']['product']} AS pr
+				JOIN {$this->conf['table']['currency']} AS cur
+				ON cur.currency_id = pr.currency_id
+				WHERE pr.product_id IN (" . implode(',',$aProductId) . ')' ."
+		) AS minmax
+		ON minmax.curId = p.currency_id
+		WHERE p.product_id IN (" . implode(',',$aProductId) . ')'
+			
+		====================
+		SELECT p.*, (p.price * c.value) AS pprice, c.value
+		FROM {$this->conf['table']['product']} AS p
+		JOIN {$this->conf['table']['currency']} AS c
+		ON c.currency_id = p.currency_id
+		WHERE p.product_id IN (" . implode(',',$aProductId) . ')'
+		* */
     	
-    	$output->pageTitle = $this->pageTitle . ' :: Reorder';
-    	$output->template  = 'productSearch.html';
-    	$output->searchFields = $searchFields;
-    	$output->products = $productcs;
+		
+		echo $query = "  
+			SELECT *, MIN(p.price) AS minPrice, MAX(p.price) AS maxPrice
+			FROM {$this->conf['table']['product']} AS p,
+			WHERE p.product_id IN (" . implode(',',$aProductId) . ')'
+		;
+		
+		$limit = $_SESSION['aPrefs']['resPerPage'];
+		$pagerOptions = array(
+			'mode'      => 'Sliding',
+			'delta'     => 8,
+			'perPage'   => 1000,
+			
+			);
+		$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+		if (PEAR::isError($aPagedData)) {
+			return false;
+		}
+		$output->aPagedData = $aPagedData;
+		$output->totalItems = $aPagedData['totalItems'];
+		
+		if (is_array($aPagedData['data']) && count($aPagedData['data'])) {
+			$output->pager = ($aPagedData['totalItems'] <= $limit) ? false : true;
+		}
+		
+		$currency = DB_DataObject::factory($this->conf['table']['currency']);
+		$currency->find();
+		
+		$aCur = array();
+		while ($currency->fetch())
+		{
+			$aCur[$currency->currency_id] = $currency->code;
+		}
+    	
+		//echo '<pre>'; print_r($aPagedData); echo '</pre>';die;
+    	
+    	$output->pageTitle 		= $this->pageTitle . ' :: Reorder';
+    	$output->template  		= 'productSearch.html';
+    	$output->catId			= $input->categoryId;
+    	$output->searchFields 	= $searchFields;
+    	$output->products 		= $productcs;
+    	$output->minPrice 		= $productcs['0']->minPrice;
+    	$output->maxPrice 		= $productcs['0']->maxPrice;
+    	$output->aCur 			= $aCur;
     	
     }
     

@@ -3,23 +3,54 @@ $(document).ready(function() {
 	$("#form-group").validationEngine();
 	$(".chosen").chosen();
 	
+	$('#searchCur').change(function()
+	{
+		searchPrice()
+	});
 	
-	$('#proSearchList').find("select").multiselect({
+	$('.jslider-pointer').click(function()
+	{
+		searchPrice()
+	});
+
+	function searchPrice()
+	{
+		var prices		= $('#Price').val();
+		var currency	= $('#searchCur').val();
+		var ajaxurl  	= makeUrl({module: "product", action: "search", frmPrices:prices, frmCur:currency});
+		
+		$.ajax({
+			url: ajaxurl,
+			cache: false,
+            type: 'POST',
+			success: function(data){
+				//console.log(data);
+				$("#searchResult").html(data);
+			},
+			error: function(){
+				console.log('Error');
+			}
+		});
+	}
+	
+	$('.multiple').multiselect({
 		selectedList: 5
 	});
 	
 	
-	$('#proSearchList').find("select").change(function(){
+	$('.multiple').change(function(){
 		var aSelected = new Array();
-		$('#proSearchList').find("select").each(function(){
+		$('.multiple').each(function(){
 			aThisSelect = $(this).val();
 			aSelected.push.apply(aSelected, aThisSelect);
 		});
+		
+		var catId = $('#catId').val();
 
 		if (aSelected.length != 0)
 			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected});
 		else
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:"36"});
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId});
 		
 		$.ajax({
 			url: ajaxurl,

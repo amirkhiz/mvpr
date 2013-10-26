@@ -1,46 +1,85 @@
-<div class="panel panel-info" style="margin: 10px;">
+<div class="panel panel-info searchBox" style="margin: 10px;">
 	{msgGet()}
 	<div class="container">
-		<div class="row">
-			<div class="col-lg-12">
-				<form name="frmProductMgr" method="post" flexy:ignore id="proSearchList">
-				    
-					{foreach:searchFields,key,value}
-		
-						<div class="form-group">
-							<label class="col-lg-4 control-label">{value[title]}: </label>
-							<div class="col-lg-7">
-								<select class="form-control" name="product[prop][{key}][]" id="pOptMulti{key}" multiple="multiple">
-					                {generateSelect(value[ops]):h}
-					            </select>
-							</div>
-						</div>
-						
-					{end:}
-					
-					<table class="table table-bordered">
-				    	<thead>
-					        <tr>
-					            <th>{translate(#ID#)}</th>
-								<th>{translate(#Title#)}</th>
-								<th>{translate(#Model#)}</th>
-								<th>{translate(#Price#)}</th>
-								<th>{translate(#Quantity#)}</th>
-					        </tr>
-						</thead>
-						<tbody id="searchResult">
-					        <tr flexy:foreach="products,key,aValue">
-					            <td nowrap>{aValue.product_id}</td>
-								<td nowrap>{aValue.title}</td>
-								<td nowrap>{aValue.model}</td>
-								<td nowrap>{aValue.price}</td>
-								<td nowrap>{aValue.quantity}</td>
-					        </tr>
-						</tbody>
-				    </table>
-		
-				</form>
+		<form name="frmProductMgr" method="post" class="form-horizental" flexy:ignore id="proSearchList">
+			<input type="hidden" name="catId" id="catId" value="{catId}"/>
+			<input type="hidden" name="minPrice" id="minPrice" value="{minPrice}"/>
+			<input type="hidden" name="maxPrice" id="maxPrice" value="{maxPrice}"/>
+			<div class="searchLogo">
+				<span class="glyphicon glyphicon-search"></span> {translate(#Filter Search#)}
 			</div>
-		</div>
+			<div class="priceBox">
+				<div class="col-lg-7 priceSlider">
+					<div class="layout-slider">
+						<input id="Price" type="slider" name="area" value="{minPrice};{maxPrice}" />
+				    </div>
+				    <script>
+						minPrice = parseInt(jQuery("#minPrice").val());
+						maxPrice = parseInt(jQuery("#maxPrice").val());
+						jQuery("#Price").slider({ from: minPrice, to: maxPrice, step: 1, dimension: '&nbsp;', skin: 'round' });
+				    </script>
+				</div>
+				<div class="col-lg-2 priceSelect">
+					<select class="form-control input-sm" name="searchCur" id="searchCur">
+		                {generateSelect(aCur,4):h}
+		            </select>
+				</div>
+		    </div>
+			<div class="clearfix"><!-- Clear And Fix --></div>
+			{foreach:searchFields,key,value}
+
+				<div class="form-group">
+					<label class="col-lg-4 control-label">{value[title]}: </label>
+					<div class="col-lg-3">
+						<select class="form-control multiple" name="product[prop][{key}][]" id="pOptMulti{key}" multiple="multiple">
+			                {generateSelect(value[ops]):h}
+			            </select>
+					</div>
+				</div>
+				
+			{end:}
+		</form>
+	</div>
+</div>
+<div class="searchResult">
+	<div class="col-lg-12">
+		<table class="table">
+	    	<thead>
+		        <tr>
+		            <th>{translate(#ID#)}</th>
+					<th>{translate(#Title#)}({totalItems}){translate(#No.#)}</th>
+					<th class="center">{translate(#Img#)}</th>
+					<th class="center"><span class="glyphicon glyphicon-magnet"></span></th>
+					<th class="center">{translate(#Price#)}</th>
+					<th class="center">{translate(#Branch#)}</th>
+					<th class="center">{translate(#Currency#)}</th>
+					<th class="center">{translate(#Tax#)}</th>
+					<th class="center">{translate(#Quantity#)}</th>
+					<th class="center">{translate(#Post#)}</th>
+					<th class="center">{translate(#Order#)}</th>
+		        </tr>
+			</thead>
+			<tbody id="searchResult">
+		        <tr flexy:foreach="aPagedData[data],key,aValue">
+		            <td nowrap>{aValue[product_id]}</td>
+					<td nowrap>{aValue[title]}</td>
+					<td class="center" nowrap>
+						<a href="{aValue[image]}">
+							<span class="glyphicon glyphicon-camera"></span>
+						</a>
+					</td>
+					<td class="center" nowrap>
+						<input type="checkbox" name="compare" value="{aValue[product_id]}"/>
+					</td>
+					<td class="center" nowrap>{aValue[price]}</td>
+					<td class="center" nowrap>{aValue[price]}</td>
+					<td class="center" nowrap>{aValue[currency_id]}</td>
+					<td class="center" nowrap>{aValue[tax]}</td>
+					<td class="center" nowrap>{aValue[quantity]}</td>
+					<td class="center" nowrap>{aValue[quantity]}</td>
+					<td class="center" nowrap><input type="text" name="orderCount"/></td>
+		        </tr>
+			</tbody>
+	    </table>
 	</div>
 </div>
