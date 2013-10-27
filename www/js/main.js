@@ -14,20 +14,43 @@ $(document).ready(function() {
 		skin: 'round',
 		callback: function( value )
 		{
-			searchPrice();
+			searchProduct();
 		}
 	});
 	
 	$('#searchCur').change(function()
 	{
-		searchPrice();
+		searchProduct();
 	});
 
-	function searchPrice()
+	$('.multiple').multiselect({
+		selectedList: 3,
+		header: false
+	});
+	
+	
+	$('.multiple').change(function()
+	{
+		searchProduct();
+	});
+	
+	function searchProduct()
 	{
 		var prices		= $('#Price').val();
 		var currency	= $('#searchCur').val();
-		var ajaxurl  	= makeUrl({module: "product", action: "search", frmPrices:prices, frmCur:currency});
+		var aSelected = new Array();
+		
+		$('.multiple').each(function(){
+			aThisSelect = $(this).val();
+			aSelected.push.apply(aSelected, aThisSelect);
+		});
+		
+		var catId = $('#catId').val();
+
+		if (aSelected.length != 0)
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency});
+		else
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency});
 		
 		$.ajax({
 			url: ajaxurl,
@@ -42,39 +65,6 @@ $(document).ready(function() {
 			}
 		});
 	}
-	
-	$('.multiple').multiselect({
-		selectedList: 5
-	});
-	
-	
-	$('.multiple').change(function(){
-		var aSelected = new Array();
-		$('.multiple').each(function(){
-			aThisSelect = $(this).val();
-			aSelected.push.apply(aSelected, aThisSelect);
-		});
-		
-		var catId = $('#catId').val();
-
-		if (aSelected.length != 0)
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected});
-		else
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId});
-		
-		$.ajax({
-			url: ajaxurl,
-			cache: false,
-            type: 'POST',
-			success: function(data){
-				//console.log(data);
-				$("#searchResult").html(data);
-			},
-			error: function(){
-				console.log('Error');
-			}
-		});
-	});
 	
 
 	var myFields=new Array("label","place","deval","help","height","width","rows","valid","mask","pattern", "checkes");
