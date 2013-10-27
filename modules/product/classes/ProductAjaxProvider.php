@@ -196,7 +196,17 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	if ($this->req->get('frmCategoryID'))
     	{
     		$categoryId = $this->req->get('frmCategoryID');
-    		$whereCondition .= " AND p.category_id = {$categoryId}";
+    		
+    		$category = DB_DataObject::factory($this->conf['table']['category']);
+    		$category->whereAdd("parent_id = " . $categoryId);
+    		$category->find();
+    		
+    		$aCat = array();
+    		while($category->fetch()){
+    			$aCat[] = $category->category_id;
+    		}
+    		
+    		$whereCondition .= " AND p.category_id IN (" . implode(',',$aCat) . ")";
     	}
     	
     	if ($this->req->get('frmPrices'))
@@ -224,6 +234,8 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	
     	$result = $this->dbh->getAll($query);
     	$result = $this->objectToArray($result);
+    	
+//     	echo '<pre>'; print_r($result); echo '</pre>';
     	
     	$output->products = $this->objectToArray($result);
     	$output->data = $this->_renderTemplate($output, 'searchView.html');

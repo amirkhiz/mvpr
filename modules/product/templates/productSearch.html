@@ -1,7 +1,7 @@
 <div class="panel panel-info searchBox" style="margin: 10px;">
 	{msgGet()}
 	<div class="container">
-		<form name="frmProductMgr" method="post" class="form-horizental" flexy:ignore id="proSearchList">
+		<form name="frmProductMgr" method="post" flexy:ignore id="proSearchList">
 			<input type="hidden" name="catId" id="catId" value="{catId}"/>
 			<input type="hidden" name="minPrice" id="minPrice" value="{minPrice}"/>
 			<input type="hidden" name="maxPrice" id="maxPrice" value="{maxPrice}"/>
@@ -23,18 +23,21 @@
 		    </div>
 			<div class="clearfix"><!-- Clear And Fix --></div>
 			{foreach:searchFields,key,value}
-
-				<div class="form-group">
-					<label class="control-label">{value[title]}: </label>
-					<div class="">
+				<div class="form-group searchOptions">
+					<label class="col-lg-12 center control-label">{value[title]}</label>
+					<div class="optSelect">
 						<select class="form-control multiple" name="product[prop][{key}][]" id="pOptMulti{key}" multiple="multiple">
 			                {generateSelect(value[ops]):h}
 			            </select>
 					</div>
 				</div>
-				
 			{end:}
+			<div class="clearfix"><!-- Clear And Fix --></div>
 		</form>
+		<div class="filtersPart">
+			<strong>{translate(#Active Filters#)} : </strong>
+			<span id="filters"></span>
+		</div>
 	</div>
 </div>
 <div class="searchResult">
