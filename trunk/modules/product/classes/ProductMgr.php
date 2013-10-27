@@ -452,8 +452,6 @@ class productMgr extends SGL_Manager
     	
     	$result = $this->dbh->getAll($query);
     	
-    	//echo '<pre>'; print_r($result); echo '</pre>';die;
-    	
     	$searchFields = array();
     	$proCounter = array();
     	$aProductId = array();
@@ -469,9 +467,10 @@ class productMgr extends SGL_Manager
 			$aProductId[$value->product_id] = $value->product_id;
 			
 		}
+		//echo '<pre>'; print_r($result); echo '</pre>';die;
 		
 		$query = "
-				SELECT pro.*, FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice
+				SELECT pro.*, FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice, cat.title AS catTitle
 				FROM 
 				(
 				     SELECT p.*, (p.price * cu.value) AS tlPrice
@@ -486,7 +485,9 @@ class productMgr extends SGL_Manager
 				     JOIN {$this->conf['table']['currency']} AS cur
 				     ON pr.currency_id = cur.currency_id
 				     WHERE pr.product_id IN (" . implode(',',$aProductId) . ")
-				) AS minmax
+				) AS minmax,
+				{$this->conf['table']['category']} AS cat
+				WHERE cat.category_id = pro.category_id
 			";
 		
 		$limit = $_SESSION['aPrefs']['resPerPage'];
@@ -500,6 +501,19 @@ class productMgr extends SGL_Manager
 		if (PEAR::isError($aPagedData)) {
 			return false;
 		}
+		
+		$brandCounter = array();
+		$aBrand = array();
+		foreach ($aPagedData['data'] as $key => $value)
+		{
+			$brandCounter[$value['category_id']]['title'] = $value['catTitle'];
+			$brandCounter[$value['category_id']]['count']++ ;
+				
+			$aBrand['10']['title'] = SGL_String::translate('Brands');
+			$aBrand['10']['ops'][$value['category_id']] = $value['catTitle'] . '(' .$brandCounter[$value['category_id']]['count'] . ')';
+		}
+		array_unshift($searchFields, $aBrand['10']);
+		
 		$output->aPagedData = $aPagedData;
 		$output->totalItems = $aPagedData['totalItems'];
 
@@ -516,7 +530,7 @@ class productMgr extends SGL_Manager
 			$aCur[$currency->currency_id] = $currency->code;
 		}
     	
-		//echo '<pre>'; print_r($aPagedData); echo '</pre>';die;
+		//echo '<pre>'; print_r($aBrand['10']); echo '</pre>';die;
     	
     	$output->pageTitle 		= $this->pageTitle . ' :: Reorder';
     	$output->template  		= 'productSearch.html';
@@ -526,6 +540,7 @@ class productMgr extends SGL_Manager
     	$output->minPrice 		= $aPagedData['data']['0']['minPrice'];
 		$output->maxPrice 		= $aPagedData['data']['0']['maxPrice'];
     	$output->aCur 			= $aCur;
+    	$output->aBrand			= $aBrand['10'];
     	
     }
     
@@ -578,7 +593,7 @@ class productMgr extends SGL_Manager
     		$aOptList[$value->cmId]['value'][$value->cmdId] = $value->cmdTitle;
     	}
     	
-    	//echo '<pre>'; print_r($product); echo '</pre>';die;
+    	//echo '<pre>'; print_r($aOptList); echo '</pre>';die;
     	
     	$output->product = $product['0'];
     	$output->pOptions = $aOptList;

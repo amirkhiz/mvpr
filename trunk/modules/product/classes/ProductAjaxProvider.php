@@ -193,6 +193,12 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
 	    	$whereCondition .= " AND ca.content_type_mapping_data_id IN (" . implode(',',$cAddition) . ')' ;
     	}
     	
+    	if ($this->req->get('frmBrands'))
+    	{
+    		$aBrands = explode(',', $this->req->get('frmBrands'));
+    		$whereCondition .= " AND p.category_id IN (" . implode(',',$aBrands) . ')' ;
+    	}
+    	
     	if ($this->req->get('frmCategoryID'))
     	{
     		$categoryId = $this->req->get('frmCategoryID');
