@@ -570,3 +570,9 @@ div.block {
 .center {
 	text-align: center;
 }	
+
+/* Product View Start*/
+.pView {
+	padding: 20px 10px;
+}
+/* Product View End*/
