@@ -539,26 +539,32 @@ class productMgr extends SGL_Manager
     	$productId = $input->productId;
     	
     	$query = "
-		    	SELECT p.*, c1.category_id AS `brandId`, c2.category_id AS `optionId`, c3.category_id AS `groupId`, c4.category_id AS `categoryId`, cmd.content_type_mapping_data_id AS cmdId, cm.content_type_mapping_id AS cmId, c.content_type_id AS cId, ca.content_addition_id AS caId,
-		    	c1.title AS `brand`, c2.title AS `option`, c3.title AS `group`, c4.title AS `category`, cmd.title AS cmdTitle, cm.title AS cmTitle, c.type_name AS cTitle
-		    	FROM {$this->conf['table']['product']} AS p
-		    	JOIN {$this->conf['table']['content_addition']} AS ca
-		    	ON ca.product_id = p.product_id
-		    	JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
-		    	ON cmd.content_type_mapping_data_id = ca.content_type_mapping_data_id
-		    	JOIN {$this->conf['table']['content_type_mapping']} AS cm
-		    	ON cm.content_type_mapping_id = cmd.content_type_mapping_id
-		    	JOIN {$this->conf['table']['content_type']} AS c
-		    	ON c.content_type_id = cm.content_type_id
-		    	JOIN {$this->conf['table']['category']} AS c1
-		    	ON c1.category_id = p.category_id
-		    	JOIN {$this->conf['table']['category']} AS c2
-		    	ON c2.category_id = c1.parent_id
-		    	JOIN {$this->conf['table']['category']} AS c3
-		    	ON c3.category_id = c2.parent_id
-		    	JOIN {$this->conf['table']['category']} AS c4
-		    	ON c4.category_id = c3.parent_id
-		    	WHERE p.product_id = {$productId}
+    			SELECT pro.*, cur.code AS curCode, cur.title AS curTitle, cur.symbol_left AS curLeft, cur.symbol_right AS curRight
+    			FROM
+    			(
+			    	SELECT p.*, c1.category_id AS `brandId`, c2.category_id AS `optionId`, c3.category_id AS `groupId`, c4.category_id AS `categoryId`, cmd.content_type_mapping_data_id AS cmdId, cm.content_type_mapping_id AS cmId, c.content_type_id AS cId, ca.content_addition_id AS caId,
+			    	c1.title AS `brand`, c2.title AS `option`, c3.title AS `group`, c4.title AS `category`, cmd.title AS cmdTitle, cm.title AS cmTitle, c.type_name AS cTitle
+			    	FROM {$this->conf['table']['product']} AS p
+			    	JOIN {$this->conf['table']['content_addition']} AS ca
+			    	ON ca.product_id = p.product_id
+			    	JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
+			    	ON cmd.content_type_mapping_data_id = ca.content_type_mapping_data_id
+			    	JOIN {$this->conf['table']['content_type_mapping']} AS cm
+			    	ON cm.content_type_mapping_id = cmd.content_type_mapping_id
+			    	JOIN {$this->conf['table']['content_type']} AS c
+			    	ON c.content_type_id = cm.content_type_id
+			    	JOIN {$this->conf['table']['category']} AS c1
+			    	ON c1.category_id = p.category_id
+			    	JOIN {$this->conf['table']['category']} AS c2
+			    	ON c2.category_id = c1.parent_id
+			    	JOIN {$this->conf['table']['category']} AS c3
+			    	ON c3.category_id = c2.parent_id
+			    	JOIN {$this->conf['table']['category']} AS c4
+			    	ON c4.category_id = c3.parent_id
+			    	WHERE p.product_id = {$productId}
+    			) AS pro
+    			JOIN {$this->conf['table']['currency']} AS cur
+    			ON cur.currency_id = pro.currency_id
 	    	";
     	
     	$product =  $this->dbh->getAll($query);
@@ -572,9 +578,10 @@ class productMgr extends SGL_Manager
     		$aOptList[$value->cmId]['value'][$value->cmdId] = $value->cmdTitle;
     	}
     	
-    	echo '<pre>'; print_r($aOptList); echo '</pre>';die;
+    	//echo '<pre>'; print_r($product); echo '</pre>';die;
     	
-    	$output->product = $product;
+    	$output->product = $product['0'];
+    	$output->pOptions = $aOptList;
     }
     
     function _cmd_reorder(&$input, &$output)
