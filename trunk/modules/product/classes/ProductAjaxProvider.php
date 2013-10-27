@@ -183,52 +183,50 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
-    	$searchCondition = '';
-    	$join = '';
+    	$whereCondition = '';
+    	$havingCondition = '';
     	$fields = '';
     	
     	if ($this->req->get('frmCAddition'))
     	{
     		$cAddition = explode(',', $this->req->get('frmCAddition'));
-	    	$searchCondition = " AND ca.content_type_mapping_data_id IN (" . implode(',',$cAddition) . ')' ;
+	    	$whereCondition .= " AND ca.content_type_mapping_data_id IN (" . implode(',',$cAddition) . ')' ;
     	}
+    	
     	if ($this->req->get('frmCategoryID'))
     	{
     		$categoryId = $this->req->get('frmCategoryID');
-    		$searchCondition = " AND p.category_id = {$categoryId}";
+    		$whereCondition .= " AND p.category_id = {$categoryId}";
     	}
+    	
     	if ($this->req->get('frmPrices'))
     	{
     		$aPrices = explode(';', $this->req->get('frmPrices'));
     		$minPrice = $aPrices['0'];
     		$maxPrice = $aPrices['1'];
     		$cur = $this->req->get('frmCur');
-    		$fields = ", cur.currency_id AS curId, cur.title AS curTitle, cur.value AS curValue, cur.code AS curCode";
-    		$join = " 
-    				JOIN {$this->conf['table']['currency']} AS cur
-    				ON cur.currency_id = p.currency_id 
-    			";
-    		$searchCondition = " AND (p.price BETWEEN {$minPrice} AND {$maxPrice})";
+    		$havingCondition .= " AND (tlPrice BETWEEN {$minPrice} AND {$maxPrice})";
     	}
     	
     	$query = "
-		    	SELECT p.* {$fields}
-		    	FROM {$this->conf['table']['content_addition']} as ca
-		    	JOIN {$this->conf['table']['product']} as p
-		    	ON p.product_id = ca.product_id
-		    	{$join}
-		    	WHERE p.product_id = p.product_id
-    			{$searchCondition}
-		    	GROUP BY p.product_id
-    		";
+    			SELECT p.*, FLOOR(p.price * cu.value) AS tlPrice {$fields}
+				FROM {$this->conf['table']['content_addition']} as ca
+				JOIN {$this->conf['table']['product']} AS p
+				ON p.product_id = ca.product_id
+				JOIN {$this->conf['table']['currency']} AS cu 
+				ON p.currency_id = cu.currency_id
+				WHERE 1
+				{$whereCondition}
+				GROUP BY p.product_id
+				HAVING 1
+				{$havingCondition}
+			";
     	
     	$result = $this->dbh->getAll($query);
     	$result = $this->objectToArray($result);
     	
     	$output->products = $this->objectToArray($result);
     	$output->data = $this->_renderTemplate($output, 'searchView.html');
-    	
-    	//echo '<pre>' ;print_r($result); echo '</pre>';
     }
     
     function objectToArray( $data )
