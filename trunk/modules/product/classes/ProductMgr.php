@@ -68,6 +68,7 @@ class productMgr extends SGL_Manager
             'delete'        => array('delete', 'redirectToDefault'),
             'list'          => array('list'),
         	'search'        => array('search'),
+        	'view'       	=> array('view'),
         );
         
     }
@@ -296,8 +297,8 @@ class productMgr extends SGL_Manager
 		$aOptList = array();
 		foreach ($cmData as $key => $value)
 		{
-		$aOptList[$value->cmId]['title'] = $value->cmTitle;
-		$aOptList[$value->cmId]['ops'][$value->cmdID] = $value->cmdTitle;
+			$aOptList[$value->cmId]['title'] = $value->cmTitle;
+			$aOptList[$value->cmId]['ops'][$value->cmdID] = $value->cmdTitle;
 		}
 		//echo '<pre>'; print_r($aOptions); echo '</pre>';
 		
@@ -308,38 +309,6 @@ class productMgr extends SGL_Manager
 		$output->aCats 		= $aCats;
 		$output->aOpts 		= $aOpts;
 		$output->product 	= $product;
-		
-    	/* 
-    	 	SELECT c1.category_id AS `brandId`, c2.category_id AS `optionId`, c3.category_id AS `groupId`, c4.category_id AS `categoryId`, cmd.content_type_mapping_data_id AS cmdId, cm.content_type_mapping_id AS cmId,
-			c1.title AS `brand`, c2.title AS `option`, c3.title AS `group`, c4.title AS `category`, cmd.title AS cmdTitle, cm.title AS cmTitle
-			FROM product AS p
-			JOIN content_addition AS ca
-			ON ca.product_id = p.product_id
-			JOIN content_type_mapping_data AS cmd
-			ON cmd.content_type_mapping_data_id = ca.content_type_mapping_data_id
-			JOIN content_type_mapping AS cm
-			ON cm.content_type_mapping_id = cmd.content_type_mapping_id
-			JOIN category AS c1
-			ON c1.category_id = p.category_id
-			JOIN category AS c2
-			ON c2.category_id = c1.parent_id
-			JOIN category AS c3 
-			ON c3.category_id = c2.parent_id
-			JOIN category AS c4 
-			ON c4.category_id = c3.parent_id
-			WHERE p.product_id = 5
-    	 */
-    	 /* 
-    	 	SELECT c1.title AS Name, c2.title AS Parent, c3.title AS Grand, c4.title AS `Grand Grand`
-			FROM category AS c1
-			JOIN category AS c2
-			ON c2.category_id = c1.parent_id
-			JOIN category AS c3 
-			ON c3.category_id = c2.parent_id
-			JOIN category AS c4 
-			ON c4.category_id = c3.parent_id
-
-		 */
     }
     
     function _cmd_update(&$input, &$output)
@@ -468,18 +437,6 @@ class productMgr extends SGL_Manager
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
-    	/*
-    	 	SELECT c.content_type_id AS cId, c.type_name AS cTitle, cm.content_type_mapping_id AS cmId, cm.title AS cmTitle, cmd.content_type_mapping_data_id AS cmdId, cmd.title AS cmdTitle, ca.*
-			FROM `content_type` AS c
-			JOIN `content_type_mapping` AS cm
-			ON cm.content_type_id = c.content_type_id
-			JOIN `content_type_mapping_data` AS cmd
-			ON cmd.content_type_mapping_id = cm.content_type_mapping_id
-			JOIN `content_addition` AS ca
-			ON ca.content_type_mapping_data_id = cmd.content_type_mapping_data_id
-			WHERE c.category_id = 36
-    	 */
-    	
     	$query = "
     			SELECT c.content_type_id AS cId, c.type_name AS cTitle, cm.content_type_mapping_id AS cmId, cm.title AS cmTitle, 
     			cmd.content_type_mapping_data_id AS cmdId, cmd.title AS cmdTitle, ca.*
@@ -513,31 +470,8 @@ class productMgr extends SGL_Manager
 			
 		}
 		
-		/*
-		 * 
-		SELECT *
-		FROM {$this->conf['table']['product']} AS p
-		JOIN(
-				SELECT MIN(pr.price) AS minPrice, MAX(pr.price) AS maxPrice, cur.value, (pr.price * cur.value) AS curPrice, cur.currency_id as curId
-				FROM {$this->conf['table']['product']} AS pr
-				JOIN {$this->conf['table']['currency']} AS cur
-				ON cur.currency_id = pr.currency_id
-				WHERE pr.product_id IN (" . implode(',',$aProductId) . ')' ."
-		) AS minmax
-		ON minmax.curId = p.currency_id
-		WHERE p.product_id IN (" . implode(',',$aProductId) . ')'
-			
-		====================
-		SELECT p.*, (p.price * c.value) AS pprice, c.value
-		FROM {$this->conf['table']['product']} AS p
-		JOIN {$this->conf['table']['currency']} AS c
-		ON c.currency_id = p.currency_id
-		WHERE p.product_id IN (" . implode(',',$aProductId) . ')'
-		* */
-    	
-		
 		$query = "
-				SELECT *
+				SELECT pro.*, FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice
 				FROM 
 				(
 				     SELECT p.*, (p.price * cu.value) AS tlPrice
@@ -593,6 +527,54 @@ class productMgr extends SGL_Manager
 		$output->maxPrice 		= $aPagedData['data']['0']['maxPrice'];
     	$output->aCur 			= $aCur;
     	
+    }
+    
+    function _cmd_view(&$input, &$output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	
+    	$output->pageTitle = $this->pageTitle . ' :: View';
+    	$output->template  = 'productView.html';
+    	
+    	$productId = $input->productId;
+    	
+    	$query = "
+		    	SELECT p.*, c1.category_id AS `brandId`, c2.category_id AS `optionId`, c3.category_id AS `groupId`, c4.category_id AS `categoryId`, cmd.content_type_mapping_data_id AS cmdId, cm.content_type_mapping_id AS cmId, c.content_type_id AS cId, ca.content_addition_id AS caId,
+		    	c1.title AS `brand`, c2.title AS `option`, c3.title AS `group`, c4.title AS `category`, cmd.title AS cmdTitle, cm.title AS cmTitle, c.type_name AS cTitle
+		    	FROM {$this->conf['table']['product']} AS p
+		    	JOIN {$this->conf['table']['content_addition']} AS ca
+		    	ON ca.product_id = p.product_id
+		    	JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
+		    	ON cmd.content_type_mapping_data_id = ca.content_type_mapping_data_id
+		    	JOIN {$this->conf['table']['content_type_mapping']} AS cm
+		    	ON cm.content_type_mapping_id = cmd.content_type_mapping_id
+		    	JOIN {$this->conf['table']['content_type']} AS c
+		    	ON c.content_type_id = cm.content_type_id
+		    	JOIN {$this->conf['table']['category']} AS c1
+		    	ON c1.category_id = p.category_id
+		    	JOIN {$this->conf['table']['category']} AS c2
+		    	ON c2.category_id = c1.parent_id
+		    	JOIN {$this->conf['table']['category']} AS c3
+		    	ON c3.category_id = c2.parent_id
+		    	JOIN {$this->conf['table']['category']} AS c4
+		    	ON c4.category_id = c3.parent_id
+		    	WHERE p.product_id = {$productId}
+	    	";
+    	
+    	$product =  $this->dbh->getAll($query);
+    	
+    	$optionId = $product['0']->optionId;
+    	
+    	$aOptList = array();
+    	foreach ($product as $key => $value)
+    	{
+    		$aOptList[$value->cmId]['title'] = $value->cmTitle;
+    		$aOptList[$value->cmId]['value'][$value->cmdId] = $value->cmdTitle;
+    	}
+    	
+    	echo '<pre>'; print_r($aOptList); echo '</pre>';die;
+    	
+    	$output->product = $product;
     }
     
     function _cmd_reorder(&$input, &$output)

@@ -546,6 +546,26 @@ div.block {
 			opacity: 0.7;
 		}
 
+	.searchBox .searchOptions {
+		float: left;
+		width: 180px;
+		margin-left: 5px;
+	}
+		.searchBox .searchOptions * {
+			float: none;
+		}
+		.searchBox .searchOptions .optSelect .ui-multiselect {
+			width: 180px !important;
+		}
+	
+	.searchBox .filtersPart {
+		border-top: 2px dotted #F86D18;
+		height: 30px;
+		padding: 12px;
+	}
+		.searchBox .filtersPart strong {
+			color: #F86D18;
+		}
 /* Search Box End*/
 .center {
 	text-align: center;
