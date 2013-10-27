@@ -536,16 +536,24 @@ class productMgr extends SGL_Manager
 		* */
     	
 		
-		$query = "  
-			SELECT *
-			FROM {$this->conf['table']['product']} AS p,
-			(
-				SELECT MIN(price) AS minPrice, MAX(price) AS maxPrice
-				FROM {$this->conf['table']['product']}
-				WHERE product_id IN (" . implode(',',$aProductId) . ')' ."
-			) AS minmax
-			WHERE p.product_id IN (" . implode(',',$aProductId) . ')'
-		;
+		$query = "
+				SELECT *
+				FROM 
+				(
+				     SELECT p.*, (p.price * cu.value) AS tlPrice
+				     FROM {$this->conf['table']['product']} AS p
+				     JOIN {$this->conf['table']['currency']} AS cu 
+				     ON p.currency_id = cu.currency_id
+				     WHERE p.product_id IN (" . implode(',',$aProductId) . ") 
+				) AS pro,
+				(
+				     SELECT MIN(pr.price * cur.value) AS minPrice, MAX(pr.price * cur.value) AS maxPrice
+				     FROM {$this->conf['table']['product']} AS pr
+				     JOIN {$this->conf['table']['currency']} AS cur
+				     ON pr.currency_id = cur.currency_id
+				     WHERE pr.product_id IN (" . implode(',',$aProductId) . ")
+				) AS minmax
+			";
 		
 		$limit = $_SESSION['aPrefs']['resPerPage'];
 		$pagerOptions = array(
