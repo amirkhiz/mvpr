@@ -35,7 +35,7 @@ pre { /* blockquote */
 /* Headings */
 h1 {
     margin-bottom: 1em;
-    border-bottom: 1px solid #666;
+    background: url("<?php echo $baseUrl ?>/images/bg/dots.gif") repeat-x center bottom;
     padding-bottom: 0.3em;
     font-size: 1.3em;
     font-weight: bold;
