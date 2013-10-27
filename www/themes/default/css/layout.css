@@ -20,6 +20,7 @@
 <?php include('jslider.round.plastic.css'); ?>
 <?php include('bootstrap.css'); ?>
 <?php include('nav.css'); ?>
+<?php include('skin-orange.css'); ?>
 
 html { /* inforces screen to show scrollbar */
     height: 100%;
@@ -575,4 +576,43 @@ div.block {
 .pView {
 	padding: 20px 10px;
 }
+
+.pDetail p b {
+	line-height: 25px;
+}
+
+.pOptions {
+	list-style: none;
+}
+	.pOptions li {
+		line-height: 25px;
+	}
+
+.productBuyBtn {
+	color: #fff;
+}
 /* Product View End*/
+
+/* Button Orange CSS*/
+.btn,.btn:hover {
+	-webkit-transition:all 0.5s ease-in-out;
+	-moz-transition:all 0.5s ease-in-out;
+	-o-transition:all 0.5s ease-in-out;
+	-ms-transition:all 0.5s ease-in-out;
+	transition:all 0.5s ease-in-out;
+	color: #fff !important;
+}
+.btn-primary {
+	color: #ffffff;
+	border-color: #0044cc #0044cc #002a80;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	*background-color: #0044cc;
+	/* Darken IE7 buttons by default so they stand out more given they won't have borders */
+	
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-primary:hover {
+	background-color: #444;
+}
+
+/* Button Orange CSS END*/
