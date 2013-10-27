@@ -3,12 +3,22 @@ $(document).ready(function() {
 	$("#form-group").validationEngine();
 	$(".chosen").chosen();
 	
-	$('#searchCur').change(function()
-	{
-		searchPrice()
+	minPrice = parseInt(jQuery("#minPrice").val());
+	maxPrice = parseInt(jQuery("#maxPrice").val());
+	
+	$("#Price").slider({ 
+		from: minPrice, 
+		to: maxPrice, 
+		step: 1, 
+		dimension: '&nbsp;', 
+		skin: 'round',
+		callback: function( value )
+		{
+			searchPrice();
+		}
 	});
 	
-	$('.jslider-pointer').click(function()
+	$('#searchCur').change(function()
 	{
 		searchPrice();
 	});
