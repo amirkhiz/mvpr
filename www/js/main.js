@@ -22,9 +22,9 @@ $(document).ready(function() {
 	{
 		searchProduct();
 	});
-
+	
 	$('.multiple').multiselect({
-		selectedList: 3,
+		selectedList: 2,
 		header: false
 	});
 	
@@ -38,19 +38,34 @@ $(document).ready(function() {
 	{
 		var prices		= $('#Price').val();
 		var currency	= $('#searchCur').val();
-		var aSelected = new Array();
+		var aSelected 	= new Array();
+		var aBrand		= new Array();
+		var filter		= '';
 		
 		$('.multiple').each(function(){
-			aThisSelect = $(this).val();
-			aSelected.push.apply(aSelected, aThisSelect);
+			if ($(this).attr('fieldId') == '0'){
+				aThisSelect = $(this).val();
+				aBrand.push.apply(aBrand, aThisSelect);
+			}
+			else{
+				aThisSelect = $(this).val();
+				aSelected.push.apply(aSelected, aThisSelect);
+			}
+			if ($(this).val()){
+				filter += '<b>' + $(this).attr('selTitle') + '</b>: ';
+				filter += '<i>' + $(this).children("option:selected").text() + '</i>,  ';
+			}
 		});
+		
+		console.log(filter);
+		$("#filters").html(filter);
 		
 		var catId = $('#catId').val();
 
 		if (aSelected.length != 0)
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency});
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency, frmBrands:aBrand});
 		else
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency});
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency, frmBrands:aBrand});
 		
 		$.ajax({
 			url: ajaxurl,
