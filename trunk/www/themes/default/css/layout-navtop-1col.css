@@ -24,3 +24,38 @@ div#local {
 div#nav-main {
     width: 1000px;
 }
+
+div.searchBtn{
+	float: left; 
+	height: 50px;
+	cursor: pointer;
+}
+div.searchBtnInner{
+	float: left; 
+	padding-top: 5px; 
+	text-align: center; 
+	background-color: #f86d18; 
+	color: #FFFFFF; 
+	font-weight: bold; 
+	font-size: 15px; 
+	padding: 16px 10px 1px ;
+	height: 50px;	
+} 
+div#searchBtnDiv {
+	display: none;
+	position: absolute;
+	width: 1000px;
+	background-color: #444444;
+	margin-left: 0px;
+	-webkit-border-radius: 3px;
+	-webkit-border-top-left-radius: 0;
+	-moz-border-radius: 3px;
+	-moz-border-radius-topleft: 0;
+	border-radius: 3px;
+	border-top-left-radius: 0;
+	z-index: 100;
+	box-shadow: 2px 2px 5px #888888;
+	top: 252px;
+	color: #f0f0f0;
+	padding: 5px;
+}
