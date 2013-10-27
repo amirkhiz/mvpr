@@ -19,6 +19,7 @@
 <?php include('jslider.round.css'); ?>
 <?php include('jslider.round.plastic.css'); ?>
 <?php include('bootstrap.css'); ?>
+<?php include('nav.css'); ?>
 
 html { /* inforces screen to show scrollbar */
     height: 100%;
