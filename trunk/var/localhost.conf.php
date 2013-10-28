@@ -171,6 +171,7 @@ $conf['table']['content_type_mapping'] = 'content_type_mapping';
 $conf['table']['content_type_mapping_data'] = 'content_type_mapping_data';
 $conf['table']['content_addition'] = 'content_addition';
 $conf['table']['product'] = 'product';
+$conf['table']['product_image'] = 'product_image';
 $conf['table']['category'] = 'category';
 $conf['table']['currency'] = 'currency';
 $conf['table']['item_category'] = 'item_category';

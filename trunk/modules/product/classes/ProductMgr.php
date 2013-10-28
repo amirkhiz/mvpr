@@ -39,6 +39,8 @@
 // $Id: productMgr.php,v 1.26 2005/06/12 17:57:57 demian Exp $
 
 require_once 'DB/DataObject.php';
+include_once SGL_MOD_DIR  . '/product/classes/ProductImage.php';
+include_once SGL_CORE_DIR . '/Image.php';
 
 /**
  * Allow users to see products.
@@ -158,7 +160,7 @@ class productMgr extends SGL_Manager
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
     	$usrId = SGL_Session::getUid();
-    
+    	
     	SGL_DB::setConnection();
     	//  get new order number
     	$product = DB_DataObject::factory($this->conf['table']['product']);
@@ -175,8 +177,15 @@ class productMgr extends SGL_Manager
     	$product->usr_id 		= $usrId;
     	$product->last_updated 	= $product->date_created = SGL_Date::getTime(true);
     	$product->status	 	= 1;
-    	$product->order_id 	= $maxItemOrder + 1;
+    	$product->order_id 		= $maxItemOrder + 1;
     
+    	//insert images
+    	$proImage = new ProductImage();
+    	$result = $proImage->create($input->product->images, $productId);
+    	$proImgIds = implode(',', $result);
+    	
+    	$product->product_image_id = $proImgIds;
+    	
     	$success = $product->insert();
     	
     	//  insert options in content_addition table
@@ -200,6 +209,8 @@ class productMgr extends SGL_Manager
     		SGL::raiseError('There was a problem inserting the record',
     				SGL_ERROR_NOAFFECTEDROWS);
     	}
+    	
+    	echo '<pre>'; print_r($input->product); echo '</pre>';die;
     }
     
     function _cmd_edit(&$input, &$output)
