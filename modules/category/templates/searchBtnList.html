@@ -2,7 +2,15 @@
 <script type="text/javascript" src="{webRoot}/js/jquery/plugins/scroll/jquery.slimscroll.js"></script>
 <ul class="catUl">
 	{foreach:aPagedData[data],key,value}
-		<li><span cat-id="{value[category_id]}">{value[title]}</span></li>
+		<li>
+			<span cat-id="{value[category_id]}">
+			{if:isBrand}
+				<a href="{makeUrl(#search#,#product#,#product#,aPagedData[data],#frmCategoryID|category_id#,key)}">{value[title]}</a>
+			{else:}
+				{value[title]}
+			{end:}
+			</span>
+		</li>
 	{end:}
 </ul>
 
