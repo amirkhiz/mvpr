@@ -14,7 +14,7 @@ class DataObjects_Product_image extends DB_DataObject
     public $product_id;                      // int(11)  not_null
     public $title;                           // string(255)  not_null
     public $url;                             // blob(65535)  not_null blob
-    public $description;                     // int(11)  not_null
+    public $description;                     // blob(65535)  not_null blob
     public $order_id;                        // int(11)  not_null
 
     /* Static get */
