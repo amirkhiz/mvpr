@@ -60,6 +60,52 @@ class CategoryAjaxProvider extends SGL_AjaxProvider2
         return true;
     }
     
+	function searchBtnList($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	$this->responseFormat = SGL_RESPONSEFORMAT_HTML;
+    	
+    	$categoryId = $this->req->get('categoryId');
+    	
+    	$output->catLevelId = $this->dbh->getOne("select level_id from {$this->conf['table']['category']} where category_id = '$categoryId'");
+    	
+    	if($categoryId != 0){
+	    	$catRow = $this->dbh->getAll("select parent_id, level_id from {$this->conf['table']['category']} where parent_id = '$categoryId'");
+	    	$parentId = $catRow[0]->parent_id;
+    	}else{
+    		$parentId = 0;
+    	}
+    	$parentLevelId = $catRow[0]->level_id;
+    	
+    	$query = " SELECT 
+    					*
+    				FROM {$this->conf['table']['category']}
+    				where 
+    					parent_id = '$parentId' 
+    				order by order_id
+    				";
+        $limit = $_SESSION['aPrefs']['resPerPage'];
+            
+        $pagerOptions = array(
+                'mode'      => 'Sliding',
+                'delta'     => 8,
+                'perPage'   => 10, 
+
+            );
+            $aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+            if (PEAR::isError($aPagedData)) {
+                return false;
+            }
+            $output->aPagedData = $aPagedData;
+            //echo "<pre>"; print_r($aPagedData); echo "</pre>";
+            $output->totalItems = $aPagedData['totalItems'];
+	        $output->parentLevelId = $parentLevelId;
+	        $output->levelId = $aPagedData['data'][0]['level_id'];
+	        $output->query = $query; 
+	   		$output->data = $this->_renderTemplate($output, 'searchBtnList.html');
+	   		
+    }
+    
     function serachCategoryList($input, $output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
@@ -106,7 +152,6 @@ class CategoryAjaxProvider extends SGL_AjaxProvider2
     	}
         
    		$output->data = $this->_renderTemplate($output, 'admin_categoryList.html');
-   		
     }
 
     function getTest($input, $output)

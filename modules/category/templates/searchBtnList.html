@@ -1,0 +1,33 @@
+{levelId}~~||~~
+<script type="text/javascript" src="{webRoot}/js/jquery/plugins/scroll/jquery.slimscroll.js"></script>
+<ul class="catUl">
+	{foreach:aPagedData[data],key,value}
+		<li><span cat-id="{value[category_id]}">{value[title]}</span></li>
+	{end:}
+</ul>
+
+<script>
+	$(document).ready(function() {
+		$('.catUl').slimscroll({
+		  width: '230px',
+		  height: '300px'
+		});
+	});
+</script>
+<style>
+ul.catUl > li{
+	list-style: none;
+}
+ul.catUl > li > span{
+	display: block;
+	border-bottom: 1px solid #666;
+	color: #f0f0f0;	
+	padding: 2px;
+	cursor: pointer;
+}
+
+ul.catUl > li > span:hover{
+	background-color: #222222;
+}
+</style>
+~~||~~{catLevelId}~~||~~{parentLevelId}

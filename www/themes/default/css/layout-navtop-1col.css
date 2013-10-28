@@ -25,7 +25,7 @@ div#nav-main {
     width: 1000px;
 }
 
-div.searchBtn{
+div#searchBtn{
 	float: left; 
 	height: 50px;
 	cursor: pointer;
@@ -58,4 +58,37 @@ div#searchBtnDiv {
 	top: 252px;
 	color: #f0f0f0;
 	padding: 5px;
+	height: 1px;
+	width: 1px;
 }
+
+div#btn-inner{
+	display: none;
+	min-height: 300px;
+}
+
+div#btn-inner .cat-lists {
+	float: left;
+	width: 240px;
+	padding: 10px;
+	border-right: 1px solid #666666;
+	height: 290px;
+}
+/*
+div#btn-inner .cat-lists ul li {
+	display: list-item;
+	text-align: -webkit-match-parent;
+}
+
+div#btn-inner .cat-lists ul li.sliding-element a{
+	display: block;
+	width: 150px;
+	padding: 5px 18px;
+	margin: 0;
+	margin-bottom: 5px;
+	color: #999;
+	background:#222 url(tab_bg.jpg) repeat-y;
+	border: 1px solid #1a1a1a;
+	text-decoration: none;
+}
+*/
