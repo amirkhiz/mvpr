@@ -3,6 +3,18 @@ $(document).ready(function() {
 	$("#form-group").validationEngine();
 	$(".chosen").chosen();
 	
+	$("#addImg").click(function(){
+		var imgTag = '<div class="form-group">';
+		imgTag += $("#imgHtml").html();
+		imgTag += '<div class="col-lg-1"><a type="button" class="btn btn-danger removeImg"><span class="glyphicon glyphicon-remove"></span></a></div></div>'
+		imgTag = $(imgTag).hide().fadeIn(1000);
+		$("#imgDiv").append(imgTag);
+	});
+	
+	$(document).on("click", ".removeImg", function(){
+		$(this).parent().parent().fadeOut(300,function(){$(this).remove()});
+	});
+	
 	minPrice = parseInt(jQuery("#minPrice").val());
 	maxPrice = parseInt(jQuery("#maxPrice").val());
 	
