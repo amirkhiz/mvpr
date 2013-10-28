@@ -151,8 +151,11 @@ class CategoryAjaxProvider extends SGL_AjaxProvider2
             //echo "<pre>"; print_r($aPagedData); echo "</pre>";
             $output->totalItems = $aPagedData['totalItems'];
 	        $output->parentLevelId = $parentLevelId;
+	        $output->isBrand = ($aPagedData['data'][0]['level_id'] == 4) ? 1 : 0;
+
 	        $output->levelId = $aPagedData['data'][0]['level_id'];
-	        $output->query = $query; 
+	        $output->query = $query;
+	         
 	   		$output->data = $this->_renderTemplate($output, 'searchBtnList.html');
 	   		
     }
