@@ -446,40 +446,6 @@ class productMgr extends SGL_Manager
     
     function _cmd_search(&$input, &$output)
     {
-    	
-    	/* 
-    	SELECT 
-		c1.category_id AS c1Id, c1.title AS c1Title,
-		c2.category_id AS c2Id, c2.title AS c2Title,
-		c3.category_id AS c3Id, c3.title AS c3Title,
-		c4.category_id AS c4Id, c4.title AS c4Title
-		FROM `category` AS c1
-		JOIN `category` AS c2
-		ON c2.category_id = c1.parent_id
-		JOIN `category` AS c3
-		ON c3.category_id = c2.parent_id
-		JOIN `category` AS c4
-		ON c4.category_id = c3.parent_id
-		WHERE c1.category_id = 36
-		=================
-		SELECT 
-		c4.category_id AS c4Id, c4.title AS c4Title,
-		c3.category_id AS c3Id, c3.title AS c3Title,
-		c2.category_id AS c2Id, c2.title AS c2Title,
-		c1.category_id AS c1Id, c1.title AS c1Title
-		FROM 
-		`category` AS c1,
-		`category` AS c2,
-		`category` AS c3,
-		`category` AS c4
-		WHERE 
-		c4.category_id = 39
-		AND c3.category_id = c4.parent_id
-		AND c2.category_id = c3.parent_id
-		AND c1.category_id = c2.parent_id
-		GROUP BY c1.category_id
-    	  */
-    	
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
     	$categoryId = $input->categoryId;
@@ -494,10 +460,10 @@ class productMgr extends SGL_Manager
     	
     	$query = "
     			SELECT 
-					c4.category_id AS ParentCatID, c4.title AS ParentCatTitle,
-					c3.category_id AS GroupCatID, c3.title AS GroupCatTitle,
-					c2.category_id AS OptionCatID, c2.title AS OptionCatTitle,
-					c1.category_id AS BrandCatID, c1.title AS BrandCatTitle
+					c4.category_id AS BrandCatID, c4.title AS BrandCatTitle,
+					c3.category_id AS OptionCatID, c3.title AS OptionCatTitle,
+					c2.category_id AS GroupCatID, c2.title AS GroupCatTitle,
+					c1.category_id AS ParentCatID, c1.title AS ParentCatTitle
 				FROM 
 					{$this->conf['table']['category']} AS c4,
 					{$this->conf['table']['category']} AS c3,
@@ -511,9 +477,20 @@ class productMgr extends SGL_Manager
     		";
     	$result = $this->dbh->getAll($query);
     	
-    	echo '<pre>';print_r($result);echo '</pre>';die;
+    	$aCats = array();
+    	$aBrands = array();
+    	foreach ($result as $key => $value)
+    	{
+    		$cats[$value->ParentCatID]['title'] = $value->ParentCatTitle;
+    		$cats[$value->ParentCatID]['groups'][$value->GroupCatID]['title'] = $value->GroupCatTitle;
+    		$cats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['title'] = $value->OptionCatTitle;
+    		$cats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['brands'][$value->BrandCatID] = $value->BrandCatTitle;
+    		
+    		$aOptions[] = $value->OptionCatID;
+    		$aBrands[] = $value->BrandCatID;
+    	}
     	
-    	$propertyRes = $this->proPropertySearch($input->categoryId);
+    	$propertyRes = $this->proPropertySearch($aOptions);
     	
     	$searchFields = array();
     	$proCounter = array();
@@ -530,7 +507,7 @@ class productMgr extends SGL_Manager
 			$aProductId[$value->product_id] = $value->product_id;
 			
 		}
-		//echo '<pre>'; print_r($result); echo '</pre>';die;
+		//echo '<pre>'; print_r($propertyRes); echo '</pre>';die;
 		
 		$query = "
 				SELECT pro.*, FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice, cat.title AS catTitle
@@ -540,14 +517,14 @@ class productMgr extends SGL_Manager
 				     FROM {$this->conf['table']['product']} AS p
 				     JOIN {$this->conf['table']['currency']} AS cu 
 				     ON p.currency_id = cu.currency_id
-				     WHERE p.product_id IN (" . implode(',',$aProductId) . ") 
+				     WHERE p.product_id IN (" . implode(',',$aProductId) . ") AND p.category_id IN (" . implode(',',$aBrands) . ")
 				) AS pro,
 				(
 				     SELECT MIN(pr.price * cur.value) AS minPrice, MAX(pr.price * cur.value) AS maxPrice
 				     FROM {$this->conf['table']['product']} AS pr
 				     JOIN {$this->conf['table']['currency']} AS cur
 				     ON pr.currency_id = cur.currency_id
-				     WHERE pr.product_id IN (" . implode(',',$aProductId) . ")
+				     WHERE pr.product_id IN (" . implode(',',$aProductId) . ") AND pr.category_id IN (" . implode(',',$aBrands) . ")
 				) AS minmax,
 				{$this->conf['table']['category']} AS cat
 				WHERE cat.category_id = pro.category_id
@@ -593,7 +570,7 @@ class productMgr extends SGL_Manager
 			$aCur[$currency->currency_id] = $currency->code;
 		}
     	
-		//echo '<pre>'; print_r($aBrand['10']); echo '</pre>';die;
+		//echo '<pre>'; print_r($aPagedData['data']); echo '</pre>';die;
     	
     	$output->pageTitle 		= $this->pageTitle . ' :: Reorder';
     	$output->template  		= 'productSearch.html';
@@ -730,7 +707,7 @@ class productMgr extends SGL_Manager
 		    	ON cmd.content_type_mapping_id = cm.content_type_mapping_id
 		    	JOIN {$this->conf['table']['content_addition']} AS ca
 		    	ON ca.content_type_mapping_data_id = cmd.content_type_mapping_data_id
-		    	WHERE c.category_id = {$categoryId}
+		    	WHERE c.category_id IN (" . implode(',', $categoryId) . ")
     		";
     	 
     	return $this->dbh->getAll($query);
