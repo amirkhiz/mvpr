@@ -210,7 +210,7 @@ class productMgr extends SGL_Manager
     				SGL_ERROR_NOAFFECTEDROWS);
     	}
     	
-    	echo '<pre>'; print_r($input->product); echo '</pre>';die;
+    	//echo '<pre>'; print_r($input->product); echo '</pre>';die;
     }
     
     function _cmd_edit(&$input, &$output)
@@ -446,27 +446,79 @@ class productMgr extends SGL_Manager
     
     function _cmd_search(&$input, &$output)
     {
+    	
+    	/* 
+    	SELECT 
+		c1.category_id AS c1Id, c1.title AS c1Title,
+		c2.category_id AS c2Id, c2.title AS c2Title,
+		c3.category_id AS c3Id, c3.title AS c3Title,
+		c4.category_id AS c4Id, c4.title AS c4Title
+		FROM `category` AS c1
+		JOIN `category` AS c2
+		ON c2.category_id = c1.parent_id
+		JOIN `category` AS c3
+		ON c3.category_id = c2.parent_id
+		JOIN `category` AS c4
+		ON c4.category_id = c3.parent_id
+		WHERE c1.category_id = 36
+		=================
+		SELECT 
+		c4.category_id AS c4Id, c4.title AS c4Title,
+		c3.category_id AS c3Id, c3.title AS c3Title,
+		c2.category_id AS c2Id, c2.title AS c2Title,
+		c1.category_id AS c1Id, c1.title AS c1Title
+		FROM 
+		`category` AS c1,
+		`category` AS c2,
+		`category` AS c3,
+		`category` AS c4
+		WHERE 
+		c4.category_id = 39
+		AND c3.category_id = c4.parent_id
+		AND c2.category_id = c3.parent_id
+		AND c1.category_id = c2.parent_id
+		GROUP BY c1.category_id
+    	  */
+    	
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
-    	$query = "
-    			SELECT c.content_type_id AS cId, c.type_name AS cTitle, cm.content_type_mapping_id AS cmId, cm.title AS cmTitle, 
-    			cmd.content_type_mapping_data_id AS cmdId, cmd.title AS cmdTitle, ca.*
-    			FROM {$this->conf['table']['content_type']} AS c
-    			JOIN {$this->conf['table']['content_type_mapping']} AS cm
-				ON cm.content_type_id = c.content_type_id
-				JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
-				ON cmd.content_type_mapping_id = cm.content_type_mapping_id
-				JOIN {$this->conf['table']['content_addition']} AS ca
-				ON ca.content_type_mapping_data_id = cmd.content_type_mapping_data_id
-				WHERE c.category_id = {$input->categoryId}
-    	";
+    	$categoryId = $input->categoryId;
     	
+    	$catLevel = $this->catLevel($categoryId);
+    	
+    	$catConId = $catLevel + 1;
+    	$catCondition = "c{$catConId}.parent_id = {$categoryId}";
+    	if ($catLevel == 4){
+    		$catCondition = "c{$catLevel}.category_id = {$categoryId}";
+    	}
+    	
+    	$query = "
+    			SELECT 
+					c4.category_id AS ParentCatID, c4.title AS ParentCatTitle,
+					c3.category_id AS GroupCatID, c3.title AS GroupCatTitle,
+					c2.category_id AS OptionCatID, c2.title AS OptionCatTitle,
+					c1.category_id AS BrandCatID, c1.title AS BrandCatTitle
+				FROM 
+					{$this->conf['table']['category']} AS c4,
+					{$this->conf['table']['category']} AS c3,
+			        {$this->conf['table']['category']} AS c2,
+					{$this->conf['table']['category']} AS c1
+				WHERE 
+					{$catCondition}
+			        AND c3.category_id = c4.parent_id
+			        AND c2.category_id = c3.parent_id
+					AND c1.category_id = c2.parent_id
+    		";
     	$result = $this->dbh->getAll($query);
+    	
+    	echo '<pre>';print_r($result);echo '</pre>';die;
+    	
+    	$propertyRes = $this->proPropertySearch($input->categoryId);
     	
     	$searchFields = array();
     	$proCounter = array();
     	$aProductId = array();
-		foreach ($result as $key => $value)
+		foreach ($propertyRes as $key => $value)
 		{
 			
 			$proCounter[$value->cmdId]['title'] = $value->cmdTitle;
@@ -664,6 +716,34 @@ class productMgr extends SGL_Manager
 	        return $result;
 	    }
 	    return $data;
+    }
+    
+    function proPropertySearch($categoryId)
+    {
+    	$query = "
+		    	SELECT c.content_type_id AS cId, c.type_name AS cTitle, cm.content_type_mapping_id AS cmId, cm.title AS cmTitle,
+		    	cmd.content_type_mapping_data_id AS cmdId, cmd.title AS cmdTitle, ca.*
+		    	FROM {$this->conf['table']['content_type']} AS c
+		    	JOIN {$this->conf['table']['content_type_mapping']} AS cm
+		    	ON cm.content_type_id = c.content_type_id
+		    	JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
+		    	ON cmd.content_type_mapping_id = cm.content_type_mapping_id
+		    	JOIN {$this->conf['table']['content_addition']} AS ca
+		    	ON ca.content_type_mapping_data_id = cmd.content_type_mapping_data_id
+		    	WHERE c.category_id = {$categoryId}
+    		";
+    	 
+    	return $this->dbh->getAll($query);
+    }
+    
+    function catLevel($categoryId)
+    {
+    	$category = DB_DataObject::factory($this->conf['table']['category']);
+    	$category->selectAdd();
+    	$category->selectAdd('level_id');
+    	$category->whereAdd('category_id = ' . $categoryId);
+    	$category->find(true);
+    	return $category->level_id;
     }
 }
 
