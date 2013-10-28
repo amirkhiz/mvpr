@@ -1,11 +1,13 @@
 <div class="panel panel-info" style="margin: 10px;">
-  <div class="panel-heading">
-    <h3 class="panel-title">{translate(#Product list#)}</h3>
-  </div>
-  <div class="topbtns">
-	  <a type="button" href="{makeUrl(#add#,#product#,#product#)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(#New Product#)}</a>
-	  <a type="button" href="{makeUrl(#reorder#,#product#,#product#)}" class="btn btn-info"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
-  </div>
+  	<div class="container">
+  		<div class="topbtns">
+			<a type="button" href="{makeUrl(#add#,#product#,#product#)}" class="btn btn-primary">
+				<span class="glyphicon glyphicon-plus"></span> {translate(#New Product#)}
+			</a>
+			<a type="button" href="{makeUrl(#reorder#,#product#,#product#)}" class="btn btn-info">
+				<span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}
+			</a>
+		</div>
 		{msgGet()}
 		<form name="frmProductMgr" method="post" flexy:ignore id="frmProductMgr">
 		    <input type="hidden" name="action" value="delete" />
@@ -48,7 +50,12 @@
 			        </tr>
 				</tbody>
 		    </table>
-						
-			<button type="submit" class="btn btn-danger" name="Delete" onclick="return confirmSubmit('{translate(#product#)}', 'frmProductMgr')" /><span class="glyphicon glyphicon-trash"></span> {translate(#delete selected#)} </button>
+
+			<div>
+				<button type="submit" class="btn btn-danger" name="Delete" onclick="return confirmSubmit('{translate(#product#)}', 'frmProductMgr')">
+					<span class="glyphicon glyphicon-trash"></span> {translate(#delete selected#)} 
+				</button>
+			</div>
 		</form>
+	</div>
 </div>
