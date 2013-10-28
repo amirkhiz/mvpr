@@ -62,6 +62,27 @@ div#searchBtnDiv {
 	width: 1px;
 }
 
+div#searchTxtDiv {
+	display: none;
+	position: absolute;
+	width: 1000px;
+	background-color: #444444;
+	margin-left: 0px;
+	-webkit-border-radius: 3px;
+	-webkit-border-top-left-radius: 0;
+	-moz-border-radius: 3px;
+	-moz-border-radius-topleft: 0;
+	border-radius: 3px;
+	border-top-left-radius: 0;
+	z-index: 100;
+	box-shadow: 2px 2px 5px #888888;
+	top: 252px;
+	color: #f0f0f0;
+	padding: 5px;
+	height: 1px;
+	width: 1px;
+}
+
 div#btn-inner{
 	display: none;
 	min-height: 300px;
@@ -73,6 +94,26 @@ div#btn-inner .cat-lists {
 	padding: 10px;
 	border-right: 1px solid #666666;
 	height: 290px;
+}
+
+div#btn-inner .cat-lists h5{
+	color: rgb(156, 156, 156);
+	margin-top: 0px;
+	text-align: center;
+}
+
+div#searchTxt {
+	float: left; 
+	height: 50px; 
+	border-left: 1px solid #444444;
+}
+
+#searchTxtBox {
+	background-color: #222222; 
+	border: 1px solid #222222; 
+	height: 50px; 
+	width: 240px; 
+	color:#f0f0f0;
 }
 /*
 div#btn-inner .cat-lists ul li {

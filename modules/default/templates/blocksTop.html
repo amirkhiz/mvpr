@@ -1,11 +1,10 @@
         <div id="nav-main">
-			
             <div class="inner">
-            	<div id="searchBtn">
+            	<div id="searchBtn" class="search-btn">
 					<div class="searchBtnInner"> <span class="glyphicon glyphicon-search"></span> Ürün Bul  <span id="searchBtnGly" class="glyphicon glyphicon-chevron-down"></span></div>
 					 <div style="clear: both;"><!-- --></div> 
 				</div>
-				<div style="float: left; height: 50px; border-left: 1px solid #444444;"><input type="text" class="form-control" placeholder="Ürün Ara ..." style="background-color: #222222; border: 1px solid #222222; height: 50px; width: 240px; color:#f0f0f0;"></div>
+				<div id="searchTxt"><input type="text" class="form-control" placeholder="Ürün Ara ..." id="searchTxtBox"></div>
 				
 				<!--<ul><li style="background-color: #222222; border-left:1px solid #444444;"><a href="{webRoot}" style="color: #FFFFFF; height: 50px; padding-top: 7px; border-right: none; border-left: none;"><span class="glyphicon glyphicon-home"></span> Anasayfa</a></li></ul>-->
 	                {foreach:blocksMainNav,key,valueObj}
@@ -17,17 +16,23 @@
 		<div id="searchBtnDiv">
 			<div id="btn-inner">
 				<div class="cat-lists cat-list-1">
-					
+					<h5>{translate(#Parent Category#)}</h5>
+					<div class="inner"></div>
 				</div>
 				<div class="cat-lists cat-list-2">
-					
+					<h5>{translate(#Product Group#)}</h5>
+					<div class="inner"></div>
 				</div>
 				<div class="cat-lists cat-list-3">
-					
+					<h5>{translate(#Product Property#)}</h5>
+					<div class="inner"></div>
 				</div>
 				<div class="cat-lists cat-list-4" style="border-right: none;">
-					
+					<h5>{translate(#Brand#)}</h5>
+					<div class="inner"></div>
 				</div>
 			</div>
+		</div>
+		<div id="searchTxtDiv">
 		</div>
 		
