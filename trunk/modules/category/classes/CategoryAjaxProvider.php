@@ -60,6 +60,57 @@ class CategoryAjaxProvider extends SGL_AjaxProvider2
         return true;
     }
     
+    function searchTxtList($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	$this->responseFormat = SGL_RESPONSEFORMAT_HTML;
+    	
+    	$keys = $this->req->get('keys');
+    	
+    	//$output->keys = $keys;
+    	
+    	$aKeys = explode(" ",$keys);
+    	$where = "";
+    	foreach($aKeys as $key => $value){
+    		$where .= " (p.title like '%$value%' or 
+    					c4.title like '%$value%' or
+    					c3.title like '%$value%' or
+    					c2.title like '%$value%' or
+    					c1.title like '%$value%') and ";
+    	}
+    	$where = substr($where,0,-4);
+    	
+    	$query = "SELECT 
+    					p.*, p.title as pTitle, c4.title as c4Title, c3.title as c3Title, c2.title as c2Title, c1.title as c1Title 
+    				FROM {$this->conf['table']['product']} as p
+    				left join {$this->conf['table']['category']} as c4 on c4.category_id = p.category_id 
+    				left join {$this->conf['table']['category']} as c3 on c4.parent_id = c3.category_id
+    				left join {$this->conf['table']['category']} as c2 on c3.parent_id = c2.category_id
+    				left join {$this->conf['table']['category']} as c1 on c2.parent_id = c1.category_id
+    				where $where 
+    				order by p.order_id
+    				";
+        $limit = $_SESSION['aPrefs']['resPerPage'];
+            
+        $pagerOptions = array(
+                'mode'      => 'Sliding',
+                'delta'     => 8,
+                'perPage'   => 10000, 
+
+            );
+            $aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+       //echo "<pre>"; print_r($aPagedData); echo "</pre>";
+       //exit;
+            if (PEAR::isError($aPagedData)) {
+                return false;
+            }
+            $output->aPagedData = $aPagedData;
+            //echo "<pre>"; print_r($aPagedData); echo "</pre>";
+            $output->totalItems = $aPagedData['totalItems'];
+    
+    	$output->data = $this->_renderTemplate($output, 'searchTxtList.html');
+    }
+    
 	function searchBtnList($input, $output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
