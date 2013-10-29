@@ -36,9 +36,11 @@ a.prev,a.next {
 a.next {
 	background-position:-22px 0
 }
+/*
 .btn-primary {
 	background-color:#F86D18;
 }
+*/
 .panel,.panel1 {
 border-left:8px solid #F86D18;
 }
