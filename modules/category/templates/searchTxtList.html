@@ -1,7 +1,24 @@
-<ul>
+<script type="text/javascript" src="{webRoot}/js/jquery/plugins/scroll/jquery.slimscroll.js"></script>
+<ul id="searchTxtUl" class="searchTxtUl">
 {foreach:aPagedData[data],key,value}
-	<li>
-	{value[pTitle]} --> {value[c4Title]} --> {value[c3Title]} --> {value[c2Title]} --> {value[c1Title]}
+	<li style="border-bottom: 1px solid #555555;">
+	<!--{value[pTitle]}  {value[c4Title]}  {value[c3Title]}  {value[c2Title]}  {value[c1Title]}-->
+		<ul class="breadcrumbs">
+			<li><a href="#">{value[c1Title]} / </a></li>
+			<li> <a href="#">{value[c2Title]} / </a></li>
+			<li> <a href="#">{value[c3Title]} / </a></li>
+			<li> <a href="#">{value[c4Title]} / </a></li>
+			<li> <a href="#" style="color: #f6ca36; font-size: 14px;">{value[pTitle]}</a> </li>
+		</ul>
 	</li>
 {end:}
 </ul>
+
+<script>
+	$(document).ready(function() {
+		$('.searchTxtUl').slimscroll({
+		  width: '990px',
+		  height: '300px'
+		});
+	});
+</script>
