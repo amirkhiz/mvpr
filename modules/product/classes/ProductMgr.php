@@ -507,7 +507,7 @@ class productMgr extends SGL_Manager
 			$aProductId[$value->product_id] = $value->product_id;
 			
 		}
-		//echo '<pre>'; print_r($propertyRes); echo '</pre>';die;
+		//echo '<pre>'; print_r($cats); echo '</pre>';die;
 		
 		$query = "
 				SELECT pro.*, FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice, cat.title AS catTitle
