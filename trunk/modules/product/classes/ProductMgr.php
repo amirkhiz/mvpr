@@ -52,6 +52,8 @@ include_once SGL_CORE_DIR . '/Image.php';
  */
 class productMgr extends SGL_Manager
 {
+	static protected $catLevel;
+	
     function __construct()
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
@@ -450,42 +452,20 @@ class productMgr extends SGL_Manager
     	
     	$categoryId = $input->categoryId;
     	
-    	$catLevel = $this->catLevel($categoryId);
-    	
-    	$catConId = $catLevel + 1;
-    	$catCondition = "c{$catConId}.parent_id = {$categoryId}";
-    	if ($catLevel == 4){
-    		$catCondition = "c{$catLevel}.category_id = {$categoryId}";
-    	}
-    	
-    	$query = "
-    			SELECT 
-					c4.category_id AS BrandCatID, c4.title AS BrandCatTitle,
-					c3.category_id AS OptionCatID, c3.title AS OptionCatTitle,
-					c2.category_id AS GroupCatID, c2.title AS GroupCatTitle,
-					c1.category_id AS ParentCatID, c1.title AS ParentCatTitle
-				FROM 
-					{$this->conf['table']['category']} AS c4,
-					{$this->conf['table']['category']} AS c3,
-			        {$this->conf['table']['category']} AS c2,
-					{$this->conf['table']['category']} AS c1
-				WHERE 
-					{$catCondition}
-			        AND c3.category_id = c4.parent_id
-			        AND c2.category_id = c3.parent_id
-					AND c1.category_id = c2.parent_id
-    		";
-    	$result = $this->dbh->getAll($query);
+    	$catTree = $this->catTree($categoryId);
     	
     	$aCats = array();
+    	$aOptions = array();
     	$aBrands = array();
-    	foreach ($result as $key => $value)
+    	foreach ($catTree as $key => $value)
     	{
-    		$cats[$value->ParentCatID]['title'] = $value->ParentCatTitle;
-    		$cats[$value->ParentCatID]['groups'][$value->GroupCatID]['title'] = $value->GroupCatTitle;
-    		$cats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['title'] = $value->OptionCatTitle;
-    		$cats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['brands'][$value->BrandCatID] = $value->BrandCatTitle;
+    		/* $aCats[$value->ParentCatID]['title'] = $value->ParentCatTitle;
+    		$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['title'] = $value->GroupCatTitle;
+    		$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['title'] = $value->OptionCatTitle;
+    		$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['brands'][$value->BrandCatID] = $value->BrandCatTitle; */
     		
+    		$aGroups['group']['title'] = SGL_String::translate('Groups');;
+    		$aGroups['group']['ops'][$value->GroupCatID] = $value->GroupCatTitle;
     		$aOptions[] = $value->OptionCatID;
     		$aBrands[] = $value->BrandCatID;
     	}
@@ -507,7 +487,6 @@ class productMgr extends SGL_Manager
 			$aProductId[$value->product_id] = $value->product_id;
 			
 		}
-		//echo '<pre>'; print_r($cats); echo '</pre>';die;
 		
 		$query = "
 				SELECT pro.*, FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice, cat.title AS catTitle
@@ -528,6 +507,7 @@ class productMgr extends SGL_Manager
 				) AS minmax,
 				{$this->conf['table']['category']} AS cat
 				WHERE cat.category_id = pro.category_id
+				ORDER BY pro.product_id
 			";
 		
 		$limit = $_SESSION['aPrefs']['resPerPage'];
@@ -570,18 +550,20 @@ class productMgr extends SGL_Manager
 			$aCur[$currency->currency_id] = $currency->code;
 		}
     	
-		//echo '<pre>'; print_r($aPagedData['data']); echo '</pre>';die;
-    	
     	$output->pageTitle 		= $this->pageTitle . ' :: Reorder';
     	$output->template  		= 'productSearch.html';
     	$output->catId			= $input->categoryId;
-    	$output->searchFields 	= $searchFields;
     	$output->products 		= $productcs;
     	$output->minPrice 		= $aPagedData['data']['0']['minPrice'];
 		$output->maxPrice 		= $aPagedData['data']['0']['maxPrice'];
     	$output->aCur 			= $aCur;
-    	$output->aBrand			= $aBrand['10'];
+    	if (self::$catLevel === '1'){
+    		$output->searchFields = $aGroups;
+    	}else{
+    		$output->searchFields = $searchFields;
+    	}
     	
+    	//echo '<pre>'; print_r($output->searchFields); echo '</pre>';die;
     }
     
     function _cmd_view(&$input, &$output)
@@ -720,7 +702,40 @@ class productMgr extends SGL_Manager
     	$category->selectAdd('level_id');
     	$category->whereAdd('category_id = ' . $categoryId);
     	$category->find(true);
+    	self::$catLevel = $category->level_id;
     	return $category->level_id;
+    }
+    
+    function catTree($categoryId)
+    {
+    	$catLevel = $this->catLevel($categoryId);
+    	
+    	$catConId = $catLevel + 1;
+    	$catCondition = "c{$catConId}.parent_id = {$categoryId}";
+    	if ($catLevel == 4){
+    		$catCondition = "c{$catLevel}.category_id = {$categoryId}";
+    	}
+    	 
+    	$query = "
+	    	SELECT
+		    	c4.category_id AS BrandCatID, c4.title AS BrandCatTitle,
+		    	c3.category_id AS OptionCatID, c3.title AS OptionCatTitle,
+		    	c2.category_id AS GroupCatID, c2.title AS GroupCatTitle,
+		    	c1.category_id AS ParentCatID, c1.title AS ParentCatTitle
+	    	FROM
+		    	{$this->conf['table']['category']} AS c4,
+		    	{$this->conf['table']['category']} AS c3,
+		    	{$this->conf['table']['category']} AS c2,
+		    	{$this->conf['table']['category']} AS c1
+	    	WHERE
+		    	{$catCondition}
+		    	AND c3.category_id = c4.parent_id
+		    	AND c2.category_id = c3.parent_id
+		    	AND c1.category_id = c2.parent_id
+    		";
+    	$result = $this->dbh->getAll($query);
+    	
+    	return $result;
     }
 }
 

@@ -52,12 +52,17 @@ $(document).ready(function() {
 		var currency	= $('#searchCur').val();
 		var aSelected 	= new Array();
 		var aBrand		= new Array();
+		var aGroup		= new Array();
 		var filter		= '';
 		
 		$('.multiple').each(function(){
 			if ($(this).attr('fieldId') == '0'){
 				aThisSelect = $(this).val();
 				aBrand.push.apply(aBrand, aThisSelect);
+			}
+			else if ($(this).attr('fieldId') == 'group'){
+				aThisSelect = $(this).val();
+				aGroup.push.apply(aGroup, aThisSelect);
 			}
 			else{
 				aThisSelect = $(this).val();
@@ -69,15 +74,16 @@ $(document).ready(function() {
 			}
 		});
 		
-		console.log(filter);
 		$("#filters").html(filter);
 		
 		var catId = $('#catId').val();
 
 		if (aSelected.length != 0)
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency, frmBrands:aBrand});
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup});
+		else if (aGroup.length != 0)
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmPrices:prices, frmCur:currency, frmGroups: aGroup});
 		else
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency, frmBrands:aBrand});
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup});
 		
 		$.ajax({
 			url: ajaxurl,

@@ -199,17 +199,29 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     		$whereCondition .= " AND p.category_id IN (" . implode(',',$aBrands) . ')' ;
     	}
     	
+    	if ($this->req->get('frmGroups'))
+    	{
+    		$aGroups = explode(',', $this->req->get('frmGroups'));
+    		$catTree = $this->catTree($aGroups);
+    		
+    		$aCatGroups = array();
+    		foreach ($catTree as $value)
+    		{
+    			$aCatGroups[$value->BrandCatID] = $value->BrandCatID;
+    		}
+    		
+    		$whereCondition .= " AND p.category_id IN (" . implode(',',$aCatGroups) . ')' ;
+    	}
+    	
     	if ($this->req->get('frmCategoryID'))
     	{
     		$categoryId = $this->req->get('frmCategoryID');
     		
-    		$category = DB_DataObject::factory($this->conf['table']['category']);
-    		$category->whereAdd("parent_id = " . $categoryId);
-    		$category->find();
+    		$catTree = $this->catTree($categoryId);
     		
     		$aCat = array();
-    		while($category->fetch()){
-    			$aCat[] = $category->category_id;
+    		foreach ($catTree as $value){
+    			$aCat[] = $value->BrandCatID;
     		}
     		
     		$whereCondition .= " AND p.category_id IN (" . implode(',',$aCat) . ")";
@@ -237,8 +249,8 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
 				HAVING 1
 				{$havingCondition}
 			";
-    	
-    	$result = $this->dbh->getAll($query);
+
+		$result = $this->dbh->getAll($query);
     	$result = $this->objectToArray($result);
     	
 //     	echo '<pre>'; print_r($result); echo '</pre>';
@@ -259,6 +271,59 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     		return $result;
     	}
     	return $data;
+    }
+    
+    function catLevel($categoryId)
+    {
+    	$category = DB_DataObject::factory($this->conf['table']['category']);
+    	$category->selectAdd();
+    	$category->selectAdd('level_id');
+    	
+    	if (is_array($categoryId))
+    		$category->whereAdd('category_id IN (' . implode(',',$categoryId) . ')');
+    	else 
+    		$category->whereAdd('category_id = ' . $categoryId);
+    	
+    	$category->find(true);
+    	return $category->level_id;
+    }
+    
+    function catTree($categoryId)
+    {
+    	$aCategoryId = array();
+    	if (!is_array($categoryId)){
+    		$aCategoryId[] = $categoryId;
+    		$categoryId = $aCategoryId;
+    	}
+    	
+    	$catLevel = $this->catLevel($categoryId);
+
+    	$catConId = $catLevel + 1;
+    	$catCondition = "c{$catConId}.parent_id IN (" . implode(',',$categoryId) . ")";
+    	if ($catLevel == 4){
+    		$catCondition = "c{$catLevel}.category_id IN (" . implode(',',$categoryId) . ")";
+    	}
+    	//echo '<pre>'; print_r($categoryId); echo '</pre>';
+    
+    	$query = "
+	    	SELECT
+		    	c4.category_id AS BrandCatID, c4.title AS BrandCatTitle,
+		    	c3.category_id AS OptionCatID, c3.title AS OptionCatTitle,
+		    	c2.category_id AS GroupCatID, c2.title AS GroupCatTitle,
+		    	c1.category_id AS ParentCatID, c1.title AS ParentCatTitle
+	    	FROM
+		    	{$this->conf['table']['category']} AS c4,
+		    	{$this->conf['table']['category']} AS c3,
+		    	{$this->conf['table']['category']} AS c2,
+		    	{$this->conf['table']['category']} AS c1
+	    	WHERE
+	    	{$catCondition}
+		    	AND c3.category_id = c4.parent_id
+		    	AND c2.category_id = c3.parent_id
+		    	AND c1.category_id = c2.parent_id
+    		";
+    	$result = $this->dbh->getAll($query);
+    	return $result;
     }
 
 }
