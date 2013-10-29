@@ -1,13 +1,17 @@
-<div id="block-logout">
-    <p>
-        <strong>{translate(#user#)}:</strong>
-        <em>{loggedOnUser}</em>
-    </p>
-    <p>
-        <strong>{translate(#session started at#)}:</strong>
-        <em>{loggedOnSince}</em>
-    </p>
-    <p>
-        <a href="{makeUrl(#logout#,#login#,#user#)}">{translate(#logout#,#ucfirst#)}</a>
-    </p>
-</div>
+<ul id="block-logout">
+    <li>
+        {loggedOnUser}
+    </li>
+	<li style="line-height: 14px; text-align: center; padding-top: 2px;">
+		<span class="glyphicon glyphicon-usd"></span><br /><span style=" font-size: 11px;">1,983</span>
+	</li>
+	<li style="line-height: 14px; text-align: center; padding-top: 2px;">
+		<span class="glyphicon glyphicon-euro"></span><br /><span style=" font-size: 11px;">2,734</span>
+	</li>
+	<li>
+		<span class="glyphicon glyphicon-calendar"> {formatDate()}</span>
+	</li>
+    <li>
+         <a href="{makeUrl(#logout#,#login#,#user#)}" style="text-decoration: none; color: #cccccc;">{translate(#logout#,#ucfirst#)} <span class="glyphicon glyphicon-log-out"></span></a>
+    </li>
+</ul>

@@ -36,6 +36,21 @@ h1, h2, h3 {
 	margin-top: 1px;
 }
 
+ul#block-logout {
+	border-left: 1px solid #444444;
+	border-right: 1px solid #222222;
+}
+
+ul#block-logout li{
+	list-style: none;	
+	float: left;
+	border-right: 1px solid #444444;
+	border-left: 1px solid #222222;
+	padding: 0px 15px;
+	height: 35px;
+	line-height: 35px; 
+}
+
 .option-columns{
 	float: left; 
 	width: 250px; 
