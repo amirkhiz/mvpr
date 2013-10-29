@@ -98,6 +98,7 @@ class User_Block_Login2
                 $this->template = $aParams['logoutTemplate'];
             }
             $blockOutput->loggedOnUserID = $this->uid;
+            $blockOutput->firstName	= "sssss";
             $blockOutput->loggedOnUser   = isset($output->loggedOnUser) ? $output->loggedOnUser : '';
             $blockOutput->loggedOnSince  = isset($output->loggedOnSince) ? $output->loggedOnSince : '';
         }
