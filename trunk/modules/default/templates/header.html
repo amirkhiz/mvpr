@@ -97,5 +97,10 @@
 			<div class="site-name">
 				{conf[site][name]}
 			</div>
+			<div style="float: right; color: #cccccc;">
+			{foreach:blocksTop,key,valueObj}
+               {valueObj.content:h}
+            {end:}
+			</div>
 		</div>
 	</div>
