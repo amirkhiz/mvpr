@@ -279,8 +279,8 @@ class productMgr extends SGL_Manager
 			
 			$aOpts['selected'][] 	= $value->cmdId;
 		}
-		//echo '<pre>'; print_r($aImgs); echo '</pre>';die;
 		
+		array_unshift($aCats,'0');
 		foreach ($aCats as $key => $value)
 		{
 			$query = "
@@ -294,6 +294,10 @@ class productMgr extends SGL_Manager
 				
 				switch ($key)
 				{
+					case '0':
+						$aCategory[$catVal->category_id] = $catVal->title;
+					break;
+					
 					case 'category':
 						$aGroup[$catVal->category_id] = $catVal->title;
 					break;
@@ -326,7 +330,6 @@ class productMgr extends SGL_Manager
 			$aOptList[$value->cmId]['title'] = $value->cmTitle;
 			$aOptList[$value->cmId]['ops'][$value->cmdID] = $value->cmdTitle;
 		}
-		//echo '<pre>'; print_r($aOptions); echo '</pre>';
 		
 		//Find product images from product_image table
 		$query = "
@@ -343,6 +346,7 @@ class productMgr extends SGL_Manager
 		}
 		
 		$output->aOptList 	= $aOptList;
+		$output->aCategory 	= $aCategory;
 		$output->aGroup 	= $aGroup;
 		$output->aOptions 	= $aOptions;
 		$output->aBrands 	= $aBrands;
@@ -429,13 +433,13 @@ class productMgr extends SGL_Manager
         
         $category = DB_DataObject::factory($this->conf['table']['category']);
         
-        $category->whereAdd("level_id = 2");
+        $category->whereAdd("level_id = 1");
         $category->find();
         $aCategories = array();
         while($category->fetch()){
         	$aCategories[$category->category_id] = $category->title;
         }
-        $output->aGroup= $aCategories;
+        $output->aCategory= $aCategories;
         
         //echo '<pre>';print_r($aCategories); echo '</pre>';die;
         
