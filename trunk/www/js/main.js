@@ -3,8 +3,9 @@ $(document).ready(function() {
 	$("#form-group").validationEngine();
 	$(".chosen").chosen();
 	
-	$(function () {
-	    'use strict';
+	$(document).on("click", ".proImgRemove", function(){
+		$("#pDeletedImg").val($("#pDeletedImg").val() + "," + $(this).attr('imgId'));
+		$(this).parent().fadeOut(300,function(){$(this).remove();});
 	});
 	
 	$("#addImg").click(function(){
