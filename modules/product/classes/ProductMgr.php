@@ -91,6 +91,7 @@ class productMgr extends SGL_Manager
         $input->productId   = $req->get('frmProductID');
         $input->items     	= $req->get('_items');
         $input->product     = (object)$req->get('product');
+        $input->pImages     	= $req->get('pImages');
         
         // Misc.
         $input->submitted   = $req->get('submitted');
@@ -181,15 +182,25 @@ class productMgr extends SGL_Manager
     	$product->status	 	= 1;
     	$product->order_id 		= $maxItemOrder + 1;
     
+    	$aImages = array();
+    	foreach ($input->pImages['name'] as $key => $value)
+    	{
+    		$aImages[$key]['name'] 		= $input->pImages['name'][$key];
+    		$aImages[$key]['type'] 		= $input->pImages['type'][$key];
+    		$aImages[$key]['tmp_name'] 	= $input->pImages['tmp_name'][$key];
+    		$aImages[$key]['error'] 	= $input->pImages['error'][$key];
+    		$aImages[$key]['size'] 		= $input->pImages['size'][$key];
+    	}
+    	
     	//insert images
     	$proImage = new ProductImage();
-    	$result = $proImage->create($input->product->images, $productId);
-    	$proImgIds = implode(',', $result);
+    	$result = $proImage->create($aImages, $productId);
     	
+    	$proImgIds = implode(',', $result);
     	$product->product_image_id = $proImgIds;
     	
     	$success = $product->insert();
-    	
+    	 
     	//  insert options in content_addition table
     	foreach ($input->product->prop as $key => $value)
     	{
@@ -229,9 +240,27 @@ class productMgr extends SGL_Manager
     	$product->get($productId);
     	
 		$query = "
-			SELECT c1.category_id AS `brandId`, c2.category_id AS `optionId`, c3.category_id AS `groupId`, c4.category_id AS `categoryId`, cmd.content_type_mapping_data_id AS cmdId, cm.content_type_mapping_id AS cmId, c.content_type_id AS cId, ca.content_addition_id AS caId,
-			c1.title AS `brand`, c2.title AS `option`, c3.title AS `group`, c4.title AS `category`, cmd.title AS cmdTitle, cm.title AS cmTitle, c.type_name AS cTitle
+			SELECT 
+				c1.category_id AS `brandId`, 
+				c2.category_id AS `optionId`, 
+				c3.category_id AS `groupId`, 
+				c4.category_id AS `categoryId`, 
+				cmd.content_type_mapping_data_id AS cmdId, 
+				cm.content_type_mapping_id AS cmId, 
+				c.content_type_id AS cId, 
+				ca.content_addition_id AS caId,
+				c1.title AS `brand`, 
+				c2.title AS `option`, 
+				c3.title AS `group`, 
+				c4.title AS `category`, 
+				cmd.title AS cmdTitle, 
+				cm.title AS cmTitle, 
+				c.type_name AS cTitle,
+				pi.product_image_id as imgId,
+				pi.title as imgTitle
 			FROM {$this->conf['table']['product']} AS p
+			JOIN {$this->conf['table']['product_image']} AS pi
+			ON pi.product_id = p.product_id
 			JOIN {$this->conf['table']['content_addition']} AS ca
 			ON ca.product_id = p.product_id
 			JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
@@ -253,20 +282,21 @@ class productMgr extends SGL_Manager
 		
 		$cats =  $this->dbh->getAll($query);
 		
-		//echo '<pre>'; print_r($cats); echo '</pre>';die;
-		
 		$aCats = array();
 		$aOpts = array();
+		$aImgs = array();
 		foreach ($cats as $value)
 		{
 			$aCats['category'] 		= $value->categoryId;
 			$aCats['group'] 		= $value->groupId;
 			$aCats['option']		= $value->optionId;
 			$aCats['brand'] 		= $value->brandId;
+			
+			$aImgs['img'][$value->imgId]	= $value->imgTitle;
 
 			$aOpts['selected'][] 	= $value->cmdId;
 		}
-		//echo '<pre>'; print_r($aCAId); echo '</pre>';die;
+		//echo '<pre>'; print_r($aImgs); echo '</pre>';die;
 		
 		foreach ($aCats as $key => $value)
 		{
@@ -321,6 +351,7 @@ class productMgr extends SGL_Manager
 		$output->aBrands 	= $aBrands;
 		$output->aCats 		= $aCats;
 		$output->aOpts 		= $aOpts;
+		$output->aImgs		= $aImgs;
 		$output->product 	= $product;
     }
     
@@ -438,6 +469,19 @@ class productMgr extends SGL_Manager
     				$cAddition->delete();
     			}
     			unset($cAddition);
+    			
+    			//Delete Product Images from product_image table
+    			$pImage = DB_DataObject::factory($this->conf['table']['product_image']);
+    			$pImage->whereAdd('product_id = ' . $productId);
+    			$pImage->find();
+    			
+    			$aImgs = array();
+    			while ($pImage->fetch())
+    			{
+    				$aImgs[] = $pImage->product_image_id;
+    			}
+    			$proImage = new ProductImage();
+    			$result = $proImage->delete($aImgs);
     		}
     		SGL::raiseMsg('product deleted successfully', true, SGL_MESSAGE_INFO);
     	} else {

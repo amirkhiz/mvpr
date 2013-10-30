@@ -1,6 +1,6 @@
 <div class="panel panel-info" style="margin: 10px;">
 	<div class="container">
-		<form method="post" flexy:ignore class="form-horizontal" id="form-group">
+		<form method="post" flexy:ignore class="form-horizontal" enctype="multipart/form-data" id="form-group">
 		
 			<div class="topbtns">
 				<button type="submit" class="btn btn-primary" name="submitted">
@@ -186,6 +186,51 @@
 						
 						<div class="tab-pane" id="image">
 
+							<br>
+						    <!-- The container for the list of example images -->
+						    <div id="links">
+						    	{foreach:aImgs[img],key,value}
+						    	<a href="{webRoot}/images/products/{value}" data-gallery="">
+						    		<img src="{webRoot}/images/products/small/small_{value}" />
+								</a>
+								{end:}
+						    </div>
+						    <br>
+	
+							<div id="blueimp-gallery" class="blueimp-gallery">
+							    <!-- The container for the modal slides -->
+							    <div class="slides"></div>
+							    <!-- Controls for the borderless lightbox -->
+							    <h3 class="title"></h3>
+							    <a class="prev">‹</a>
+							    <a class="next">›</a>
+							    <a class="close">×</a>
+							    <a class="play-pause"></a>
+							    <ol class="indicator"></ol>
+							    <!-- The modal dialog, which will be used to wrap the lightbox content -->
+							    <div class="modal fade">
+							        <div class="modal-dialog">
+							            <div class="modal-content">
+							                <div class="modal-header">
+							                    <button type="button" class="close" aria-hidden="true">&times;</button>
+							                    <h4 class="modal-title"></h4>
+							                </div>
+							                <div class="modal-body next"></div>
+							                <div class="modal-footer">
+							                    <button type="button" class="btn btn-default pull-left prev">
+							                        <i class="glyphicon glyphicon-chevron-left"></i>
+							                        Previous
+							                    </button>
+							                    <button type="button" class="btn btn-primary next">
+							                        Next
+							                        <i class="glyphicon glyphicon-chevron-right"></i>
+							                    </button>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+							</div>
+							
 							<div class="form-group">
 								<div class="col-lg-3">
 									<button type="button" id="addImg" class="btn btn-primary">
@@ -198,7 +243,7 @@
 								<div id="imgHtml" class="form-group">
 									<label class="col-lg-2 control-label">{translate(#Image#,#ucfirst#)}: </label>
 									<div class="col-lg-9">
-						      			<input type="file" class="form-control" name="product[images][]" value="{product.image}" placeholder="{translate(#Image#,#ucfirst#)}" />
+						      			<input type="file" class="form-control" name="pImages[]" value="{product.image}" placeholder="{translate(#Image#,#ucfirst#)}" />
 									</div>
 								</div>
 							</div>
