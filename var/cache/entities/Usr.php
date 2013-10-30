@@ -15,7 +15,7 @@ class DataObjects_Usr extends DB_DataObject
     public $role_id;                         // int(11)  not_null
     public $username;                        // string(64)  
     public $passwd;                          // string(32)  
-    public $first_name;                      // string(128)  
+    public $first_name;                      // string(64)  
     public $last_name;                       // string(128)  
     public $telephone;                       // string(16)  
     public $mobile;                          // string(16)  

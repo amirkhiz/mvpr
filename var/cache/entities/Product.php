@@ -31,7 +31,7 @@ class DataObjects_Product extends DB_DataObject
     public $weight_id;                       // int(11)  not_null
     public $manufacturer_id;                 // int(11)  
     public $seo;                             // blob(65535)  blob
-    public $product_image_id;                // int(11)  
+    public $image;                           // string(255)  
     public $date_created;                    // datetime(19)  binary
     public $last_updated;                    // datetime(19)  binary
     public $status;                          // int(4)  not_null
