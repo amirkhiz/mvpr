@@ -186,16 +186,20 @@
 						
 						<div class="tab-pane" id="image">
 
-							<br>
 						    <!-- The container for the list of example images -->
 						    <div id="links">
-						    	{foreach:aImgs[img],key,value}
-						    	<a href="{webRoot}/images/products/{value}" data-gallery="">
-						    		<img src="{webRoot}/images/products/small/small_{value}" />
-								</a>
+						    	<input type="hidden" name="pDeletedImg" id="pDeletedImg" value=""/>
+						    	{foreach:aProImgs[img],key,value}
+								<div class="imgFrame col-lg-2 center">
+							    	<a href="{webRoot}/images/products/{value}" data-gallery="">
+							    		<img src="{webRoot}/images/products/small/small_{value}" width="50" height="50"/>
+									</a>
+			                        <span class="glyphicon glyphicon-remove proImgRemove" imgId="{key}"></span>
+								</div>
 								{end:}
 						    </div>
-						    <br>
+							
+							<div class="clearfix"><!-- Clear and Fix --></div>
 	
 							<div id="blueimp-gallery" class="blueimp-gallery">
 							    <!-- The container for the modal slides -->

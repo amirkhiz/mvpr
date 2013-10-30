@@ -748,3 +748,23 @@ div.block {
 }
 
 /*************************Tabs End*******************************/
+
+.imgFrame {
+	background-color: #E9F0F0;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	margin: 10px;
+}
+
+	.imgFrame .proImgRemove {
+		color: #ff0000;
+		-webkit-transition:all 0.5s ease-in-out;
+		-moz-transition:all 0.5s ease-in-out;
+		-o-transition:all 0.5s ease-in-out;
+		-ms-transition:all 0.5s ease-in-out;
+		transition:all 0.5s ease-in-out;
+		cursor: pointer;
+	}
+	.imgFrame .proImgRemove:hover {
+		color: #000000;
+	}
