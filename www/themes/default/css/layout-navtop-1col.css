@@ -25,6 +25,10 @@ div#nav-main {
     width: 1000px;
 }
 
+.required{
+	color: red;
+}
+
 div#searchBtn{
 	float: left; 
 	height: 50px;
@@ -134,6 +138,10 @@ ul.breadcrumbs li a {
 	display: block;
 	color: #999;
 	font-size: 13px;
+}
+
+.formError .formErrorArrow{
+	margin: -12px 0 0 13px;
 }
 /*
 div#btn-inner .cat-lists ul li {

@@ -5,7 +5,7 @@
   
 	<form method="post" action=""  flexy:ignore class="form-horizontal" id="form-group">
 		<div class="topbtns">
-			<a  class="btn btn-primary" href="javascript:formSubmit('frmOrgEdit','submitted',1,1);"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</a>
+			<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
 			<a class="btn btn-info" href="{makeUrl(##,#org#,#user#)}"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</a>
 		</div>
 	    {msgGet()}
@@ -39,7 +39,7 @@
 			<div class="form-group">
 		      <label class="col-lg-2 control-label">{translate(#Manager#)}:  <span class="required">*</span></label>
 			  <div class="col-lg-7">
-				<input type="text" class="validate[required] form-control input-sm" name="org[manager]" id="org[manager]" value="{org.manager}" placeholder="{translate(#Manager#)}"/>
+				<input type="text" class="validate[required] form-control input-sm" name="org[manager]" id="org[manager]" value="{org.manager}" placeholder="{translate(#Manager#)}" data-prompt-position="topLeft:+10"/>
 			  </div>
 		    </div>
 			
@@ -63,7 +63,6 @@
 				<textarea class="form-control input-sm" rows="3" name="org[description]">{org.description}</textarea>
 			  </div>
 		    </div>
-			<!--
 			<div class="form-group">
                 <label class="col-lg-2 control-label">{translate(#Default Role#)}</label>
 				<div class="col-lg-7">
@@ -82,7 +81,6 @@
 				</div>
 	        </div>
 	        {end:}
-			-->	
 		</fieldset>
 		
 		<fieldset class="inside">
@@ -90,7 +88,7 @@
 			<div class="form-group">
 	            <label class="col-lg-2 control-label">{translate(#Telephone 1#)}: <span class="required">*</span></label>
 	            <div class="col-lg-7">
-	            	<input type="text" class="validate[required] form-control input-sm" name="org[telephone]" id="org[telephone]" value="{org.telephone}" placeholder="{translate(#Telephone 1#)}" />
+	            	<input type="text" class="validate[required] form-control input-sm" name="org[telephone]" id="org[telephone]" value="{org.telephone}" placeholder="{translate(#Telephone 1#)}"  data-prompt-position="topLeft:+10"/>
 				</div>
 	        </div>
 			<div class="form-group">

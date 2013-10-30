@@ -97,6 +97,8 @@ class UserDAO extends SGL_Manager
 
         $userId = $this->dbh->nextId($this->conf['table']['user']);
         $oUser->usr_id = $userId;
+        $oUser->birth_date = date("Y-m-d", strtotime($oUser->birth_date));
+        $oUser->gender 	   = (isset($oUser->gender)) ? 1 : 0;
         $ok = $oUser->insert();
 
         if (!$ok) {
@@ -158,7 +160,7 @@ class UserDAO extends SGL_Manager
 
         SGL_DB::setConnection();
         $this->dbh->autocommit(false);
-
+		
         $ok = $oUser->update();
 
         if ($ok === false) {

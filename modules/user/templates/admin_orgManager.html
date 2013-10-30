@@ -40,7 +40,7 @@
                 <tbody>
                     <tr class="{switchRowClass()}" flexy:foreach="results,k,org">
                         <td><input type="checkbox" name="frmDelete[]" value="{org[organisation_id]}" /></td>
-                        <td>{org[organisation_id]}</td>
+                        <td>1000{org[organisation_id]}</td>
                         <td class="left"><a href="{makeUrl(#edit#,#org#,#user#,results,#frmOrgId|organisation_id#,k)}">{org[name]}</a></td>
                         <td>{org[role_id]}</td>
                         {if:conf[OrgMgr][typeEnabled]}
