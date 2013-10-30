@@ -119,7 +119,7 @@
                     "alertTextLoad": "* Doğrulanıyor, lütfen bekleyiniz"
                 },
 				"ajaxUserCallPhp": {
-                    "url": "phpajax/ajaxValidateFieldUser.php",
+                    "url": "mvpr/www/js/jquery/validation/phpajax/ajaxValidateFieldUser.php",
                     // you may want to pass extra data on the ajax call
                     "extraData": "name=eric",
                     // if you provide an "alertTextOk", it will show as a green prompt when the field validates

@@ -9,6 +9,17 @@
         <legend>{translate(#Authorisation Required#)}</legend>
         <ol class="clearfix">
             <li>
+            	<label for="frm_username" style="width: 146px;">
+                    <em>*</em> {translate(#Company number#)}
+                </label>
+				<div>
+                    <p class="error" flexy:if="error[company_num]">
+                        {translate(error[company_num])}
+                    </p>
+                    <input id="frm_company_num" type="text"
+                           name="frmCompany_num" value="{company_num}" class="form-control small-control" placeholder="Company number"  />
+                </div>
+				
                 <label for="frm_username">
                     <em>*</em> {translate(#Username#)}
                 </label>

@@ -78,6 +78,7 @@ class LoginMgr extends SGL_Manager
         $input->submitted   = $req->get('submitted');
         $input->username    = $req->get('frmUsername');
         $input->password    = $req->get('frmPassword');
+        $input->company_num	= $req->get('frmCompany_num');
         $input->action      = ($req->get('action')) ? $req->get('action') : 'list';
         $input->rememberMe  = $req->get('frmExtendedLifetime');
 
@@ -91,6 +92,9 @@ class LoginMgr extends SGL_Manager
             }
             if ($input->password == '') {
                 $aErrors['password'] = 'You must enter a password';
+            }
+        	if ($input->company_num == '') {
+                $aErrors['company_num'] = 'You must enter a company number';
             }
         }
         //  if submitted and there are errors
@@ -211,7 +215,7 @@ class User_DoLogin extends SGL_Observable
         $this->conf = $this->input->getConfig();
         $this->dbh = $this->_getDb();
 
-        if ($res = $this->_doLogin($this->input->username,
+        if ($res = $this->_doLogin($this->input->company_num,$this->input->username,
                 $this->input->password, $this->input->rememberMe)) {
 
             //  invoke observers
@@ -250,15 +254,16 @@ class User_DoLogin extends SGL_Observable
         }
     }
 
-    function _doLogin($username, $password, $rememberMe)
+    function _doLogin($company_num, $username, $password, $rememberMe)
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
-
+		$company_num = $company_num - 10000;
         $query = "
             SELECT  usr_id, role_id
             FROM " . $this->conf['table']['user'] . "
             WHERE   username = " . $this->dbh->quoteSmart($username) . "
-            AND     passwd = '" . md5($password) . "'
+            AND     passwd = '" . md5($password) . " '
+            AND		organisation_id = '" . $this->dbh->quoteSmart($company_num) . " '
             AND     is_acct_active = 1";
 
         $aResult = $this->dbh->getRow($query, DB_FETCHMODE_ASSOC);

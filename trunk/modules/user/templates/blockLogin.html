@@ -1,5 +1,9 @@
 <form id="block-login" method="post" style="margin-top: 5px;" action="{makeUrl(#login#,#login#,#user#)}" flexy:ignore class="form-inline" role="form">
 	<div class="form-group">
+	    <input id="frm_company_block" class="form-control input-sm"style="height: 25px;" placeholder="Company number" type="text"
+	           name="frmCompany_num" />
+	</div>
+	<div class="form-group">
 	    <input id="frm_username_block" class="form-control input-sm"style="height: 25px;" placeholder="Username" type="text"
 	           name="frmUsername" value="{username}" />
 	</div>
@@ -21,16 +25,4 @@
 	    <li><a href="{makeUrl(##,#password#,#user#)}">{translate(#Forgot Password#)}</a></li>
 	  </ul>
 	</div>
-	<!--
-	<div class="form-group">
-	    <p flexy:if="conf[RegisterMgr][enabled]">
-	        <a href="{makeUrl(##,#register#,#user#)}">{translate(#Not Registered#)}</a>
-	    </p>
-	</div>
-	<div class="form-group">
-	    <p>
-	        <a href="{makeUrl(##,#password#,#user#)}">{translate(#Forgot Password#)}</a>
-	    </p>
-	</div>
-	-->
 </form>

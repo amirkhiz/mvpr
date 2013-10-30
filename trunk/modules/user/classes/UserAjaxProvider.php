@@ -34,11 +34,13 @@
 // +---------------------------------------------------------------------------+
 // | UserAjaxProvider.php                                                      |
 // +---------------------------------------------------------------------------+
-// | Author: Dmitri Lakachauskis <lakiboy83@gmail.com>                         |
+// | Author: Sina Saderi <sina.saderi@gmail.com>                         |
 // +---------------------------------------------------------------------------+
 
 require_once dirname(__FILE__) . '/UserDAO.php';
-require_once SGL_CORE_DIR . '/AjaxProvider.php';
+require_once SGL_CORE_DIR . '/Delegator.php';
+require_once SGL_CORE_DIR . '/AjaxProvider2.php';
+
 
 /**
  * Simple wrapper to UserDAO to use with AJAX.
@@ -47,26 +49,25 @@ require_once SGL_CORE_DIR . '/AjaxProvider.php';
  * @subpackage user
  * @author     Dmitri Lakachauskis <lakiboy83@gmail.com>
  */
-class UserAjaxProvider extends SGL_AjaxProvider
+class UserAjaxProvider extends SGL_AjaxProvider2
 {
-    function UserAjaxProvider()
+	public $req;
+    public $responseFormat;
+    
+    function __construct()
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
-        parent::SGL_AjaxProvider();
-        $this->responseFormat = SGL_RESPONSEFORMAT_JSON;
+        parent::__construct();
+        $this->req = &SGL_Registry::singleton()->getRequest();
+        $this->responseFormat = SGL_RESPONSEFORMAT_HTML;
         $this->da = UserDAO::singleton();
     }
 
-    function singleton()
+	function _isOwner($requestedUsrId)
     {
-        static $instance;
+        SGL::logMessage(null, PEAR_LOG_DEBUG);
 
-        // If the instance is not there, create one
-        if (!isset($instance)) {
-            $class = __CLASS__;
-            $instance = new $class();
-        }
-        return $instance;
+        return true;
     }
 
     /**
@@ -77,8 +78,12 @@ class UserAjaxProvider extends SGL_AjaxProvider
      */
     function isUniqueUsername()
     {
-        $req = SGL_Request::singleton();
-        $username = $req->get('username');
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	$this->responseFormat = SGL_RESPONSEFORMAT_HTML;
+    	
+    	$username = $this->req->get('username');
+        return "ssss";
+        /*
         $ok = $this->da->isUniqueUsername($username);
         if ($ok) {
             $msg = 'Selected username is available';
@@ -94,6 +99,7 @@ class UserAjaxProvider extends SGL_AjaxProvider
             );
         }
         return $ret;
+        */
     }
 }
 

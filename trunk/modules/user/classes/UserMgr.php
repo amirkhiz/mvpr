@@ -109,6 +109,8 @@ class UserMgr extends RegisterMgr
         $input->changeStatusNotify = ($req->get('frmChangeStatusNotify') == 'on') ? 1 : 0;
         $input->user->is_email_public = (isset($input->user->is_email_public)) ? 1 : 0;
         $input->user->is_acct_active = (isset($input->user->is_acct_active)) ? 1 : 0;
+        $input->user->gender = (isset($input->user->gender)) ? 1 : 0;
+        $input->user->categories = implode(",",$input->user->categories);
         $input->sortBy      = SGL_Util::getSortBy($req->get('frmSortBy'), SGL_SORTBY_USER);
         $input->sortOrder   = SGL_Util::getSortOrder($req->get('frmSortOrder'));
 
@@ -172,6 +174,7 @@ class UserMgr extends RegisterMgr
             $output->aSyncModes = $aSyncModes;
         }
         $output->isAcctActive = ($output->user->is_acct_active) ? ' checked="checked"' : '';
+        $output->isMale		  = ($output->user->gender) ? ' checked="checked"' : '';
         $output->addJavascriptFile(array(
             'js/scriptaculous/lib/prototype.js',
             'js/scriptaculous/src/effects.js'
@@ -238,16 +241,20 @@ class UserMgr extends RegisterMgr
         $output->user = $oUser;
         $output->user->username_orig = $oUser->username;
         $output->user->email_orig = $oUser->email;
+        $output->user->birth_date = date("d.m.Y", strtotime($output->user->birth_date));
+        $output->user->categories = explode(",", $output->user->categories);
     }
 
     function _cmd_update($input, $output)
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
-
+        //echo "<pre>"; print_r($input->user); echo "</pre>"; exit;
         $oUser = $this->da->getUserById($input->user->usr_id);
         $oUser->setFrom($input->user);
         $oUser->last_updated = SGL_Date::getTime();
         $oUser->updated_by = SGL_Session::getUid();
+        $oUser->birth_date = date("Y-m-d", strtotime($oUser->birth_date));
+        //echo $oUser->category_id; exit;
         $success = $this->da->updateUser($oUser, $input->user->role_id_orig,
             $input->user->organisation_id_orig);
 
@@ -435,6 +442,7 @@ class UserMgr extends RegisterMgr
 
         $oUser = $this->da->getUserById($input->userID);
         $oUser->is_acct_active = ($oUser->is_acct_active) ? 0 : 1;
+        $oUser->gender 	       = ($oUser->gender) ? 1 : 0;
         $success = $oUser->update();
         if ($input->changeStatusNotify && $success !== false) {
             $success = $this->_sendStatusNotification($oUser, $oUser->is_acct_active);

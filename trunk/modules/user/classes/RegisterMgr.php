@@ -65,7 +65,7 @@ class RegisterMgr extends SGL_Manager
 
         $this->_aActionsMapping =  array(
             'add'       => array('add'),
-            'insert'    => array('insert', 'redirectToDefault'),
+            'insert'    => array('insert'),
         );
     }
 
@@ -88,10 +88,12 @@ class RegisterMgr extends SGL_Manager
         //  get referer details if present
         $input->redir = $req->get('redir');
 
+       
         $aErrors = array();
         if (($input->submitted && $input->action != 'changeUserStatus')
                 || in_array($input->action, array('insert', 'update'))) {
             $v = new Validate();
+             /*
             if (empty($input->user->username)) {
                 $aErrors['username'] = 'You must enter a username';
             } else {
@@ -171,7 +173,7 @@ class RegisterMgr extends SGL_Manager
                 $input->user->username =
                     SGL_Emailer::cleanMailInjection($input->user->username);
             }
-
+*/
             //  check for hacks - only admin user can set certain attributes
             if ((SGL_Session::getRoleId() != SGL_ADMIN
                     && count(array_filter(array_flip($req->get('user')), array($this, 'containsDisallowedKeys'))))) {
@@ -261,6 +263,10 @@ class RegisterMgr extends SGL_Manager
         }
         //  returns id for new user
         $output->uid = $addUser->run();
+        $options = array(
+		    'moduleName' => 'default',
+		);
+		SGL_HTTP::redirect($options);
     }
 }
 
