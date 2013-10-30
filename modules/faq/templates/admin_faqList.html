@@ -9,11 +9,9 @@
 		{msgGet()}
 		<form name="frmFaqMgr" method="post" flexy:ignore id="frmFaqMgr">
 		    <input type="hidden" name="action" value="delete" />
-						
+						{if:pager}<flexy:include src="admin_pager_table.html" />{end:}	
 		    <table class="table table-bordered selectable">
-		    	<tr>
-		    		{if:pager}<flexy:include src="admin_pager_table.html" />{end:}	
-		    	</tr>
+		    		
 		    	<thead>
 			        <tr>
 			            <th width="3%">
