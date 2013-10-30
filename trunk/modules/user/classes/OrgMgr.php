@@ -90,7 +90,12 @@ class OrgMgr extends SGL_Manager
                 'role_id'         => 'role_id',
                 'organisation_type_id' => 'organisation_type_id',
                 'name'            => 'name',
+        		'name_summ'		  => 'name_summ',
                 'description'     => 'description',
+        		'manager'		  => 'manager',
+        		'tax_office'	  => 'tax_office',
+        		'tax_number'	  => 'tax_number',
+        		'address'		  => 'address',
                 'addr_1'          => 'addr_1',
                 'addr_2'          => 'addr_2',
                 'addr_3'          => 'addr_3',
@@ -99,6 +104,9 @@ class OrgMgr extends SGL_Manager
                 'country'         => 'country',
                 'post_code'       => 'post_code',
                 'telephone'       => 'telephone',
+        		'telephone2'	  => 'telephone2',
+        		'telephone3'	  => 'telephone3',
+        		'fax'			  => 'fax',
                 'website'         => 'website',
                 'email'           => 'email',
                 'date_created'    => 'date_created',
@@ -126,7 +134,7 @@ class OrgMgr extends SGL_Manager
         $input->orgId           = $req->get('frmOrgId');
         $input->org             = (object) $req->get('org');
         $input->aDelete         = $req->get('frmDelete');
-
+		/*
         $aErrors = array();
         if ($input->submitted || in_array($input->action, array('insert', 'update'))) {
             $v = new Validate();
@@ -168,6 +176,7 @@ class OrgMgr extends SGL_Manager
             }
             $this->validated = false;
         }
+        */
     }
 
     function display($output)
@@ -211,10 +220,12 @@ class OrgMgr extends SGL_Manager
 
         $output->pageTitle = $input->pageTitle . ' :: Add';
         //  handle org hierarchy
+        //echo"<pre>"; print_r($this->_params); echo "</pre>"; exit;
         $nestedSet = new SGL_NestedSet($this->_params);
 
         //  datatype must be an array for NestedSet
         $aOrg = (array) $input->org;
+        //echo"<pre>"; print_r($aOrg); echo "</pre>"; exit;
         $aOrg['date_created'] = $aOrg['last_updated'] = SGL_Date::getTime();
         $aOrg['created_by'] = $aOrg['updated_by'] = SGL_Session::getUid();
 
@@ -240,7 +251,6 @@ class OrgMgr extends SGL_Manager
         SGL::logMessage(null, PEAR_LOG_DEBUG);
 
         $output->template = 'orgEdit.html';
-
         //  get DB_NestedSet_Node array for this org
         $nestedSet = new SGL_NestedSet($this->_params);
         $aOrgNode = $nestedSet->getNode($input->orgId);
