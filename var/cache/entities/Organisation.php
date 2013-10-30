@@ -20,7 +20,12 @@ class DataObjects_Organisation extends DB_DataObject
     public $role_id;                         // int(11)  not_null
     public $organisation_type_id;            // int(11)  not_null
     public $name;                            // string(128)  
+    public $name_summ;                       // string(16)  not_null
     public $description;                     // blob(65535)  blob
+    public $manager;                         // string(64)  not_null
+    public $tax_office;                      // string(64)  not_null
+    public $tax_number;                      // string(16)  not_null
+    public $address;                         // string(256)  not_null
     public $addr_1;                          // string(128)  not_null
     public $addr_2;                          // string(128)  
     public $addr_3;                          // string(128)  
@@ -29,6 +34,9 @@ class DataObjects_Organisation extends DB_DataObject
     public $country;                         // string(2)  
     public $post_code;                       // string(16)  
     public $telephone;                       // string(32)  
+    public $telephone2;                      // string(16)  not_null
+    public $telephone3;                      // string(16)  not_null
+    public $fax;                             // string(16)  not_null
     public $website;                         // string(128)  
     public $email;                           // string(128)  
     public $date_created;                    // datetime(19)  binary

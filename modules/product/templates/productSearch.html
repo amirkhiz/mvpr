@@ -40,6 +40,23 @@
 		</div>
 	</div>
 </div>
+<div class="horLine"><!-- Horizentall lines --></div>
+<div class="horLine"><!-- Horizentall lines --></div>
+<div class="horLine"><!-- Horizentall lines --></div>
+<div class="searchListActions">
+	<div class="proSum col-lg-3">
+		<span>{translate(#Sum#)} {totalItems} {translate(#No. Products Finded#)}</span>
+	</div>
+	
+	<div class="proViewType col-lg-2">
+		<a class="listViewBtn" name="listView" id="listView">
+			<span class="glyphicon glyphicon-th-list"></span>
+		</a>
+		<a class="largViewBtn" name="largView" id="largView">
+			<span class="glyphicon glyphicon-th"></span>
+		</a>
+	</div>
+</div>
 <div class="searchResult">
 	<div class="col-lg-12">
 		<table class="table">
@@ -63,7 +80,7 @@
 		            <td nowrap>{aValue[product_id]}</td>
 					<td nowrap>{aValue[title]}</td>
 					<td class="center" nowrap>
-						<a href="{aValue[image]}">
+						<a href="{aValue[pImgTitle]}">
 							<span class="glyphicon glyphicon-camera"></span>
 						</a>
 					</td>
