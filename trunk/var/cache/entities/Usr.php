@@ -13,11 +13,17 @@ class DataObjects_Usr extends DB_DataObject
     public $usr_id;                          // int(11)  not_null primary_key
     public $organisation_id;                 // int(11)  
     public $role_id;                         // int(11)  not_null
+    public $categories;                      // string(64)  not_null
+    public $org_name;                        // string(64)  not_null
     public $username;                        // string(64)  
     public $passwd;                          // string(32)  
-    public $first_name;                      // string(128)  
+    public $first_name;                      // string(64)  
     public $last_name;                       // string(128)  
+    public $gender;                          // int(4)  not_null
+    public $position;                        // string(64)  not_null
+    public $branch;                          // string(64)  not_null
     public $telephone;                       // string(16)  
+    public $localphone;                      // string(16)  not_null
     public $mobile;                          // string(16)  
     public $email;                           // string(128)  
     public $addr_1;                          // string(128)  
@@ -27,6 +33,8 @@ class DataObjects_Usr extends DB_DataObject
     public $region;                          // string(32)  
     public $country;                         // string(2)  
     public $post_code;                       // string(16)  
+    public $birth_date;                      // date(10)  not_null binary
+    public $birth_place;                     // string(32)  not_null
     public $is_email_public;                 // int(6)  
     public $is_acct_active;                  // int(6)  
     public $security_question;               // int(6)  

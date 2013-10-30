@@ -550,7 +550,10 @@ class productMgr extends SGL_Manager
 		}
 		
 		$query = "
-				SELECT pro.*, FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice, cat.title AS catTitle
+				SELECT 
+					pro.*, 
+					FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice, 
+					cat.title AS catTitle
 				FROM 
 				(
 				     SELECT p.*, (p.price * cu.value) AS tlPrice
@@ -592,7 +595,22 @@ class productMgr extends SGL_Manager
 				
 			$aBrand['10']['title'] = SGL_String::translate('Brands');
 			$aBrand['10']['ops'][$value['category_id']] = $value['catTitle'] . '(' .$brandCounter[$value['category_id']]['count'] . ')';
+			
+			$query = "
+					SELECT pi.title AS proImgTitle
+					FROM
+						{$this->conf['table']['product']} AS pro
+					JOIN {$this->conf['table']['product_image']} AS pi
+					ON pi.product_id = pro.product_id
+				";
+			$proImgs = $this->dbh->getOne($query);
+			if ($proImgs){
+				$aProImgs['img'][] = $proImgs->proImgTitle;
+				echo '=====<br/>' . $proImgs->proImgTitle;
+			}
 		}
+		echo '<pre>'; print_r($aProImgs); echo '</pre>';die;
+		
 		array_unshift($searchFields, $aBrand['10']);
 		
 		$output->aPagedData = $aPagedData;
@@ -667,16 +685,12 @@ class productMgr extends SGL_Manager
     	
     	$product =  $this->dbh->getAll($query);
     	
-    	$optionId = $product['0']->optionId;
-    	
     	$aOptList = array();
     	foreach ($product as $key => $value)
     	{
     		$aOptList[$value->cmId]['title'] = $value->cmTitle;
     		$aOptList[$value->cmId]['value'][$value->cmdId] = $value->cmdTitle;
     	}
-    	
-    	//echo '<pre>'; print_r($aOptList); echo '</pre>';die;
     	
     	$output->product = $product['0'];
     	$output->pOptions = $aOptList;

@@ -588,6 +588,28 @@ div.block {
 			color: #F86D18;
 		}
 /* Search Box End*/
+/*Search List action style */
+.searchListActions {
+	overflow: hidden;
+}
+.proViewType {
+	font-size: 15px;
+}
+	.proViewType .listViewBtn, .proViewType .largViewBtn{
+		-webkit-transition:all 0.5s ease-in-out;
+		-moz-transition:all 0.5s ease-in-out;
+		-o-transition:all 0.5s ease-in-out;
+		-ms-transition:all 0.5s ease-in-out;
+		transition:all 0.5s ease-in-out;
+		cursor: pointer;
+		color: #333333;
+	}
+	.proViewType .listViewBtn:hover, .proViewType .largViewBtn:hover {
+		color: #F87F92;
+		background: none;
+		text-decoration: none;
+	}
+
 .center {
 	text-align: center;
 }	
@@ -768,3 +790,11 @@ div.block {
 	.imgFrame .proImgRemove:hover {
 		color: #000000;
 	}
+	
+/* Horizental Line style*/
+.horLine {
+	height: 3px;
+	width: 100%;
+	background: url("<?php echo $baseUrl ?>/images/bg/dots.gif") repeat-x center bottom;
+}
+
