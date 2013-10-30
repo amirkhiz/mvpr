@@ -3,6 +3,10 @@ $(document).ready(function() {
 	$("#form-group").validationEngine();
 	$(".chosen").chosen();
 	
+	$(function () {
+	    'use strict';
+	});
+	
 	$("#addImg").click(function(){
 		var imgTag = '<div class="form-group">';
 		imgTag += $("#imgHtml").html();

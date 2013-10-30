@@ -113,10 +113,10 @@ class ProductImage extends SGL_Manager {
 																   "thumbDir"=>"small", 
 																   "thumbnails" => "small",
 																   "resize" =>"width:70,height:70" , 
-																   "uploadDir" => "/www/images/product"
+																   "uploadDir" => "/www/images/products"
 																 )
 												 ),
-							 "uploadDir" => "/www/images/product"
+							 "uploadDir" => "/www/images/products"
 							);
 		$ok   = $image->init($imageConfig); 
         if (PEAR::isError($ok)) {
@@ -152,10 +152,10 @@ class ProductImage extends SGL_Manager {
 																   "thumbDir"=>"small", 
 																   "thumbnails" => "small",
 																   "resize" =>"width:70,height:70" , 
-																   "uploadDir" => "/www/images/gallery"
+																   "uploadDir" => "/www/images/products"
 																 )
 												 ),
-							 "uploadDir" => "/www/images/gallery"
+							 "uploadDir" => "/www/images/products"
 							);
 		$ok   = $image->init($imageConfig); 
         if (PEAR::isError($ok)) {
@@ -187,10 +187,10 @@ class ProductImage extends SGL_Manager {
 																   "thumbDir"=>"small", 
 																   "thumbnails" => "small",
 																   "resize" =>"width:70,height:70" , 
-																   "uploadDir" => "/www/images/gallery"
+																   "uploadDir" => "/www/images/products"
 																 )
 												 ),
-							 "uploadDir" => "/www/images/gallery"
+							 "uploadDir" => "/www/images/products"
 							);
 		$ok   = $image->init($imageConfig); 
         if (PEAR::isError($ok)) {
@@ -217,25 +217,27 @@ class ProductImage extends SGL_Manager {
 		
 		foreach ($values as $key => $value)
     	{
-    		$value = $this->generateUniqueFileName($value);
+    		$value['name'] = $this->generateUniqueFileName($value['name']);
 
     		$proImage = DB_DataObject::factory($this->conf['table']['product_image']);
     		$proImage->setFrom($values);
     		$proImage->product_image_id		= $proImgId[] = $this->dbh->nextId('product_image');
     		$proImage->product_id 			= $productId;
-    		$proImage->title			 	= $value;
+    		$proImage->title			 	= $value['name'];
     		 
     		$success = $proImage->insert();
+    		
+    		if ($success) {
+    			$this->uploadImage($value['name'], $value['tmp_name']);
+    			$result = $proImgId;
+    		} else {
+    			//  error
+    			SGL::raiseError('Incorrect parent node id or module id passed to ' . __CLASS__ . '::' . __FUNCTION__, SGL_ERROR_INVALIDARGS);
+    			$result = false;
+    		}
     	}
     	
-    	if ($success) {
-    		$this->uploadImage($value, $value);
-    		return $proImgId;
-    	} else {
-    		//  error
-    		SGL::raiseError('Incorrect parent node id or module id passed to ' . __CLASS__ . '::' . __FUNCTION__, SGL_ERROR_INVALIDARGS);
-    		return false;
-    	}
+    	return $result;
 	}
 	
 	/**
@@ -294,7 +296,7 @@ class ProductImage extends SGL_Manager {
                 $gallery = DB_DataObject::factory($this->conf['table']['product_image']);
                 $gallery->get($product_image_id);
 				if($gallery->image_name){
-					$this->deleteImage($gallery->image_name);
+					$this->deleteImage($gallery->title);
 				}
                 $gallery->delete();
                 unset($gallery);

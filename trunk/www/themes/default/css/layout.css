@@ -18,6 +18,8 @@
 <?php include('jslider.plastic.css'); ?>
 <?php include('jslider.round.css'); ?>
 <?php include('jslider.round.plastic.css'); ?>
+<?php include('blueimp-gallery.min.css'); ?>
+<?php include('bootstrap-image-gallery.css'); ?>
 <?php include('bootstrap.css'); ?>
 <?php include('nav.css'); ?>
 

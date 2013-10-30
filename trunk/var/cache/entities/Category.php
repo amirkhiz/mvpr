@@ -12,7 +12,7 @@ class DataObjects_Category extends DB_DataObject
     public $__table = 'category';            // table name
     public $category_id;                     // int(11)  not_null primary_key
     public $title;                           // string(255)  not_null
-    public $parent_id;                       // int(11)  not_null multiple_key
+    public $parent_id;                       // int(11)  not_null
     public $level_id;                        // int(11)  not_null
     public $image;                           // string(255)  not_null
     public $description;                     // blob(65535)  not_null blob
