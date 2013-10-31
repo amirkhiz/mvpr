@@ -687,10 +687,22 @@ class productMgr extends SGL_Manager
     	{
     		$aOptList[$value->cmId]['title'] = $value->cmTitle;
     		$aOptList[$value->cmId]['value'][$value->cmdId] = $value->cmdTitle;
+    		
     	}
     	
-    	$output->product = $product['0'];
-    	$output->pOptions = $aOptList;
+    	$query = "
+		    	SELECT pi.title AS proImgTitle
+		    	FROM
+		    	{$this->conf['table']['product_image']} AS pi
+		    	WHERE pi.product_id = {$productId}
+    		";
+    	$aProImgs = $this->objectToArray($this->dbh->getAll($query));
+    	
+    	//echo '<pre>';print_r($aProImgs);echo '</pre>';die;
+    	
+    	$output->product 	= $product['0'];
+    	$output->pOptions 	= $aOptList;
+    	$output->proImages 	= $aProImgs;
     }
     
     function _cmd_reorder(&$input, &$output)
