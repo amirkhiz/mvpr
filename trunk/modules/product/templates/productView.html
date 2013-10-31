@@ -12,7 +12,7 @@
 			</p>
 		</div>
 		
-		<div class="panel panel-info pView">
+		<div class="panel panel-info pViewDetails">
 			<ul class="pOptions">
 				{foreach:pOptions,key,value}
 				<li>
@@ -26,7 +26,14 @@
 	</div>
 	<div class="col-lg-5">
 		<div class="panel panel-info pImage">
-			<img src="{webRoot}/images/products/NA200ART231.jpg" width="100%"/>
+			<div class="bigImage">
+				<img src="{webRoot}/images/products/{proImages[0][proImgTitle]}" width="100%"/>
+			</div>
+			<div class="pThumbImg" flexy:foreach="proImages,key,value">
+				<a href="{webRoot}/images/products/{aValue[proImgTitle]}"  data-gallery="">
+					<img src="{webRoot}/images/products/{value[proImgTitle]}" width="20%"/>
+				</a>
+			</div>
 		</div>
 	</div>
 	</div>

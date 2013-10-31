@@ -112,7 +112,7 @@ class ProductImage extends SGL_Manager {
 							                                       "saveQuality"=>"100",
 																   "thumbDir"=>"small", 
 																   "thumbnails" => "small",
-																   "resize" =>"width:70,height:70" , 
+																   "resize" =>"width:120,height:120" , 
 																   "uploadDir" => "/www/images/products"
 																 )
 												 ),
@@ -151,7 +151,7 @@ class ProductImage extends SGL_Manager {
 							                                       "saveQuality"=>"100",
 																   "thumbDir"=>"small", 
 																   "thumbnails" => "small",
-																   "resize" =>"width:70,height:70" , 
+																   "resize" =>"width:120,height:120" , 
 																   "uploadDir" => "/www/images/products"
 																 )
 												 ),
@@ -186,7 +186,7 @@ class ProductImage extends SGL_Manager {
 							                                       "saveQuality"=>"100",
 																   "thumbDir"=>"small", 
 																   "thumbnails" => "small",
-																   "resize" =>"width:70,height:70" , 
+																   "resize" =>"width:120,height:120" , 
 																   "uploadDir" => "/www/images/products"
 																 )
 												 ),

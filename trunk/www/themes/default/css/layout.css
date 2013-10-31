@@ -653,8 +653,12 @@ div.block {
 }	
 
 /* Product View Start*/
-.pView {
+.pViewDetails {
 	padding: 20px 10px;
+}
+
+.pThumbImg {
+	float: left;
 }
 
 .pDetail p b {
