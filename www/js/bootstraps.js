@@ -3,7 +3,77 @@ $(document).ready(function() {
 	$("body").click(function(){
 		searchBtnDivClose();
 		searchTxtDivClose();
+		//brandListClose();
 	});
+	
+	
+	$("#groupListBtn").click(function(e){
+		if($('#groupListBtn span').hasClass('glyphicon-chevron-down')){
+			//e.stopPropagation();
+			catListOpen("groupList");
+			loadCatList("groupList",2);
+		}else{
+			catListClose("groupList");
+		}
+	});
+	
+	
+	$("#brandListBtn").click(function(e){
+		if($('#brandListBtn span').hasClass('glyphicon-chevron-down')){
+			//e.stopPropagation();
+			//brandListOpen();
+			catListOpen("brandList");
+			loadCatList("brandList",4);
+		}else{
+			catListClose("brandList");
+		}
+	});
+	
+	function loadCatList(levelName, levelId){
+		var ajaxurl  = makeUrl({module: "category", action: "laodCatList"});
+		$.ajax({
+			url: ajaxurl,
+            type: 'POST',
+            data: {levelId: levelId},
+            async:false,
+			success: function(data){
+            		$("#"+levelName+"Inner").html(data);
+            },
+			error: function(){
+				console.log('Error');
+			}
+		});
+	}
+	
+	function catListClose(catId){
+		console.log("#"+catId+"Btn");
+    	$("#"+catId+"Btn")
+  	    .animate({
+  	        borderTopLeftRadius: 0, 
+  	        borderTopRightRadius: 0}, "normal");
+    	
+    	$("#"+catId)
+        	.animate({ height: "1px" }, "normal" );
+    	
+    	$("#"+catId+"Inner").fadeOut("normal");
+    	$("#"+catId+"Btn").find(".glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+    }
+	
+	function catListOpen(catId){
+		console.log($("#"+catId+"Btn").html());
+    	//$("#"+catId+"Btn").css("display","block");
+    	
+    	$("#"+catId)
+        	.animate({ height: "300px" }, "normal" );
+    	
+    	$("#"+catId+"Btn")
+    	  .animate({
+    	    borderTopLeftRadius: 5, 
+    	    borderTopRightRadius: 5}, "normal");
+    	console.log("#"+catId+"Inner");
+    	$("#"+catId+"Inner").fadeIn("normal");
+    	$("#"+catId+"Btn").find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+    }
 	
 	$('body').on('click', '.catUl > li > span', function (e) {
 		e.stopPropagation();
@@ -11,11 +81,6 @@ $(document).ready(function() {
 		loadCategory(catId);
 		
 	});
-	
-	/*$("#searchTxtBox, #searchTxtDiv, #searchBtnDiv").click(function(e){
-		e.stopPropagation();
-	});
-	*/
 	
 	$("#searchTxtBox").keyup(function(e){
 			searchTxtDivOpen();

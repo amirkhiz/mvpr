@@ -4,7 +4,7 @@
 	        		<img src="{webRoot}/themes/{theme}/images/logo.png" alt="{conf[site][name]}" />
 				</a>
 			</div>
-			<div class="right-btn">
+			<div class="right-btn" id="groupListBtn" style="cursor: pointer;">
 				<div style="float: left; font-size: 70px; color: #323232; padding: 10px 0 0 18px;">
 					<span class="glyphicon glyphicon-th-large"></span>
 				</div>
@@ -12,8 +12,9 @@
 					Ürün <br /> Grupları <br /> <span class="glyphicon glyphicon-chevron-down"></span>
 				</div>
 			</div>
+			<div id="groupList"><div id="groupListInner" style="display: none;"></div></div>
 			
-			<div class="left-btn">
+			<div class="left-btn" id="brandListBtn" style="cursor: pointer;">
 				<div style="float: left; font-size: 70px; color: #FFFFFF; padding: 10px 0 0 18px;">
 					<span class="glyphicon glyphicon-tags"></span>
 				</div>
@@ -21,5 +22,6 @@
 					Marka <br /> <span class="glyphicon glyphicon-chevron-down"></span>
 				</div>
 			</div>
+			<div id="brandList"><div id="brandListInner" style="display: none;"></div></div>
 			<div style="clear: both;"><!-- --></div>
         </div><!-- end header -->

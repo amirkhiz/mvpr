@@ -25,6 +25,42 @@ div#nav-main {
     width: 1000px;
 }
 
+#brandList{
+	position: absolute; 
+	width: 220px; 
+	background-color: #6e7a8a; 
+	padding: 5px; 
+	margin-left: 530px; 
+	top: 121px; 
+	display: block;
+	height: 1px;
+	z-index: 100;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#groupList{
+	position: absolute; 
+	width: 220px; 
+	background-color: #f5ca36; 
+	padding: 5px; 
+	margin-left: 770px; 
+	top: 130px; 
+	display: block;
+	height:1px;
+	z-index: 100;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
 .required{
 	color: red;
 }
