@@ -124,6 +124,13 @@ class productMgr extends SGL_Manager
         		$input->pageTitle .= ' :: Edit';
         	}
         }
+        
+        
+    }
+    
+	function display(&$output)
+    {
+    	$output->addJavascriptFile("js/jquery/plugins/jslider/jquery.slider.js");
     }
 
     function _cmd_list(&$input, &$output)
@@ -506,6 +513,7 @@ class productMgr extends SGL_Manager
     				__FUNCTION__, SGL_ERROR_INVALIDARGS);
     	}
     }
+    
     
     function _cmd_search(&$input, &$output)
     {
