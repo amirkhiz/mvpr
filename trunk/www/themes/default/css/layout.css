@@ -657,9 +657,18 @@ div.block {
 	padding: 20px 10px;
 }
 
-.pThumbImg {
-	float: left;
+.bigImage {
+	border-bottom: 8px solid #F86D18;
 }
+.pThumbImgs {
+	padding: 25px 0;
+	overflow: hidden;
+}
+	.pThumbImgs .pThumbImg {
+		border: 1px solid transparent;
+		border-radius: 4px;
+		height: 50px;
+	}
 
 .pDetail p b {
 	line-height: 25px;
