@@ -186,6 +186,7 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	$whereCondition = '';
     	$havingCondition = '';
     	$fields = '';
+    	$proSearchViewTemplate = 'search' . $this->req->get('frmViewType') . '.html';
     	
     	if ($this->req->get('frmCAddition'))
     	{
@@ -237,7 +238,7 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	}
     	
     	$query = "
-    			SELECT p.*, FLOOR(p.price * cu.value) AS tlPrice {$fields}
+    			SELECT p.*, FLOOR(p.price * cu.value) AS tlPrice, cu.symbol_left AS curLeft, cu.symbol_right AS curRight {$fields}
 				FROM {$this->conf['table']['content_addition']} as ca
 				JOIN {$this->conf['table']['product']} AS p
 				ON p.product_id = ca.product_id
@@ -253,10 +254,23 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
 		$result = $this->dbh->getAll($query);
     	$result = $this->objectToArray($result);
     	
-//     	echo '<pre>'; print_r($result); echo '</pre>';
+    	foreach ($result as $key => $value)
+    	{
+    		$proID = $value['product_id'];
+    		$query = "
+		    		SELECT pi.title AS proImgTitle
+		    		FROM
+		    		{$this->conf['table']['product_image']} AS pi
+		    		WHERE pi.product_id = {$proID}
+	    		";
+    		$proImgs = $this->dbh->getRow($query);
+    		$result[$key]['proImgTitle'] = $proImgs->proImgTitle;
+    	}
     	
-    	$output->products = $this->objectToArray($result);
-    	$output->data = $this->_renderTemplate($output, 'searchView.html');
+    	//echo '<pre>'; print_r($result); echo '</pre>';die;
+    	
+    	$output->products = $result;
+    	$output->data = $this->_renderTemplate($output, $proSearchViewTemplate);
     }
     
     function objectToArray( $data )

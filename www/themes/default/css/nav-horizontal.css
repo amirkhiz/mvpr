@@ -9,15 +9,13 @@
 div#nav-main {
 }
     div#nav-main div.inner {
-        margin-bottom: 2px;
         height: 50px;
         background-color: #222222;
     }
 
 div.nav-bottom {
 	background: url(<?php echo $baseUrl ?>/images/bg/nav-shadow.jpg) no-repeat center top;
-	height: 25px;
-	margin-top: -2px;
+	height: 29px;
 }
 
 /* END main navigation */

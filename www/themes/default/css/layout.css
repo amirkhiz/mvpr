@@ -609,6 +609,44 @@ div.block {
 		background: none;
 		text-decoration: none;
 	}
+	
+	#proSearchResult {
+		
+	}
+	.productBox {
+		background-color: #F5F5F5;
+		float: left;
+		margin: 10px 39px;
+		text-align: center;
+	}
+		.productBox .proSearchImg {
+			font-size: 40px;
+			background-color: #fff;
+			margin: 5px 0;
+			border: 1px solid transparent;
+			border-radius: 4px;
+		}
+		
+		.productBox .proSearchAction {
+			text-align: left;
+		}
+			.productBox .proSearchAction .proSearchCompare {
+				float: left;
+			}
+			.productBox .proSearchAction .proSearchOrder {
+				float: right;
+			}
+		
+		.productBox .proSearchDetail {
+			background-color: #F86D18;
+			width: 100%;
+			margin: 10px 0;
+			border-radius: 4px;
+		}
+			.productBox .proSearchDetail a {
+				color: #fff;
+				text-decoration: none;
+			}
 
 .center {
 	text-align: center;
