@@ -582,8 +582,11 @@ class productMgr extends SGL_Manager
 			
 			);
 		$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
-		if (PEAR::isError($aPagedData)) {
-			return false;
+			if (PEAR::isError($aPagedData)) {
+			$options = array(
+			    'moduleName' => 'default',
+			);
+			SGL_HTTP::redirect($options);
 		}
 		
 		$brandCounter = array();
@@ -690,19 +693,28 @@ class productMgr extends SGL_Manager
     		
     	}
     	
-    	$query = "
-		    	SELECT pi.title AS proImgTitle
-		    	FROM
-		    	{$this->conf['table']['product_image']} AS pi
-		    	WHERE pi.product_id = {$productId}
-    		";
-    	$aProImgs = $this->objectToArray($this->dbh->getAll($query));
-    	
-    	//echo '<pre>';print_r($aProImgs);echo '</pre>';die;
-    	
-    	$output->product 	= $product['0'];
-    	$output->pOptions 	= $aOptList;
-    	$output->proImages 	= $aProImgs;
+    	$productId = intval($productId);
+    	if($productId){
+	    	$query = "
+			    	SELECT pi.title AS proImgTitle
+			    	FROM
+			    	{$this->conf['table']['product_image']} AS pi
+			    	WHERE pi.product_id = {$productId}
+	    		";
+			
+	    	$aProImgs = $this->objectToArray($this->dbh->getAll($query));
+	    	
+	    	//echo '<pre>';print_r($aProImgs);echo '</pre>';die;
+	    	
+	    	$output->product 	= $product['0'];
+	    	$output->pOptions 	= $aOptList;
+	    	$output->proImages 	= $aProImgs;
+    	}else{
+    		$options = array(
+		    	'moduleName' => 'default',
+			);
+			SGL_HTTP::redirect($options);
+    	}
     }
     
     function _cmd_reorder(&$input, &$output)
@@ -750,6 +762,7 @@ class productMgr extends SGL_Manager
     function objectToArray( $data )
     {
     	if (is_array($data) || is_object($data))
+    	//if (count($data))
 	    {
 	        $result = array();
 	        foreach ($data as $key => $value)
