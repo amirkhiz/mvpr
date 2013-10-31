@@ -3,7 +3,7 @@
 {foreach:aPagedData[data],key,value}
 	<li style="border-bottom: 1px solid #555555;">
 		<ul>
-			<li><a href="#">{value[title]}</a></li>
+			<li><a href="{makeUrl(#search#,#product#,#product#)}frmCategoryID/{value[category_id]}">{value[title]}</a></li>
 		</ul>
 	</li>
 {end:}
