@@ -1,0 +1,35 @@
+<script type="text/javascript" src="{webRoot}/js/jquery/plugins/scroll/jquery.slimscroll.js"></script>
+<ul id="brnadUl">
+{foreach:aPagedData[data],key,value}
+	<li style="border-bottom: 1px solid #555555;">
+		<ul>
+			<li><a href="#">{value[title]}</a></li>
+		</ul>
+	</li>
+{end:}
+</ul>
+
+<style>
+	ul#brnadUl li {
+		padding: 0px;
+	}
+	ul#brnadUl li a{
+		color: #f5ca36;
+		display: block;
+		padding: 5px;
+	}
+	ul#brnadUl li a:hover{
+		display: block;
+		background-color: rgb(81, 87, 95);
+		text-decoration: none;
+	}
+</style>
+
+<script>
+	$(document).ready(function() {
+		$('#brnadUl').slimscroll({
+		  width: '205px',
+		  height: '280px'
+		});
+	});
+</script>

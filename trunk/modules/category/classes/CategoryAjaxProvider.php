@@ -60,6 +60,40 @@ class CategoryAjaxProvider extends SGL_AjaxProvider2
         return true;
     }
     
+	function laodCatList($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	$this->responseFormat = SGL_RESPONSEFORMAT_HTML;
+    	
+    	$levelId = $this->req->get('levelId');
+    	
+    	$query = "SELECT * 
+    				FROM {$this->conf['table']['category']} 
+    				where level_id = '$levelId'  
+    				order by order_id 
+    				";
+        $limit = $_SESSION['aPrefs']['resPerPage'];
+            
+        $pagerOptions = array(
+                'mode'      => 'Sliding',
+                'delta'     => 8,
+                'perPage'   => 10000, 
+
+            );
+            $aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+       //echo "<pre>"; print_r($aPagedData); echo "</pre>";
+       //exit;
+            if (PEAR::isError($aPagedData)) {
+                return false;
+            }
+            $output->aPagedData = $aPagedData;
+            //echo "<pre>"; print_r($aPagedData); echo "</pre>";
+            $output->totalItems = $aPagedData['totalItems'];
+    	$output->levelId = $levelId;
+    	$template = ($levelId == 2) ? 'loadGroupList.html' : 'loadBrandList.html';
+    	$output->data = $this->_renderTemplate($output, $template);
+    }
+    
     function searchTxtList($input, $output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
