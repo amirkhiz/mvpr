@@ -596,20 +596,17 @@ class productMgr extends SGL_Manager
 			$aBrand['10']['title'] = SGL_String::translate('Brands');
 			$aBrand['10']['ops'][$value['category_id']] = $value['catTitle'] . '(' .$brandCounter[$value['category_id']]['count'] . ')';
 			
+			$proID = $value['product_id'];
 			$query = "
 					SELECT pi.title AS proImgTitle
 					FROM
-						{$this->conf['table']['product']} AS pro
-					JOIN {$this->conf['table']['product_image']} AS pi
-					ON pi.product_id = pro.product_id
+						{$this->conf['table']['product_image']} AS pi
+					WHERE pi.product_id = {$proID}
 				";
-			$proImgs = $this->dbh->getOne($query);
-			if ($proImgs){
-				$aProImgs['img'][] = $proImgs->proImgTitle;
-				echo '=====<br/>' . $proImgs->proImgTitle;
-			}
+			$proImgs = $this->dbh->getRow($query);
+			$aPagedData['data'][$key]['proImgTitle'] = $proImgs->proImgTitle;
 		}
-		echo '<pre>'; print_r($aProImgs); echo '</pre>';die;
+		//echo '<pre>'; print_r($aPagedData['data']); echo '</pre>';die;
 		
 		array_unshift($searchFields, $aBrand['10']);
 		

@@ -3,6 +3,16 @@ $(document).ready(function() {
 	$("#form-group").validationEngine();
 	$(".chosen").chosen();
 	
+	$("#largView").click(function(){
+		$("#proSearchViewType").val('LargView');
+		searchProduct();
+	});
+	
+	$("#listView").click(function(){
+		$("#proSearchViewType").val('ListView');
+		searchProduct();
+	});
+	
 	$(document).on("click", ".proImgRemove", function(){
 		$("#pDeletedImg").val($("#pDeletedImg").val() + "," + $(this).attr('imgId'));
 		$(this).parent().fadeOut(300,function(){$(this).remove();});
@@ -11,13 +21,13 @@ $(document).ready(function() {
 	$("#addImg").click(function(){
 		var imgTag = '<div class="form-group">';
 		imgTag += $("#imgHtml").html();
-		imgTag += '<div class="col-lg-1"><a type="button" class="btn btn-danger removeImg"><span class="glyphicon glyphicon-remove"></span></a></div></div>'
+		imgTag += '<div class="col-lg-1"><a type="button" class="btn btn-danger removeImg"><span class="glyphicon glyphicon-remove"></span></a></div></div>';
 		imgTag = $(imgTag).hide().fadeIn(1000);
 		$("#imgDiv").append(imgTag);
 	});
 	
 	$(document).on("click", ".removeImg", function(){
-		$(this).parent().parent().fadeOut(300,function(){$(this).remove()});
+		$(this).parent().parent().fadeOut(300,function(){$(this).remove();});
 	});
 	
 	minPrice = parseInt(jQuery("#minPrice").val());
@@ -59,6 +69,7 @@ $(document).ready(function() {
 		var aBrand		= new Array();
 		var aGroup		= new Array();
 		var filter		= '';
+		var proSearchViewType = $('#proSearchViewType').val();
 		
 		$('.multiple').each(function(){
 			if ($(this).attr('fieldId') == '0'){
@@ -84,11 +95,11 @@ $(document).ready(function() {
 		var catId = $('#catId').val();
 
 		if (aSelected.length != 0)
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup});
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup, frmViewType:proSearchViewType});
 		else if (aGroup.length != 0)
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmPrices:prices, frmCur:currency, frmGroups: aGroup});
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmPrices:prices, frmCur:currency, frmGroups: aGroup, frmViewType:proSearchViewType});
 		else
-			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup});
+			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup, frmViewType:proSearchViewType});
 		
 		$.ajax({
 			url: ajaxurl,
@@ -96,7 +107,7 @@ $(document).ready(function() {
             type: 'POST',
 			success: function(data){
 				//console.log(data);
-				$("#searchResult").html(data);
+				$("#proSearchResult").html(data);
 			},
 			error: function(){
 				console.log('Error');
@@ -121,7 +132,7 @@ $(document).ready(function() {
 		values = '<input type="checkbox" style="display: inline;"> ';
 		values += '<input type="text" class="form-control input-sm" style="width: 180px; display: inline;" placeholder="New label" value=""> ';
 		values += '<a style="margin-bottom:10px; cursor:pointer; text-decoration:none;"><span class="glyphicon glyphicon-plus sinap"></span></a> ';
-		var newCheck = '<div class="option-values">' + values + '</div>'
+		var newCheck = '<div class="option-values">' + values + '</div>';
 		thisDiv.parent().append(newCheck);
 		$(this).parent().remove();
 		thisDiv.append('<a style="margin-bottom:10px; cursor:pointer; text-decoration:none;"><span class="glyphicon glyphicon-minus sinam"></span></a>');
@@ -135,7 +146,7 @@ $(document).ready(function() {
 		values = '<input type="radio" name="radioption" style="display: inline;"> ';
 		values += '<input type="text" class="form-control input-sm" style="width: 180px; display: inline;" placeholder="New label" value=""> ';
 		values += '<a style="margin-bottom:10px; cursor:pointer; text-decoration:none;"><span class="glyphicon glyphicon-plus rsinap"></span></a> ';
-		var newRadio = '<div class="option-values">' + values + '</div>'
+		var newRadio = '<div class="option-values">' + values + '</div>';
 		thisDiv.parent().append(newRadio);
 		$(this).parent().remove();
 		thisDiv.append('<a style="margin-bottom:10px; cursor:pointer; text-decoration:none;"><span class="glyphicon glyphicon-minus rsinam"></span></a>');
@@ -186,7 +197,7 @@ $(document).ready(function() {
 				loadTagOptions(this);
 				callfunc = false;
 			}
-		})
+		});
 		
 		$('.tagOptions').on('hidden.bs.popover', function () {
 			callfunc = true;

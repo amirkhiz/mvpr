@@ -1,0 +1,24 @@
+		<div class="productBox panel panel-info col-lg-3" flexy:foreach="products,key,aValue">
+			<div class="proSearchImg">
+				{if:aValue[proImgTitle]}
+				<a href="{webRoot}/images/products/{aValue[proImgTitle]}"  data-gallery="">
+					<img src="{webRoot}/images/products/small/small_{aValue[proImgTitle]}" height="50"/>
+				</a>
+				{else:}
+				<span class="glyphicon glyphicon-ban-circle proImgNotFound"></span>
+				{end:}
+			</div>
+			<div class="proSearchAction">
+				<input type="checkbox" class="proSearchCompare" name="compare" value="{aValue[product_id]}"/>{translate(#Compare#)}
+				<input type="text" class="proSearchOrder" name="orderCount" size="2"/>
+				<div class="clearfix"><!-- clear And  Fix --></div>
+			</div>
+			<div class="proSearchDetail">
+				<a href="{makeUrl(#view#,#product#,#product#,aPagedData[data],#frmProductID|product_id#,key)}">
+					{aValue[title]}
+				</a>
+			</div>
+			<div class="proSearchPrice">
+				<b>{translate(#Price#)} : </b>{aValue[curLeft]} {aValue[price]} {aValue[curRight]}<br />
+			</div>
+		</div>
