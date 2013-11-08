@@ -116,7 +116,7 @@ $(document).ready(function() {
 	}
 	
 
-	var myFields=new Array("label","place","deval","help","height","width","rows","valid","mask","pattern", "checkes");
+	var myFields=new Array("label","place","deval","help","height","width","rows","valid","mask","pattern", "checkes","postval","preval");
 	var callfunc = true;
 	
 	function orderTags(){
@@ -220,6 +220,7 @@ $(document).ready(function() {
 		});
 	}
 	tagOptionClick();
+	
 	$('body').on('click', '#newtag li a', function () {
 		tagType = $(this).attr("alt");
 		var $input = $("."+tagType+"Tag").html();
@@ -470,6 +471,7 @@ $(document).ready(function() {
 					$($this).parents('li').find('.added-tag').attr("size",optionField);
 				break;
 				case "mask":
+					/*
 					help = $($this).parents('li').find('span[class="help-block"]').html();
 					if(optionField == ""){
 			    		if(typeof(unmask) == "function"){
@@ -480,9 +482,32 @@ $(document).ready(function() {
 			    		$($this).parents('li').find('input[class^="added-tag"]').mask(optionField);
 			    		$($this).parents('li').find('span[class="help-block"]').html(help + " e.g." + optionField);
 			    	}
+			    	*/
 				break;
 				case "blabel":
 					$($this).parents('li').find('input[type="button"]').val(optionField);
+				break;
+				case "postval":
+					/*
+					if($($this).parents('li').find('span[class="help-block"]').html() != ""){
+						var hHtml = $($this).parents('li').find('span[class="help-block"]').html();
+						$($this).parents('li').find('span[class="help-block"]').html(hHtml + " e.g. XXXX" + optionField);
+					}else if(optionField != ""){
+						$($this).parents('li').find('span[class="help-block"]').html(" e.g. XXXX" + optionField);
+					}
+					*/
+				break;
+				
+				case "preval":
+					/*
+					if($($this).parents('li').find('span[class="help-block"]').html() != ""){
+						var hHtml = $($this).parents('li').find('span[class="help-block"]').html();
+						hHtml += " " + optionField;
+						$($this).parents('li').find('span[class="help-block"]').html(hHtml + " e.g. " + optionField + "XXXX");
+					}else{
+						$($this).parents('li').find('span[class="help-block"]').html(" e.g. " + optionField + "XXXX");
+					}
+					*/
 				break;
 			}
 			$($this).parents('li').find(".h-"+myfields).val(optionField);

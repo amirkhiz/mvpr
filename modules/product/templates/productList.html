@@ -1,5 +1,6 @@
 <div class="panel panel-info" style="margin: 10px;">
   	<div class="container">
+  		{if:roleId}
   		<div class="topbtns">
 			<a type="button" href="{makeUrl(#add#,#product#,#product#)}" class="btn btn-primary">
 				<span class="glyphicon glyphicon-plus"></span> {translate(#New Product#)}
@@ -8,6 +9,7 @@
 				<span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}
 			</a>
 		</div>
+		{end:}
 		{msgGet()}
 		<form name="frmProductMgr" method="post" flexy:ignore id="frmProductMgr">
 		    <input type="hidden" name="action" value="delete" />
@@ -28,7 +30,9 @@
 						<th>{translate(#Created#)}</th>
 						<th>{translate(#Updated#)}</th>
 						<th>{translate(#Order#)}</th>
+						{if:roleId}
 			            <th>{translate(#Action#)}</th>
+						{end:}
 			        </tr>
 				</thead>
 				<tbody>

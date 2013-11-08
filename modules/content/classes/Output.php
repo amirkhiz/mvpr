@@ -57,7 +57,7 @@ class ContentOutput
     	
     	if($aOptions['checkes'])
     	{
-    		$output->items = $this->makeRadios($aOptions['checkes']);
+    		$output->items = $this->makeCheckes($aOptions['checkes']);
     	}
     	
     	if($aOptions['radios'])
@@ -112,7 +112,7 @@ class ContentOutput
     		if($vValue[0]){
     			$checked = "checked";
     		}
-    		$items .= '<label class="checkbox-inline"><input type="checkbox" $checked title="checkbox"> '. $vValue[1] .' </label>';
+    		$items .= '<label class="checkbox-inline"><input type="checkbox" $checked title="checkbox" '.$checked.'> '. $vValue[1] .' </label>';
     	}
     	return $items;
     }

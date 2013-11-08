@@ -62,10 +62,10 @@ class ContentDAO extends SGL_Manager
         parent::__construct();
         
         $this->inputTypes = array(
-			//"textbox" => "Text input",
+			"textbox" => "Text input",
 		    //"textarea" => "Text area",
-		    //"checkbox" => "Checkbox",
-		    //"radio" => "Radio",
+		    "checkbox" => "Checkbox",
+		    "radio" => "Radio",
 			"select" => "Selectbox",
         	"multipleselect" => "Multiple Selectbox",
 			//"file" => "File",

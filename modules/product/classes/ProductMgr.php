@@ -131,6 +131,8 @@ class productMgr extends SGL_Manager
 	function display(&$output)
     {
     	$output->addJavascriptFile("js/jquery/plugins/jslider/jquery.slider.js");
+    	
+    	$output->roleId = SGL_Session::getRoleId() == false;
     }
 
     function _cmd_list(&$input, &$output)
