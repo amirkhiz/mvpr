@@ -123,7 +123,8 @@ class AdminFaqMgr extends SGL_Manager
         $output->template  = 'faqEdit.html';
         $output->pageTitle = 'FaqMgr :: Add';
         $output->action    = 'insert';
-        $output->wysiwyg   = true;    }
+        $output->wysiwyg   = true;    
+    }
 
     function _cmd_insert(&$input, &$output)
     {
@@ -166,7 +167,8 @@ class AdminFaqMgr extends SGL_Manager
 
         $faq = DB_DataObject::factory($this->conf['table']['faq']);
         $faq->get($input->faqId);
-        $output->faq = $faq;    }
+        $output->faq = $faq;    
+    }
 
     function _cmd_update(&$input, &$output)
     {
@@ -184,7 +186,8 @@ class AdminFaqMgr extends SGL_Manager
         } else {
             SGL::raiseError('faq update NOT successfull',
                 SGL_ERROR_NOAFFECTEDROWS);
-        }    }
+        }    
+    }
 
     function _cmd_list(&$input, &$output)
     {

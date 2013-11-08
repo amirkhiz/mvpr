@@ -187,6 +187,42 @@ class TypeMgr extends SGL_Manager
 
     function _cmd_edit(&$input, &$output)
     {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+        $output->template  = 'type/typeEdit.html';
+        $output->pageTitle = 'TypeMgr :: Edit';
+        $output->action    = 'update';
+        $output->inputTypes = $this->da->inputTypeArray();
+
+        $type = DB_DataObject::factory($this->conf['table']['content_type']);
+        $type->get($input->typeId);
+        $output->type = $type;
+        unset($type);
+        
+        $type = DB_DataObject::factory($this->conf['table']['content_type_mapping']);
+        $type->whereAdd("content_type_id='".$input->typeId."'");
+        $type->orderBy("tag_order");
+        $type->find();
+		$aTypes = array();
+		while($type->fetch())
+		{
+            $aTypes[]          = clone($type);
+            
+			//$aTypes['mId'][] = $type->content_type_mapping_id;
+			//$aTypes['opt'][] = $type->options;
+		}
+		$output->tags = $aTypes;
+		
+		
+		$category = DB_DataObject::factory($this->conf['table']['category']);
+        
+        $category->whereAdd("level_id = 3");
+        $category->find();
+        $aCategories = array();
+        while($category->fetch()){
+        	$aCategories[$category->category_id] = $category->title;
+        }
+        $output->categories = $aCategories;
+    	/*
         SGL::logMessage(null, PEAR_LOG_DEBUG);
         $output->template  = 'type/typeEdit.html';
         $output->pageTitle = 'TypeMgr :: Edit';
@@ -234,6 +270,7 @@ class TypeMgr extends SGL_Manager
         	$aCategories[$category->category_id] = $category->title;
         }
         $output->categories = $aCategories;
+        */
     }
 
     function _cmd_update(&$input, &$output)
