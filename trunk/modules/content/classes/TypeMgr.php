@@ -205,10 +205,12 @@ class TypeMgr extends SGL_Manager
 		$aTypes = array();
 		while($type->fetch())
 		{
-            $aTypes[]          = clone($type);
+			$type->options = unserialize($type->options); 
+			$type->options['content_type_mapping_id'] = $type->content_type_mapping_id;
+			$type->options = serialize($type->options);
+			//echo "<pre>"; print_r($type->options); echo "</pre>";
+            $aTypes[] = clone($type);
             
-			//$aTypes['mId'][] = $type->content_type_mapping_id;
-			//$aTypes['opt'][] = $type->options;
 		}
 		$output->tags = $aTypes;
 		
@@ -276,18 +278,61 @@ class TypeMgr extends SGL_Manager
     function _cmd_update(&$input, &$output)
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
-        $type = DB_DataObject::factory($this->conf['table']['content_type']);
-        $type->content_type_id = $input->typeId;
-        $type->find(true);
-        $type->setFrom($input->type);
-        $success = $type->update();
-
-        if ($success !== false) {
-            SGL::raiseMsg('content_type update successfull', false, SGL_MESSAGE_INFO);
-        } else {
-            SGL::raiseError('content_type update NOT successfull',
-                SGL_ERROR_NOAFFECTEDROWS);
-        }    
+        $contentTypeId = $input->type->content_type_id;
+        $aTags = array();
+        foreach($input->type as $tKey => $tArray)
+        {
+        	foreach($tArray as $key => $value)
+        	{
+        		$i = 0;
+				foreach($input->type->{$tKey}[$key] as $vKey => $vValue)
+				{
+					$aTags[$tKey][$vKey][$key] = $input->type->{$tKey}[$key][$vKey];
+				}
+        	}
+        }
+        
+        $maps = $this->getContentMaps($contentTypeId);
+       	 
+        //echo "<pre>"; print_r($aTags); echo "</pre>"; exit;
+        
+        foreach($aTags as $aKey => $aValue)
+        {
+        	foreach($aValue as $key => $value)
+        	{
+        		$value['type'] = $aKey;
+        		if(empty($value['content_type_mapping_id'])){
+        			unset($value['content_type_mapping_id']);
+        			$typeMap = DB_DataObject::factory($this->conf['table']['content_type_mapping']);
+	        		$typeMap->content_type_mapping_id = $this->dbh->nextId($this->conf['table']['content_type_mapping']);
+	        		$typeMap->title = $value['label'];
+	        		$typeMap->content_type_id = $contentTypeId;
+	        		$typeMap->options 	= serialize($value);
+	        		$typeMap->tag_order	= $value['order'];
+	        		$typeMap->insert();
+        		}else{
+        			$mId = $value['content_type_mapping_id'];
+	        		unset($value['content_type_mapping_id']);
+	        		unset($maps[$mId]);
+	        		$typeMap = DB_DataObject::factory($this->conf['table']['content_type_mapping']);
+		        	$typeMap->get($mId);
+		        	$typeMap->title = $value['label'];
+		        	$typeMap->tag_order = $value['order'];
+		        	$typeMap->options = serialize($value);
+					$typeMap->update();
+        		}
+        	}
+        }
+        
+        foreach ($maps as $key => $mapId){
+        		$maps = DB_DataObject::factory($this->conf['table']['content_type_mapping']);
+                $maps->get($mapId);
+                $maps->delete();
+                unset($maps);
+        }
+        
+        SGL::raiseMsg('content type updated successfully', true, SGL_MESSAGE_INFO);
+        //exit;
     }
 
     function _cmd_list(&$input, &$output)
@@ -355,6 +400,20 @@ class TypeMgr extends SGL_Manager
             SGL::raiseError('content_type delete NOT successfull ' .
                 __CLASS__ . '::' . __FUNCTION__, SGL_ERROR_INVALIDARGS);
         }    
+    }
+    
+	function getContentMaps($contentTypeId){
+        $maps = DB_DataObject::factory($this->conf['table']['content_type_mapping']);
+        $maps->whereAdd("content_type_id='".$contentTypeId."'");
+        $maps->orderBy("tag_order");
+        $maps->find();
+		$aMaps = array();
+		while($maps->fetch())
+		{
+            $aMaps[$maps->content_type_mapping_id] = $maps->content_type_mapping_id;
+		}
+		
+		return $aMaps;
     }
 
 
