@@ -246,7 +246,8 @@ $(document).ready(function() {
 	tagOptionPopover();
 	function loadTagOptions($this){
 		$($this).parents('li').find("input[type=hidden]").each(function(){
-			myfields = $(this).attr("class").replace("h-","");
+			fClass = String($(this).attr("class"));
+			myfields = fClass.replace("h-","");
 			var fieldOption = $($this).parents('li').find(".h-"+myfields).val();
 			switch(myfields){
 				case 'width':
@@ -357,7 +358,9 @@ $(document).ready(function() {
 	
 	function saveTagOptions($this){
 		$($this).parents('li').find("input[type=hidden]").each(function(){
-			myfields = $(this).attr("class").replace("h-","");
+			fClass = String($(this).attr("class"));
+			myfields = fClass.replace("h-","");
+			//myfields = $(this).attr("class").replace("h-","");
 			var optionField = $($this).closest('div[class="options"]').find(".cu-"+myfields).val();
 			
 			switch(myfields){

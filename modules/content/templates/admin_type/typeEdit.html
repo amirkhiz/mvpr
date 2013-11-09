@@ -15,7 +15,7 @@
 	</div>
   {msgGet()}
 	<input type="hidden" name="action" value="{action}" />
-	<input type="hidden" name="content_type_id" value="{type.content_type_id}" />
+	<input type="hidden" name="type[content_type_id]" value="{type.content_type_id}" />
 	
 	<div class="form-group">
 	  <label class="col-2 control-label">{translate(#Title#,#ucfirst#)}: </label>
@@ -36,7 +36,6 @@
 	
 	<ul class="sortable list" id="added-tags">
 		{foreach:tags,tKey,tValue}
-			{tValue.content_type_mapping_id}
 			{this.plugin(#makeTag#,tValue.options):h}
 		{end:}
 	</ul>
@@ -60,8 +59,25 @@
 <script>
 $(document).ready(function() {
 	$('.sortable').sortable();
+	function orderTags(){
+		var order = 1;
+		$("ul#added-tags").find(".h-order").each(function(){
+			$(this).val(order);
+			order++;
+		});
+	}
+	$('.sortable').sortable({
+		placeholder: "ui-state-highlight",
+		update: function( event, ui ) {
+			orderTags();
+		}
+	});
+	orderTags();
 });
 </script>
+<style>
+.ui-state-highlight { height: 69px; line-height: 1.2em; }
+</style>
 
 <!--{foreach:inputTypes,key,value}
 	<flexy:include src="admin_type/options/option_{key}.html" />

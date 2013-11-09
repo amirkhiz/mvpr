@@ -6,7 +6,8 @@
 			{end:}
 		</span>
 		<span class="help-block">{options[help]}</span>
-		<input type="hidden" name="type[checkbox][label][]" class="h-label" flexy:ignore>
-		<input type="hidden" name="type[checkbox][help][]" class="h-help" flexy:ignore>
+		<input type="hidden" name="type[checkbox][label][]" class="h-label" value="{options[label]}" flexy:ignore>
+		<input type="hidden" name="type[checkbox][help][]" class="h-help" value="{options[help]}" flexy:ignore>
 		<input type="hidden" name="type[checkbox][checkes][]" class="h-checkes" value="{this.plugin(#setDefaultValue#,options[checkes],#0|Label 1#):h}" flexy:ignore>
 		<input type="hidden" name="type[checkbox][order][]" class="h-order" flexy:ignore>
+		<input type="hidden" name="type[checkbox][content_type_mapping_id][]" value="{options[content_type_mapping_id]}" flexy:ignore>

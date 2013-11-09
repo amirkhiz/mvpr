@@ -1,4 +1,4 @@
-		<select class="form-control added-tag" title="select">
+		<select class="form-control added-tag {options[height]}" title="select">
 			<option></option>
 			{items:h}
 		</select>
@@ -9,3 +9,4 @@
 		<input type="hidden" name="type[select][width][]" class="h-width" value="{this.plugin(#setDefaultValue#,options[width],#8#):h}" flexy:ignore>
 		<input type="hidden" name="type[select][selects][]" class="h-selects" value="{this.plugin(#setDefaultValue#,options[selects],#0|Option 1#):h}" flexy:ignore>
 		<input type="hidden" name="type[select][order][]" class="h-order" value="{options[order]}" flexy:ignore>
+		<input type="hidden" name="type[select][content_type_mapping_id][]" value="{options[content_type_mapping_id]}" flexy:ignore>
