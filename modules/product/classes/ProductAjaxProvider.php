@@ -153,7 +153,50 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	 
     	$catId = $this->req->get('frmCatId');
+    	
+    	$typeId = $this->dbh->getOne("select content_type_id from {$this->conf['table']['content_type']} where category_id = $catId");
+    	
+    	//$output->template  = 'type/typeEdit.html';
+        $output->pageTitle = 'TypeMgr :: Edit';
+        $output->action    = 'update';
+        $output->inputTypes = $this->da->inputTypeArray();
 
+        $type = DB_DataObject::factory($this->conf['table']['content_type']);
+        $type->get($typeId);
+        $output->type = $type;
+        unset($type);
+        
+        $type = DB_DataObject::factory($this->conf['table']['content_type_mapping']);
+        $type->whereAdd("content_type_id='".$typeId."'");
+        $type->orderBy("tag_order");
+        $type->find();
+		$aTypes = array();
+		while($type->fetch())
+		{
+			$type->options = unserialize($type->options); 
+			$type->options['content_type_mapping_id'] = $type->content_type_mapping_id;
+			$type->options = serialize($type->options);
+			//echo "<pre>"; print_r($type->options); echo "</pre>";
+            $aTypes[] = clone($type);
+            
+		}
+		$output->tags = $aTypes;
+		
+		
+		$category = DB_DataObject::factory($this->conf['table']['category']);
+        
+        $category->whereAdd("level_id = 3");
+        $category->find();
+        $aCategories = array();
+        while($category->fetch()){
+        	$aCategories[$category->category_id] = $category->title;
+        }
+        $output->categories = $aCategories;
+        
+        $output->data = $this->_renderTemplate($output, 'typeLoad.html');
+    	
+    	
+		/*
     	$query = "
     			SELECT cm.content_type_mapping_id as cmId, cm.title AS cmTitle, cmd.content_type_mapping_data_id AS cmdID, cmd.title AS cmdTitle
     			FROM {$this->conf['table']['content_type']} as c
@@ -176,6 +219,7 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
 		$output->aOptions = $aOptions;
 		$output->isMulti = 1;
     	$output->data = $this->_renderTemplate($output, 'propertySelectbox.html');
+    	*/
     	
     }
     
