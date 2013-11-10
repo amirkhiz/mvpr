@@ -173,7 +173,8 @@ class productMgr extends SGL_Manager
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
     	$usrId = SGL_Session::getUid();
-    	
+    	//echo "<pre>"; print_r($input->product->prop); echo "<pre>";
+
     	SGL_DB::setConnection();
     	//  get new order number
     	$product = DB_DataObject::factory($this->conf['table']['product']);
@@ -199,19 +200,18 @@ class productMgr extends SGL_Manager
     	$success = $product->insert();
     	 
     	//  insert options in content_addition table
-    	foreach ($input->product->prop as $key => $value)
-    	{
-    		foreach ($value as $opKey => $opValue)
-    		{
-		    	$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);
-		    	$cAddition->setFrom($input->product->prop);
-		    	$cAddition->content_addition_id				= $this->dbh->nextId('content_addition');
+    	
+    	foreach($input->product->prop as $key => $value){
+    		foreach($value as $vKey => $vValue){
+	    		$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);
+	    		$cAddition->content_addition_id				= $this->dbh->nextId('content_addition');
 		    	$cAddition->product_id 						= $productId;
-		    	$cAddition->content_type_mapping_data_id 	= $opValue;
-		    	
-		    	$cASuccess = $cAddition->insert();
+		    	$cAddition->content_type_mapping_data_id	= $key;
+		    	$cAddition->value							= $vValue;
+		    	$success = $cAddition->insert();
     		}
     	}
+    	
     
     	if ($success) {
     		SGL::raiseMsg('product saved successfully', true, SGL_MESSAGE_INFO);
@@ -220,7 +220,6 @@ class productMgr extends SGL_Manager
     				SGL_ERROR_NOAFFECTEDROWS);
     	}
     	
-    	//echo '<pre>'; print_r($input->product); echo '</pre>';die;
     }
     
     function _cmd_edit(&$input, &$output)
