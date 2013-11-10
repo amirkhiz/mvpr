@@ -361,7 +361,7 @@
 		});
 		
 		var ajaxurl = makeUrl({module: "product", action: "getProperty", frmCatId:pOptionId})
-		
+		console.log(pOptionId);
 		$.ajax({
 			url: ajaxurl,
 			cache: false,

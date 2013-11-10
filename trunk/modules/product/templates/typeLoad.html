@@ -1,0 +1,13 @@
+	{foreach:tags,tKey,tValue}
+		{this.plugin(#loadTag#,tValue.options):h}
+	{end:}
+	<style>
+		ul#loaded-tags{
+			width: 700px;
+			margin-left: 20px;
+		}
+		
+		ul#loaded-tags li {
+			list-style: none;
+		}
+	</style>
