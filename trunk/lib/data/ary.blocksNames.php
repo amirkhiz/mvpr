@@ -10,6 +10,7 @@ $aBlocksNames = array(
     'AdminBreadcrumbs' => 'AdminBreadcrumbs',
     'MainNav' => 'MainNav',
     'MainBreadcrumb' => 'MainBreadcrumb',
-    'FirstPage' => 'FirstPage'
+    'FirstPage' => 'FirstPage',
+	'Slider' => 'Slider',
     );
 ?>

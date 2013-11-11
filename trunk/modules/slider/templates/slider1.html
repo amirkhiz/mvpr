@@ -1,0 +1,50 @@
+<link rel="stylesheet" type="text/css" href="{conf[site][baseUrl]}/slider/css/style6.css" />
+<script language="javascript" type="text/javascript" src="{conf[site][baseUrl]}/slider/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="{conf[site][baseUrl]}/slider/js/jquery.easing.js"></script>
+<script language="javascript" type="text/javascript" src="{conf[site][baseUrl]}/slider/js/script.js"></script>
+ 	<script>
+		var ie6sliderCss = '<link rel="stylesheet" type="text/css" href="' + SGL_JS_WEBROOT + '/slider/css/style6IE.css" />';
+	</script>
+
+<!--[if lte IE 7]>
+    <script type="text/javascript">
+		document.write(ie6sliderCss);
+    </script>
+<![endif]-->
+<script type="text/javascript" src="{conf[site][baseUrl]}/slider/js/jquery.easing.js"></script>
+<script type="text/javascript" src="{conf[site][baseUrl]}/slider/js/script.js"></script>
+<script type="text/javascript">
+ $(document).ready( function(){	
+	// buttons for next and previous item						 
+	var buttons = { previous:$('#jslidernews3 .button-previous') ,
+					next:$('#jslidernews3 .button-next') };			
+	 $('#jslidernews3').lofJSidernews( { interval : 4000,
+										direction		: 'opacitys',	
+										easing			: 'easeInOutExpo',
+										duration		: 1200,
+										auto		 	: true,
+										maxItemDisplay  : 4,
+										navPosition     : 'horizontal', // horizontal
+										navigatorHeight : 32,
+										navigatorWidth  : 80,
+										mainWidth		: 710,
+										buttons			: buttons } );	
+});
+</script>
+
+       
+<!------------------------------------- THE CONTENT ------------------------------------------------->
+<div id="jslidernews3" class="lof-slidecontent" style="width:710px; height:300px;margin: 0 auto;">
+	 <!-- MAIN CONTENT --> 
+	 <div class="button-previous">Previous</div>
+    <div class="button-next">Next</div>
+      <div class="main-slider-content" style="width:710px; height:300px;">
+        <ul class="sliders-wrap-inner">
+		{if:results}
+		    <li flexy:foreach="results,key,valueObj">
+		        <img width="710px" height="300px" src="{conf[site][baseUrl]}/images/slider/{valueObj.image1}"/>
+		    </li>
+		{end:} 
+        </ul>  	
+    </div>
+</div>
