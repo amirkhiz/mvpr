@@ -25,6 +25,24 @@ div#nav-main {
     width: 1000px;
 }
 
+.table-searching{
+	width: 100%;
+}
+.table-searching th {
+	font-size: 13px;
+	color: #F86D18;
+	border-bottom: 3px solid #999999;
+	padding: 2px;
+}
+.table-searching td {
+	font-size: 13px;
+	border: none;
+	background: none;
+	color: #555555;
+	padding: 2px;
+	border-bottom: 1px solid #cccccc;
+}
+
 #brandList{
 	position: absolute; 
 	width: 220px; 
