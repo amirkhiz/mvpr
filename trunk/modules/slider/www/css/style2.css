@@ -108,11 +108,11 @@ ul.sliders-wrap-inner li img{	padding:0px;	}
 }
 .lof-slidecontent   .button-next {
 	right:0px;
-	background:url(../images/next.png) no-repeat right center;
+	background:url(../images/arrow-r.png) no-repeat right center;
 }
 .lof-slidecontent  .button-previous {
 	left:0px;
-	background:url(../images/previous.png) no-repeat left center;
+	background:url(../images/arrow-l.png) no-repeat left center;
 }
 
 

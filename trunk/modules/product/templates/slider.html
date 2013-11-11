@@ -1,0 +1,85 @@
+<link rel="stylesheet" type="text/css" href="{webRoot}/product/css/skin.css" />
+<script language="javascript" type="text/javascript" src="{webRoot}/product/js/jquery.jcarousel.min.js"></script>
+
+<script>
+	var ie6sliderCss = '<link rel="stylesheet" type="text/css" href="' + SGL_JS_WEBROOT + '/product/css/style6IE.css" />';
+</script>
+
+<!--[if lte IE 7]>
+    <script type="text/javascript">
+		document.write(ie6sliderCss);
+    </script>
+<![endif]-->
+
+<script type="text/javascript">
+/**
+ * We use the initCallback callback
+ * to assign functionality to the controls
+ */
+function mycarousel_initCallback(carousel) {
+    
+	jQuery('#mycarousel-next').bind('click', function() {
+        carousel.next();
+        return false;
+    });
+
+    jQuery('#mycarousel-prev').bind('click', function() {
+        carousel.prev();
+        return false;
+    });
+};
+
+// Ride the carousel...
+jQuery(document).ready(function() {
+    jQuery("#mycarousel").jcarousel({
+        scroll: 1,
+        initCallback: mycarousel_initCallback,
+        // This tells jCarousel NOT to autobuild prev/next buttons
+        buttonNextHTML: null,
+        buttonPrevHTML: null
+    });
+});
+
+</script>
+
+<!-- Block Slider Content
+----------------------->
+
+
+<div class=" jcarousel-skin-tango">
+	<div style="position: relative; display: block;" id="mycarousel" class="jcarousel-container jcarousel-container-horizontal">
+
+	    <div style="position: relative;" class="jcarousel-clip jcarousel-clip-horizontal">
+	    	<ul style="" class="jcarousel-list jcarousel-list-horizontal">
+		      {foreach:productsItem,key,value}
+		      <li jcarouselindex="{key}" class="jcarousel-item jcarousel-item-horizontal jcarousel-item-1 jcarousel-item-1-horizontal">
+		      	<div class="productImg">
+		      		<a href="{makeUrl(#view#,#product#,#product#,productsItem,#frmProductID|product_id#,key)}" target="_blank">
+		      			<img src="{webRoot}/images/products/small/small_{value.image}" alt="{value.imgTitle}" width="100" height="100">
+					</a>
+	      		</div>
+		      	<div class="productTitle">
+		      		<span>{value.title}</span>
+	      		</div>
+	      		<div class="productPrice">
+		      		<span>{translate(#Price#)} : {value.price}  {translate(#Toman#)}</span>
+		      	</div>
+	      		<div class="productDesc">
+	      			<a href="{makeUrl(#view#,#product#,#product#,productsItem,#frmProductID|product_id#,key)}" class="btn btn-danger btn-xs" target="_blank">
+      					{translate(#Description#)}
+					</a>
+	      		</div>
+		      </li>
+		      {end:}
+		          	
+	    	</ul>
+		</div>
+	
+	    <div class="jcarousel-scroll">
+	        <a href="#" id="mycarousel-next" class="jcarousel-prev-horizontal"><!-- Prev --></a>
+	        <a href="#" id="mycarousel-prev" class="jcarousel-next-horizontal"><!-- Next --></a>
+	    </div>
+
+  </div>
+</div>
+

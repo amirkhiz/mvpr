@@ -12,5 +12,6 @@ $aBlocksNames = array(
     'MainBreadcrumb' => 'MainBreadcrumb',
     'FirstPage' => 'FirstPage',
 	'Slider' => 'Slider',
+	'ProductSlider' => 'ProductSlider',
     );
 ?>

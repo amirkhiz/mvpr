@@ -1,0 +1,65 @@
+.bwWrapper {
+	position:relative;
+	display:block;
+}
+
+/******************************************************
+* 
+* Blocks Slider Style
+*
+*******************************************************/
+.wrapper .InnerWrapper:first-child {
+    margin-left: 14px;
+    
+}
+.wrapper .InnerWrapper{
+    margin-right: 5px;
+	list-style:none;
+	float:left;
+	padding: 5px 5px;
+	background-color: #fff;
+	border: 1px solid #BEBEBE; 
+    max-width: 200px;
+    min-height: 250px;
+    max-height: 250px;
+    overflow: hidden;
+}
+
+.bwWrapper {
+    height: 250px;
+}
+
+/******************************************************
+* 
+* Horizental line styles 
+*
+*******************************************************/
+div#sliderBlockHr {
+    display: block;
+    margin: 5px 0;
+    padding: 0 10px;
+}
+div#sliderBlockHr1 {
+    margin: 0 auto;
+    border-bottom: 1px dashed #fff;
+    width: 100%;
+}
+    div#sliderBlockHr1 div#sliderBlockHr2 {
+        border-top: 1px dashed #fff;
+        border-bottom: 1px dashed #c7c7c7;
+        height: 6px;
+    }
+        div#sliderBlockHr1 div#sliderBlockHr2 div#sliderBlockHr3{
+            border-top: 1px solid #c7c7c7;
+            border-bottom: 1px solid #fff;
+            margin-top: 2px;
+        }
+        
+.blockSliderLink:hover {
+	text-decoration: none;
+}
+
+div.blockSliderTitle {
+    background: url(<?php echo $baseUrl ?>/images/bg/titleBack.png) no-repeat center;
+    color: #982521;
+}
