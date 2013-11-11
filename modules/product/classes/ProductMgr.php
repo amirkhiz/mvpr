@@ -430,10 +430,25 @@ class productMgr extends SGL_Manager
     	$output->template = "productSearch.html";
     	$categoryId = $input->categoryId;
     	
+    	echo $query = "select * from {$this->conf['table']['product']} order by date_created desc";
     	
+    	$query = "
+	    	select p.*, pi.title as proImgTitle, cu.title as curTitle
+			from {$this->conf['table']['product']} as p 
+			left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
+			left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
+			where p.category_id in ({$categoryId}) order by p.date_created desc
+    	";
     	
-    	
-    	
+    	$limit = $_SESSION['aPrefs']['resPerPage'];
+		$pagerOptions = array(
+			'mode'      => 'Sliding',
+			'delta'     => 8,
+			'perPage'   => 1000,
+			
+			);
+		$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+		$output->aPagedData = $aPagedData;
     	
     	
     	
