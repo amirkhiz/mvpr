@@ -206,7 +206,7 @@ class productMgr extends SGL_Manager
 	    		$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);
 	    		$cAddition->content_addition_id				= $this->dbh->nextId('content_addition');
 		    	$cAddition->product_id 						= $productId;
-		    	$cAddition->content_type_mapping_data_id	= $key;
+	    		$cAddition->content_type_mapping_id			= $key;
 		    	$cAddition->value							= $vValue;
 		    	$success = $cAddition->insert();
     		}
@@ -235,112 +235,27 @@ class productMgr extends SGL_Manager
     	//  get product data
     	$product->get($productId);
     	
-		$query = "
-			SELECT 
-				c1.category_id AS `brandId`, 
-				c2.category_id AS `optionId`, 
-				c3.category_id AS `groupId`, 
-				c4.category_id AS `categoryId`, 
-				cmd.content_type_mapping_data_id AS cmdId, 
-				cm.content_type_mapping_id AS cmId, 
-				c.content_type_id AS cId, 
-				ca.content_addition_id AS caId,
-				c1.title AS `brand`, 
-				c2.title AS `option`, 
-				c3.title AS `group`, 
-				c4.title AS `category`, 
-				cmd.title AS cmdTitle, 
-				cm.title AS cmTitle, 
-				c.type_name AS cTitle
-			FROM 
-				{$this->conf['table']['product']} AS p
-			JOIN {$this->conf['table']['content_addition']} AS ca
-			ON ca.product_id = p.product_id
-			JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
-			ON cmd.content_type_mapping_data_id = ca.content_type_mapping_data_id
-			JOIN {$this->conf['table']['content_type_mapping']} AS cm
-			ON cm.content_type_mapping_id = cmd.content_type_mapping_id
-			JOIN {$this->conf['table']['content_type']} AS c
-			ON c.content_type_id = cm.content_type_id
-			JOIN {$this->conf['table']['category']} AS c1
-			ON c1.category_id = p.category_id
-			JOIN {$this->conf['table']['category']} AS c2
-			ON c2.category_id = c1.parent_id
-			JOIN {$this->conf['table']['category']} AS c3 
-			ON c3.category_id = c2.parent_id
-			JOIN {$this->conf['table']['category']} AS c4 
-			ON c4.category_id = c3.parent_id
-			WHERE p.product_id = {$productId}
+    	$query = "
+			SELECT c1.title as brandCat , c2.title as propCat, c2.category_id as propId, c3.title as groupCat, c4.title as categoryCat
+			FROM {$this->conf['table']['category']} as c1 
+			left join {$this->conf['table']['category']} as c2 on c2.category_id = c1.parent_id 
+			left join {$this->conf['table']['category']} as c3 on c3.category_id = c2.parent_id 
+			left join {$this->conf['table']['category']} as c4 on c4.category_id = c3.parent_id 
+			where c1.category_id = '{$product->category_id}'
 		";
+    	
+		$cats = $this->dbh->getRow($query);
 		
-		$cats =  $this->dbh->getAll($query);
 		
-		$aCats = array();
-		$aOpts = array();
-		$aImgs = array();
-		foreach ($cats as $value)
-		{
-			$aCats['category'] 		= $value->categoryId;
-			$aCats['group'] 		= $value->groupId;
-			$aCats['option']		= $value->optionId;
-			$aCats['brand'] 		= $value->brandId;
-			
-			$aOpts['selected'][] 	= $value->cmdId;
-		}
-		
-		array_unshift($aCats,'0');
-		foreach ($aCats as $key => $value)
-		{
-			$query = "
-				SELECT category_id, title
-				FROM {$this->conf['table']['category']}
-				WHERE parent_id = {$value}
-			";
-			$cats =  $this->dbh->getAll($query);
-			foreach ($cats as $catId => $catVal)
-			{
-				
-				switch ($key)
-				{
-					case '0':
-						$aCategory[$catVal->category_id] = $catVal->title;
-					break;
-					
-					case 'category':
-						$aGroup[$catVal->category_id] = $catVal->title;
-					break;
-					
-					case 'group':
-						$aOptions[$catVal->category_id] = $catVal->title;
-					break;
-					
-					case 'option':
-						$aBrands[$catVal->category_id] = $catVal->title;
-					break;
-				}
-			}
-		}
-		
-		$query = "
-			SELECT cm.content_type_mapping_id as cmId, cm.title AS cmTitle, cmd.content_type_mapping_data_id AS cmdID, cmd.title AS cmdTitle
-			FROM {$this->conf['table']['content_type']} as c
-			JOIN {$this->conf['table']['content_type_mapping']} AS cm
-			ON cm.content_type_id = c.content_type_id
-			JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
-			ON cmd.content_type_mapping_id = cm.content_type_mapping_id
-			WHERE c.category_id = {$aCats['option']}
-			";
-		$cmData =  $this->dbh->getAll($query);
-		
-		$aOptList = array();
-		foreach ($cmData as $key => $value)
-		{
-			$aOptList[$value->cmId]['title'] = $value->cmTitle;
-			$aOptList[$value->cmId]['ops'][$value->cmdID] = $value->cmdTitle;
-		}
-		
-		//Find product images from product_image table
-		$query = "
+		$query = "select * from category where parent_id = '{$cats->propId}'";
+    	$brands = $this->dbh->getAll($query);
+    	$aBrands = array();
+    	foreach($brands as $value)
+    	{
+    		$aBrands[$value->category_id] = $value->title;
+    	}
+    	
+    	$query = "
 			SELECT pi.product_image_id AS imgId, pi.title AS imgTitle
 			FROM {$this->conf['table']['product']} AS p
 			JOIN {$this->conf['table']['product_image']} AS pi
@@ -353,15 +268,12 @@ class productMgr extends SGL_Manager
 			$aImgs['img'][$value->imgId]	= $value->imgTitle;
 		}
 		
-		$output->aOptList 	= $aOptList;
-		$output->aCategory 	= $aCategory;
-		$output->aGroup 	= $aGroup;
-		$output->aOptions 	= $aOptions;
-		$output->aBrands 	= $aBrands;
-		$output->aCats 		= $aCats;
-		$output->aOpts 		= $aOpts;
 		$output->aProImgs	= $aImgs;
 		$output->product 	= $product;
+		$output->cats = $cats;
+		$output->brands = $aBrands;
+    	$this->edit_display($output);
+		
     }
     
     function _cmd_update(&$input, &$output)
@@ -386,18 +298,14 @@ class productMgr extends SGL_Manager
     	}
     	unset($cAddition);
     	
-    	foreach ($input->product->prop as $key => $value)
-    	{
-    		foreach ($value as $opKey => $opValue)
-    		{
-    			//Insert Product New properties in content addition table
-    			$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);
-		    	$cAddition->setFrom($input->product->prop);
-		    	$cAddition->content_addition_id				= $this->dbh->nextId('content_addition');
+    	foreach($input->product->prop as $key => $value){
+    		foreach($value as $vKey => $vValue){
+	    		$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);
+	    		$cAddition->content_addition_id				= $this->dbh->nextId('content_addition');
 		    	$cAddition->product_id 						= $productId;
-		    	$cAddition->content_type_mapping_data_id 	= $opValue;
-		    	
-		    	$cASuccess = $cAddition->insert();
+	    		$cAddition->content_type_mapping_id			= $key;
+		    	$cAddition->value							= $vValue;
+		    	$success = $cAddition->insert();
     		}
     	}
     	
@@ -519,20 +427,27 @@ class productMgr extends SGL_Manager
     function _cmd_search(&$input, &$output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
-    	
+    	$output->template = "productSearch.html";
     	$categoryId = $input->categoryId;
     	
-    	$catTree = $this->catTree($categoryId);
     	
+    	
+    	
+    	
+    	
+    	
+    	
+    	/*
+    	$catTree = $this->catTree($categoryId);
     	$aCats = array();
     	$aOptions = array();
     	$aBrands = array();
     	foreach ($catTree as $key => $value)
     	{
-    		/* $aCats[$value->ParentCatID]['title'] = $value->ParentCatTitle;
-    		$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['title'] = $value->GroupCatTitle;
-    		$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['title'] = $value->OptionCatTitle;
-    		$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['brands'][$value->BrandCatID] = $value->BrandCatTitle; */
+    		#$aCats[$value->ParentCatID]['title'] = $value->ParentCatTitle;
+    		#$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['title'] = $value->GroupCatTitle;
+    		#$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['title'] = $value->OptionCatTitle;
+    		#$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['brands'][$value->BrandCatID] = $value->BrandCatTitle; 
     		
     		$aGroups['group']['title'] = SGL_String::translate('Groups');;
     		$aGroups['group']['ops'][$value->GroupCatID] = $value->GroupCatTitle;
@@ -557,7 +472,6 @@ class productMgr extends SGL_Manager
 			$aProductId[$value->product_id] = $value->product_id;
 			
 		}
-		
 		$query = "
 				SELECT 
 					pro.*, 
@@ -650,7 +564,7 @@ class productMgr extends SGL_Manager
     	}else{
     		$output->searchFields = $searchFields;
     	}
-    	
+    	*/
     	//echo '<pre>'; print_r($output->searchFields); echo '</pre>';die;
     }
     

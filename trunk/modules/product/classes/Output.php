@@ -69,8 +69,7 @@ class ProductOutput
     	
     	if($aOptions['type'] == "textbox"){
     		if(count($addition)){
-    			$this->finTxtValue($aOptions['content_type_mapping_id'])
-				echo "<pre>";print_r($addition);echo "</pre>";
+    			$aOptions['deval'] = $this->finTxtValue($aOptions['content_type_mapping_id']);
     		}
     	}
     	
@@ -164,6 +163,15 @@ class ProductOutput
     		$items .= '<option value="' . $vValue[1] . '" ' . $selected . '>'. $vValue[1] .'</option>';
     	}
     	return $items;
+    }
+    
+    function finTxtValue($mId){
+    	foreach($this->addition as $key => $value)
+    	{
+    		if($value->content_type_mapping_id == $mId){
+    			return $value->value;
+    		}
+    	}
     }
     
     function syncIfEdit($str, $mId)
