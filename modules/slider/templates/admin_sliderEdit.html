@@ -1,0 +1,60 @@
+<div id="manager-actions">
+
+    <span>{translate(#Action#)}: &nbsp;</span>
+    <a class="action save" href="javascript:formSubmit('frmsliderAdd','submitted',1,1)" accesskey="s">{translate(#Save#)}</a>
+    <a class="action cancel" href="{makeUrl(#list#,#adminslider#,#slider#)}" accesskey="c">{translate(#Cancel#)}</a>
+</div>
+<div id="content">
+    <div id="content-header">
+        <h2>{translate(pageTitle)}</h2>
+        <div class="message">{msgGet()}</div>
+    </div>
+    <form action="" method="post" name="frmsliderAdd" enctype="multipart/form-data" flexy:ignore id="frmsliderAdd">
+        <fieldset class="hide">
+            {if:isAdd}
+            <input type="hidden" name="action" value="insert" />
+                {if:redir}
+                <input type="hidden" name="redir" value="{redir}" />
+                {end:}
+            {else:}
+            <input type="hidden" name="action" value="update" />
+            <input type="hidden" name="slider[slider_id]" value="{slider.slider_id}" />
+            <input type="hidden" name="slider[title_original]" value="{slider.title_original}" />
+            {end:}
+        </fieldset>
+
+        <h3 flexy:if="isAdd">{translate(#add slider#,#ucfirst#)}</h3>
+        <h3 flexy:if="!isAdd">{translate(#edit slider#,#ucfirst#)}</h3>
+        <fieldset class="inside" id="sliderDetails">
+        
+            {if:!isAdd}
+                {if:multiLanguageContents}
+                <p>
+                    <label class="tipOwner">{translate(#Language#)}
+                        <span class="tipText">{translate(#switching language will cause changes to be lost#)}</span>
+                    </label>
+                    <select dir="ltr" name="frmSliderLang"
+                            onChange="javascript:document.location.href='{makeUrl(#edit#,#adminslider#,#slider#,##,#frmSliderId|sliderId#)}frmSliderLang/' + this.options[selectedIndex].value + '/';">
+                        {generateSelect(availableLangs,sliderLang):h}
+                    </select>
+                </p>
+                {end:}
+            {end:}
+       		<p>
+                <label for="slider[title]"><span class="required">*</span> {translate(#Title#)}</label>
+                <span class="error" flexy:if="error[title]">{translate(error[title])}</span>
+                <input type="text" lang="fa" cols="40" rows="7" name="slider[title]" id="slider[title]" value="{slider.title}">
+                <span dir="ltr" class="currentLanguage">&nbsp;{fullSliderLang}</span>
+            </p>
+         
+           
+            <p>
+                <label for="gimage1"><span class="required">*</span> {translate(#pic#)}</label>
+                <span class="error" flexy:if="error[gimage1]"></span>
+                <input type="file" name="gimage1" id="gimage1" size="26">
+            </p>
+            
+        </fieldset>
+    </form>
+    <div class="spacer"></div>
+</div>

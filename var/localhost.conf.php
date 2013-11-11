@@ -181,5 +181,6 @@ $conf['table']['item'] = 'item';
 $conf['table']['item_addition'] = 'item_addition';
 $conf['table']['item_type'] = 'item_type';
 $conf['table']['item_type_mapping'] = 'item_type_mapping';
+$conf['table']['slider'] = 'slider';
 $conf['localConfig']['moduleName'] = 'default';
 ?>
