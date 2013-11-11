@@ -1,5 +1,5 @@
 	{foreach:tags,tKey,tValue}
-		{this.plugin(#loadTag#,tValue.options):h}
+		{this.plugin(#loadTag#,tValue.options,addition):h}
 	{end:}
 	<style>
 		ul#loaded-tags{

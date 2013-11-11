@@ -14,7 +14,8 @@
 			{msgGet()}
 			
 			<input type="hidden" name="action" value="{action}" />
-			<input type="hidden" name="product[product_id]" value="{product.product_id}" />
+			<input type="hidden" name="product[product_id]" id="productId" value="{product.product_id}" />
+			<input type="hidden" name="isAdd" id="isAdd" value="{isAdd}" />
 			
 				<!-- tabs left -->
 				<div class="tabbable tabs-left">
@@ -302,10 +303,8 @@
 					</div>
 				</div>
 				<!-- /tabs -->
-			
 		</form>
 	</div><!-- End container -->
-	
 </div>
 
 <script>
@@ -356,14 +355,16 @@
             type: 'POST',
 			success: function(data){
 				$("#p-brandsDiv").html(data);
+				getProperties(pOptionId);
 			},
 			error: function(){
 				console.log('Error');
 			}
 		});
-		
-		var ajaxurl = makeUrl({module: "product", action: "getProperty", frmCatId:pOptionId})
-		console.log(pOptionId);
+	});
+	
+	function getProperties(pOptionId, productId){
+		var ajaxurl = makeUrl({module: "product", action: "getProperty", frmCatId:pOptionId, frmProductId:productId})
 		$.ajax({
 			url: ajaxurl,
 			cache: false,
@@ -375,10 +376,16 @@
 				console.log('Content Type Error');
 			}
 		});
-	});
+	}
 </script>
-<script>
-	$(document).ready(function() {
-		$("#form-group").validationEngine();
-	});	
-</script>
+{scriptOpen:h}
+$(document).ready(function() {
+	var isAdd = $("#isAdd").val();
+	if(isAdd == "0"){
+		var optionId = $("#p-options").val();
+		var productId = $("#productId").val();
+		getProperties(optionId,productId);
+	}
+	$("#form-group").validationEngine();
+});	
+{scriptClose:h}
