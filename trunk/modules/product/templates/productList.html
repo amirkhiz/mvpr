@@ -24,12 +24,12 @@
 	                    </th>
 						<th>{translate(#Title#)}</th>
 						<th>{translate(#Model#)}</th>
+						<th>{translate(#Brand#)}</th>
 						<th>{translate(#Price#)}</th>
 						<th>{translate(#Quantity#)}</th>
 						<th>{translate(#User#)}</th>
 						<th>{translate(#Created#)}</th>
 						<th>{translate(#Updated#)}</th>
-						<th>{translate(#Order#)}</th>
 						{if:roleId}
 			            <th>{translate(#Action#)}</th>
 						{end:}
@@ -40,17 +40,20 @@
 			            <td align="center"><input type="checkbox" name="frmDelete[]" value="{aValue[product_id]}" /></td>
 						<td nowrap>{aValue[title]}</td>
 						<td nowrap>{aValue[model]}</td>
+						<td nowrap>brand</td>
 						<td nowrap>{aValue[price]}</td>
 						<td nowrap>{aValue[quantity]}</td>
 						<td nowrap>{aValue[username]}</td>
 						<td nowrap>{formatDate(aValue[date_created])}</td>
 						<td nowrap>{formatDate(aValue[last_update])}</td>
 						<td nowrap>{aValue[item_order]}</td>
+						{if:roleId}
 			            <td width="10%" nowrap>
 			            <a href="{makeUrl(#edit#,#product#,#product#,results,#frmProductID|product_id#,key)}" />
 			                <span class="glyphicon glyphicon-edit"></span> {translate(#edit#)}
 			            </a> 
 			            </td>
+						{end:}
 			        </tr>
 				</tbody>
 		    </table>
