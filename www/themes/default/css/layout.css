@@ -849,3 +849,7 @@ div.block {
 	background: url("<?php echo $baseUrl ?>/images/bg/dots.gif") repeat-x center bottom;
 }
 
+/* Slider Block Style */
+.sliderBlock .content {
+	padding: 0 !important;
+}
