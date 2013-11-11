@@ -164,7 +164,7 @@ class productMgr extends SGL_Manager
     	$output->action     = 'insert';
     	$output->pageTitle  = $this->pageTitle . ' :: Add';
     	$output->productLang = SGL_Translation::getFallbackLangID();
-    	
+    	$output->isAdd = 1;
     	$this->edit_display($output);
     }
     
@@ -227,7 +227,7 @@ class productMgr extends SGL_Manager
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
     	$productId = $input->productId;
-    
+    	$output->isAdd = 0;
     	$output->template  = 'productEdit.html';
     	$output->action    = 'update';
     	$output->pageTitle = $this->pageTitle . ' :: Edit';

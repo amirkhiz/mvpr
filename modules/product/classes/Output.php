@@ -41,9 +41,12 @@ require_once SGL_CORE_DIR . '/Delegator.php';
 
 class ProductOutput
 {
-    function loadTag($tag)
+	var $addition = array();
+    function loadTag($tag, $addition = array())
     {
+    	$this->addition = $addition;
     	$aOptions = unserialize($tag);
+    	
     	if($aOptions['selects'])
     	{
     		$output->items = $this->makeSelects($aOptions['selects'], $aOptions['content_type_mapping_id']);
@@ -64,12 +67,20 @@ class ProductOutput
     		$output->items = $this->makeRadios($aOptions['radios'], $aOptions['content_type_mapping_id']);
     	}
     	
+    	if($aOptions['type'] == "textbox"){
+    		if(count($addition)){
+    			$this->finTxtValue($aOptions['content_type_mapping_id'])
+				echo "<pre>";print_r($addition);echo "</pre>";
+    		}
+    	}
+    	
     	if(!$aOptions["width"])
     	{
     		$aOptions["width"] = 8;
     	}
     	
     	$output->options = $aOptions;
+    	
     	$tagType = $this->_renderTemplate($output, 'type/options/tag_'.$aOptions['type'].'.html');
     	
     	if($aOptions['type'] == "textbox" and $aOptions['postval'] != ""){
@@ -94,7 +105,7 @@ class ProductOutput
     
     function makeRadios($str, $mId)
     {
-    	$aItems = explode("~~||~~",$str);
+    	$aItems = $this->syncIfEdit($str, $mId);
     	$items = "";
     	foreach($aItems as $iValue){
     		$vValue = explode("|",$iValue);
@@ -109,7 +120,8 @@ class ProductOutput
     
 	function makeCheckes($str, $mId)
 	{
-    	$aItems = explode("~~||~~",$str);
+		$aItems = $this->syncIfEdit($str, $mId);
+    	//$aItems = explode("~~||~~",$str);
     	$items = "";
     	foreach($aItems as $iValue){
     		$vValue = explode("|",$iValue);
@@ -126,7 +138,7 @@ class ProductOutput
     
 	function makeMultipleselects($str, $mId)
 	{
-    	$aItems = explode("~~||~~",$str);
+    	$aItems = $this->syncIfEdit($str, $mId);
     	$items = "";
     	foreach($aItems as $iValue){
     		$vValue = explode("|",$iValue);
@@ -141,7 +153,7 @@ class ProductOutput
     
 	function makeSelects($str, $mId)
 	{
-    	$aItems = explode("~~||~~",$str);
+    	$aItems = $this->syncIfEdit($str, $mId);
     	$items = "";
     	foreach($aItems as $iValue){
     		$vValue = explode("|",$iValue);
@@ -153,6 +165,43 @@ class ProductOutput
     	}
     	return $items;
     }
+    
+    function syncIfEdit($str, $mId)
+    {
+    	$aItems = explode("~~||~~", $str);
+    	if(count($this->addition)){
+			foreach($aItems as $iKey => $iValue)
+			{
+				$x = 0;
+				$aItemsValue = substr($iValue, 2);
+		    	foreach($this->addition as $key => $value)
+		    	{
+		    		if($mId == $value->content_type_mapping_id){
+						$f = $aItemsValue . "---" ;
+						if($value->value == $aItemsValue)
+						{
+							$x = 1;
+						}
+		    		}
+		    	}
+		    	if($x){
+		    		$aItems[$iKey] = "1|" . $aItemsValue;
+		    	}else{
+		    		$aItems[$iKey] = "0|" . $aItemsValue;
+		    	}
+			}
+    	}
+    	return $aItems;
+    }
+    
+    function removeDeVal($aItems){
+    	foreach($aItems as $key => $value)
+    	{
+    		$aItems[$key] = substr($value, 2);
+    	}
+    	return $aItems;
+    }
+    
     
     function setDefaultValue($userVal, $defaultValue)
     {

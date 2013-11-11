@@ -153,12 +153,11 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	 
     	$catId = $this->req->get('frmCatId');
+    	$productId = $this->req->get('frmProductId');
     	
     	$typeId = $this->dbh->getOne("select content_type_id from {$this->conf['table']['content_type']} where category_id = $catId");
     	
     	//$output->template  = 'type/typeEdit.html';
-        $output->pageTitle = 'TypeMgr :: Edit';
-        $output->action    = 'update';
         $output->inputTypes = $this->da->inputTypeArray();
 
         $type = DB_DataObject::factory($this->conf['table']['content_type']);
@@ -193,6 +192,18 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
         }
         $output->categories = $aCategories;
         
+        if($productId){
+        	$output->productId  = $productId;
+        	$addition = DB_DataObject::factory($this->conf['table']['content_addition']);
+	        $addition->whereAdd("product_id = '". $productId."'");
+	        $addition->find();
+	        $aAddition = array();
+	        while($addition->fetch()){
+	        	$aAddition[] = clone($addition);
+	        }
+	        //echo "<pre>"; print_r($aAddition); echo "</pre>";
+	        $output->addition = $aAddition;
+        }
         $output->data = $this->_renderTemplate($output, 'typeLoad.html');
     	
     	
