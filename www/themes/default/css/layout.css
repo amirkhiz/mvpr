@@ -474,7 +474,7 @@ div#content {
     div#main {
         min-height: 350px;
         _height: 350px;  /* min height for ie6 */
-        padding: 0em 10px 5px;
+        /*padding: 0em 10px 5px;*/
         background-color: #fff;
     }
 
