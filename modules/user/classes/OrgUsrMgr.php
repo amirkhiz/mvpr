@@ -65,6 +65,11 @@ class OrgUsrMgr extends SGL_Manager
 
         $this->_aActionsMapping =  array(
             'list'       => array('list'),
+        	'edit'       => array('edit'),
+        	'update'     => array('update', 'redirectToDefault'),
+        	'delete'     => array('delete', 'redirectToDefault'),
+        	'requestPasswordReset'     	=> array('requestPasswordReset'),
+        	'resetPassword'     		=> array('resetPassword', 'redirectToDefault'),
         );
     }
 
@@ -77,20 +82,14 @@ class OrgUsrMgr extends SGL_Manager
         $input->masterTemplate = $this->masterTemplate;
         $input->template    = $this->template;
         $input->action      = ($req->get('action')) ? $req->get('action') : 'list';
+        $input->userID      = $req->get('frmUserID');
+        $input->user        = (object)$req->get('user');
+        $input->aDelete     = $req->get('frmDelete');
+        $input->user->is_acct_active = (isset($input->user->is_acct_active)) ? 1 : 0;
+        $input->user->gender = (isset($input->user->gender)) ? 1 : 0;
 
         //  get referer details if present
         $input->redir = $req->get('redir');
-
-       
-        $aErrors = array();
-
-        //  if errors have occured
-        if (is_array($aErrors) && count($aErrors)) {
-            SGL::raiseMsg('Please fill in the indicated fields');
-            $input->error = $aErrors;
-            $input->template = 'userAdd.html';
-            $this->validated = false;
-        }
 
     }
 
@@ -98,6 +97,8 @@ class OrgUsrMgr extends SGL_Manager
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
 
+        $output->isAcctActive = ($output->user->is_acct_active) ? ' checked="checked"' : '';
+        $output->isMale		  = ($output->user->gender) ? ' checked="checked"' : '';
     }
 
     function _cmd_list($input, $output)
@@ -162,6 +163,129 @@ class OrgUsrMgr extends SGL_Manager
    		
     	$output->totalItems = $aPagedData['totalItems'];
 		$output->addOnLoadEvent("switchRowColorOnHover()");
+    }
+    
+    function _cmd_edit($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    
+    	$output->pageTitle = $this->pageTitle . ' :: Edit';
+    	$output->template = 'userAdd.html';
+    	$oUser = $this->da->getUserById($input->userID);
+    	$output->user = $oUser;
+    	$output->user->username_orig = $oUser->username;
+    	$output->user->email_orig = $oUser->email;
+    	$output->user->birth_date = date("d.m.Y", strtotime($output->user->birth_date));
+    	$output->user->categories = explode(",", $output->user->categories);
+    }
+    
+    function _cmd_update($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	//echo "<pre>"; print_r($input->user); echo "</pre>"; exit;
+    	$oUser = $this->da->getUserById($input->user->usr_id);
+    	$oUser->setFrom($input->user);
+    	$oUser->last_updated = SGL_Date::getTime();
+    	$oUser->updated_by = SGL_Session::getUid();
+    	$oUser->birth_date = date("Y-m-d", strtotime($oUser->birth_date));
+    	//echo "<pre>"; print_r($oUser); echo "</pre>"; exit;
+    	
+    	$success = $this->da->updateUser($oUser, $input->user->role_id_orig,
+    			$input->user->organisation_id_orig);
+    
+    	if (!PEAR::isError($success)) {
+    		SGL::raiseMsg('details successfully updated', true, SGL_MESSAGE_INFO);
+    	} else {
+    		SGL::raiseError('There was a problem inserting the record',
+    				SGL_ERROR_NOAFFECTEDROWS);
+    	}
+    }
+    
+    function _cmd_delete($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	
+    	//Get Current user Id
+    	$curUsrId = SGL_Session::getUid();
+    
+    	$results = array();
+    	if (is_array($input->aDelete)) {
+    		foreach ($input->aDelete as $index => $userId) {
+    
+    			//  don't allow admin to be deleted
+    			if ($userId == $curUsrId) {
+    				continue;
+    			}
+    			$ret = $this->da->deletePrefsByUserId($userId);
+    			$ret = $this->da->deletePermsByUserId($userId);
+    			if (!empty($this->conf['cookie']['rememberMeEnabled'])) {
+    				$ret = $this->da->deleteUserLoginCookiesByUserId($userId);
+    			}
+    			$query = "DELETE FROM {$this->conf['table']['user']} WHERE usr_id=$userId";
+    			if (is_a($this->dbh->query($query), 'PEAR_Error')) {
+    				$results[$userId] = 0; //log result for user
+    				continue;
+    			}
+    			$results[$userId] = 1;
+    		}
+    	} else {
+    		SGL::raiseError('Incorrect parameter passed to ' .
+    				__CLASS__ . '::' . __FUNCTION__, SGL_ERROR_INVALIDARGS);
+    	}
+    	//  could eventually display a list of failed/succeeded user ids--just summarize for now
+    	$results = array_count_values($results);
+    	$succeeded = array_key_exists(1, $results) ? $results[1] : 0;
+    	$failed = array_key_exists(0, $results) ? $results[0] : 0;
+    	if ($succeeded && !$failed) {
+    		$errorType = SGL_MESSAGE_INFO;
+    	} elseif (!$succeeded && $failed) {
+    		$errorType = SGL_MESSAGE_ERROR;
+    	} else {
+    		$errorType = SGL_MESSAGE_WARNING;
+    	}
+    	//  redirect on success
+    	SGL::raiseMsg("$succeeded user(s) successfully deleted. $failed user(s) failed.", false, $errorType);
+    }
+    
+    function _cmd_requestPasswordReset($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    
+    	if (isset($this->conf['tuples']['demoMode'])
+    			&& $this->conf['tuples']['demoMode'] == true
+    			&& $input->userID == 1) {
+    		SGL::raiseMsg('Admin password cannot be reset in demo mode',
+    				false, SGL_MESSAGE_WARNING);
+    		return false;
+    	}
+    	$output->pageTitle = $this->pageTitle . ' :: Reset password';
+    	$output->template = 'userPasswordReset.html';
+    	$oUser = $this->da->getUserById($input->userID);
+    	$output->user = $oUser;
+    }
+    
+    function _cmd_resetPassword($input, $output)
+    {
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    
+    	require_once 'Text/Password.php';
+    	$oPassword = new Text_Password();
+    	$passwd = $oPassword->create();
+    	$oUser = $this->da->getUserById($input->userID);
+    	$oUser->passwd = md5($passwd);
+    	$success = $oUser->update();
+    	if ($input->passwdResetNotify && $success !== false) {
+    		require_once SGL_MOD_DIR . '/user/classes/PasswordMgr.php';
+    		$success = PasswordMgr::sendPassword($oUser, $passwd);
+    	}
+    	//  redirect on success
+    	if ($success) {
+    		SGL::raiseMsg('Password updated successfully', true, SGL_MESSAGE_INFO);
+    	} else {
+    		$output->template = 'userManager.html';
+    		SGL::raiseError('There was a problem inserting the record',
+    				SGL_ERROR_NOAFFECTEDROWS);
+    	}
     }
 }
 ?>
