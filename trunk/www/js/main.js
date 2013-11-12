@@ -83,12 +83,20 @@ $(document).ready(function() {
 			else{
 				aThisSelect = $(this).val();
 				aSelected.push.apply(aSelected, aThisSelect);
+				if(aThisSelect != null){
+					aSelected.push($(this).attr("fieldid") + "|||");
+				}
 			}
 			if ($(this).val()){
 				filter += '<b>' + $(this).attr('selTitle') + '</b>: ';
 				filter += '<i>' + $(this).children("option:selected").text() + '</i>,  ';
 			}
 		});
+		for(i=0; i < aSelected.length; i++){
+			var s = aSelected[i];
+			aSelected[i] = s.replace(/\//g,"~~~"); 
+		}
+		aSelected = aSelected.join("~~||~~");
 		
 		$("#filters").html(filter);
 		
@@ -96,11 +104,12 @@ $(document).ready(function() {
 
 		if (aSelected.length != 0)
 			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup, frmViewType:proSearchViewType});
+			
 		else if (aGroup.length != 0)
 			var ajaxurl  = makeUrl({module: "product", action: "search", frmPrices:prices, frmCur:currency, frmGroups: aGroup, frmViewType:proSearchViewType});
 		else
 			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup, frmViewType:proSearchViewType});
-		
+		//console.log(ajaxurl); return false;
 		$.ajax({
 			url: ajaxurl,
 			cache: false,

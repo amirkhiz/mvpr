@@ -430,7 +430,24 @@ class productMgr extends SGL_Manager
     	$output->template = "productSearch.html";
     	$categoryId = $input->categoryId;
     	
-    	echo $query = "select * from {$this->conf['table']['product']} order by date_created desc";
+    	##############################################
+    	#############  load breadcrambs ##############
+    	##############################################
+    	
+    	$query = "
+			SELECT c1.title as brandCat , c2.title as propCat, c2.category_id as propId, c3.title as groupCat, c4.title as categoryCat
+			FROM {$this->conf['table']['category']} as c1 
+			left join {$this->conf['table']['category']} as c2 on c2.category_id = c1.parent_id 
+			left join {$this->conf['table']['category']} as c3 on c3.category_id = c2.parent_id 
+			left join {$this->conf['table']['category']} as c4 on c4.category_id = c3.parent_id 
+			where c1.category_id = '{$categoryId}'
+		";
+    	
+		$cats = $this->dbh->getRow($query);
+		
+		##############################################
+		################# load products ##############
+		##############################################
     	
     	$query = "
 	    	select p.*, pi.title as proImgTitle, cu.title as curTitle
@@ -445,12 +462,78 @@ class productMgr extends SGL_Manager
 			'mode'      => 'Sliding',
 			'delta'     => 8,
 			'perPage'   => 1000,
-			
 			);
 		$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
 		$output->aPagedData = $aPagedData;
+		
+		####################################
+		#####    load currency types #######
+		####################################
+    	
+		$currency = DB_DataObject::factory($this->conf['table']['currency']);
+		$currency->find();
+		
+		$aCur = array();
+		while ($currency->fetch())
+		{
+			$aCur[$currency->currency_id] = $currency->title;
+		}
+		$output->aCur = $aCur;
+    	
+		
+		####################################
+		#####     Min and Max prices #######
+		####################################
+		
+		$query = "
+	    	select min(p.price) as minPrice, max(p.price) as maxPrice
+			from {$this->conf['table']['product']} as p 
+			left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
+			left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
+			where p.category_id in ({$categoryId}) order by p.date_created desc
+    	";
+		
+		$prices = $this->dbh->getRow($query);
+		$output->minPrice = $prices->minPrice;
+    	$output->maxPrice = $prices->maxPrice;
     	
     	
+    	############################################
+    	########### load product properties ########
+    	############################################
+    	
+    	$query = "SELECT cm.*, ca.* FROM `content_type_mapping` as cm 
+					join content_type as ct on ct.content_type_id = cm.content_type_id
+					left join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id
+					where ct.category_id = '{$cats->propId}'
+					group by ca.value";
+    	
+    	$limit = $_SESSION['aPrefs']['resPerPage'];
+		$pagerOptions = array(
+			'mode'      => 'Sliding',
+			'delta'     => 8,
+			'perPage'   => 1000,
+			);
+		$aProps = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+		
+		$searchFields = array();
+		foreach($aProps['data'] as $pKey => $pValue)
+		{
+			$ctmId = $pValue['content_type_mapping_id'];
+			$searchFields[$ctmId]['title'] = $pValue['title'];
+			$searchFields[$ctmId]['ops'][$pValue['value']] = $pValue['value'];
+		}
+		
+		//echo "<pre>"; print_r($searchFields); echo "</pre>";
+		$output->searchFields = $searchFields;
+		
+    	/*
+    	foreach($props as $pKey => $pValue)
+    	{
+    		echo $pValue;
+    		echo "<br />";
+    	}
+    	*/
     	
     	/*
     	$catTree = $this->catTree($categoryId);
