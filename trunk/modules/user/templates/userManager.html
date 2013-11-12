@@ -7,7 +7,9 @@
 		</div>
 		{msgGet()}
 		
-	    <form name="users" method="post" flexy:ignore id="users" action="{makeUrl(##,#user#,##)}">
+	    <form name="users" method="post" flexy:ignore id="users" action="{makeUrl(##,#orgusr#,#user#)}">
+	    	<input type="hidden" name="action" value="delete" />
+			
 	        <table class="table table-bordered selectable">
 	            <thead>
 	                <tr class="infos">
@@ -15,7 +17,7 @@
 	                        {totalItems} {translate(#user(s) found#)}
 	                        <a class="clearSearch" href="{makeUrl(#search#,#usersearch#,#user#,##,#frmSortBy|sortBy||frmSortOrder|sortOrder#)}" flexy:if="search">{translate(#clear search#)}</a>
 	                    </td>
-	                    <td class="right" colspan="8">
+	                    <td class="right" colspan="9">
 	                    {if:pager}<flexy:include src="admin_pager_table.html" />{end:}
 	                    </td>
 	                </tr>
@@ -33,15 +35,14 @@
 	                    {end:}
 	                    <th width="18%" class="left">{translate(#Email#)}</th>
 	                    <th width="5%">{translate(#Role#)}</th>
-	                    <th width="7%">{translate(#Status#)}</th>
-	                    <th width="12%">{translate(#Password#)}</th>
-	                    <th width="12%">{translate(#Permissions#)}</th>
-	                    <th width="10%">{translate(#Logins#)}</th>
+	                    <th class="center" width="7%">{translate(#Status#)}</th>
+	                    <th class="center" width="12%">{translate(#Password#)}</th>
+						<th>{translate(#Action#)}</th>
 	                </tr>
 	            </thead>
 	            <tfoot>
 	                <tr class="infos">
-	                    <td class="right" colspan="10">
+	                    <td class="right" colspan="9">
 	                        {if:pager}<flexy:include src="admin_pager_table.html" />{end:}
 	                    </td>
 	                </tr>
@@ -50,7 +51,7 @@
 	                <tr class="{switchRowClass()}" flexy:foreach="aPagedData[data],key,aValue">
 	                    <td><input type="checkbox" name="frmDelete[]" value="{aValue[usr_id]}" /></td>
 	                    <td>{aValue[usr_id]}</td>
-	                    <td class="left"><a href="{makeUrl(#edit#,#user#,##,aPagedData[data],#frmUserID|usr_id#,key)}">{aValue[username]}</a></td>
+	                    <td class="left">{aValue[username]}</td>
 	                    {if:conf[OrgMgr][enabled]}
 	                    <td>{aValue[org_name]}</td>
 	                    {end:}
@@ -64,21 +65,17 @@
 	                        {end:}
 	                    </td>
 	                    <td class="center">
-	                        <button type="button" class="btn btn-info btn-xs" name="frmReset"
-	                            onclick="javascript:document.location.href='{makeUrl(#requestPasswordReset#,#user#,##,aPagedData[data],#frmUserID|usr_id#,key)}'">
+	                        <a type="button" class="btn btn-info btn-xs"
+	                            href="{makeUrl(#requestPasswordReset#,#orgusr#,#user#,aPagedData[data],#frmUserID|usr_id#,key)}">
                             	<span class="glyphicon glyphicon-refresh"></span>
 								{translate(#reset#)}
-							</button>
+							</a>
 	                    </td>
-	                    <td class="center" flexy:if="!isAdmin(aValue[role_id])">
-	                        <button type="button" class="btn btn-info btn-xs" name="frmReset"
-	                            onClick="javascript:document.location.href='{makeUrl(#editPerms#,#user#,##,aPagedData[data],#frmUserID|usr_id#,key)}'" />
-								<span class="glyphicon glyphicon-cog"></span>
-								{translate(#change#)}
-							</button>
-	                    </td>
-	                    <td class="center" flexy:if="isAdmin(aValue[role_id])">&nbsp;</td>
-	                    <td class="center"><a href="{makeUrl(#viewLogin#,#user#,##,aPagedData[data],#frmUserID|usr_id#,key)}">{translate(#list#)}</a></td>
+						<td width="10%" nowrap>
+				            <a href="{makeUrl(#edit#,#orgusr#,#user#,aPagedData[data],#frmUserID|usr_id#,key)}" />
+				                <span class="glyphicon glyphicon-edit"></span> {translate(#edit#)}
+				            </a> 
+						</td>
 	                </tr>
 	                <tr flexy:if="!aPagedData[data]">
 	                    <td colspan="10">{translate(#No users found#)}</td>
