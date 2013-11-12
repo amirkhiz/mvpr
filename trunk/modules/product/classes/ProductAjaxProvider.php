@@ -277,17 +277,21 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     		$aPrices = explode(';', $this->req->get('frmPrices'));
     		$minPrice = $aPrices['0'];
     		$maxPrice = $aPrices['1'];
+    		$havingCondition .= " (price BETWEEN '{$minPrice}' AND '{$maxPrice}')";
+    		
     		$cur = $this->req->get('frmCur');
-    		$havingCondition .= " (price BETWEEN '{$minPrice}' AND '{$maxPrice}') AND (currency_id = '$cur')";
+    		if($cur)
+    		$havingCondition .= " AND (p.currency_id = '$cur')";
     	}
     	
     	
     	
-    	$query = "SELECT p.*, cm.*, ca.*
+    	$query = "SELECT p.*, p.title as productTitle, cm.*, ca.*, cu.title as curTitle
 					FROM `content_type_mapping` as cm 
 					join content_type as ct on ct.content_type_id = cm.content_type_id left 
 					join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id 
 					join product as p on p.product_id = ca.product_id 
+					join currency as cu on cu.currency_id = p.currency_id 
 					where ";
     	if($additionQuery != ""){
     		$query .= $additionQuery . " AND ";

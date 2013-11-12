@@ -30,9 +30,7 @@
 						<th>{translate(#User#)}</th>
 						<th>{translate(#Created#)}</th>
 						<th>{translate(#Updated#)}</th>
-						{if:roleId}
 			            <th>{translate(#Action#)}</th>
-						{end:}
 			        </tr>
 				</thead>
 				<tbody>
@@ -46,14 +44,11 @@
 						<td nowrap>{aValue[username]}</td>
 						<td nowrap>{formatDate(aValue[date_created])}</td>
 						<td nowrap>{formatDate(aValue[last_update])}</td>
-						<td nowrap>{aValue[item_order]}</td>
-						{if:roleId}
 			            <td width="10%" nowrap>
 			            <a href="{makeUrl(#edit#,#product#,#product#,results,#frmProductID|product_id#,key)}" />
 			                <span class="glyphicon glyphicon-edit"></span> {translate(#edit#)}
 			            </a> 
 			            </td>
-						{end:}
 			        </tr>
 				</tbody>
 		    </table>
