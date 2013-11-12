@@ -25,7 +25,7 @@
 			<div class="clearfix"><!-- Clear And Fix --></div>
 			{foreach:searchFields,key,value}
 				<div class="form-group searchOptions">
-					<label class="col-lg-12 center control-label">{value[title]}</label>
+					<label class="col-lg-12 center control-label" style="font-size: 13px;">{value[title]}</label>
 					<div class="optSelect">
 						<select class="form-control multiple" name="product[prop][{key}][]" selTitle="{value[title]}" fieldId="{key}" id="pOptMulti{key}" multiple="multiple">
 			                {generateSelect(value[ops]):h}
@@ -70,10 +70,10 @@
 					<th class="center">{translate(#Price#)}</th>
 					<th class="center">{translate(#Model#)}</th>
 					<th class="center">{translate(#Currency#)}</th>
-					<th class="center">{translate(#Tax#)}</th>
-					<th class="center">{translate(#Quantity#)}</th>
+					<th class="center">{translate(#Warranty#)}</th>
 					<th class="center">KDV</th>
-					<th class="center">{translate(#Order#)}</th>
+					<th class="center">{translate(#Quantity#)}</th>
+					<!--<th class="center">{translate(#Order#)}</th>-->
 		        </tr>
 			</thead>
 			<tbody id="searchResult">
@@ -99,10 +99,10 @@
 					<td class="center" nowrap>{aValue[price]}</td>
 					<td class="center" nowrap>{aValue[model]}</td>
 					<td class="center" nowrap>{aValue[curTitle]}</td>
-					<td class="center" nowrap>{aValue[tax]}</td>
-					<td class="center" nowrap>{aValue[quantity]}</td>
+					<td class="center" nowrap>{aValue[warranty]}</td>
 					<td class="center" nowrap>18</td>
-					<td class="center" nowrap><input type="text" name="orderCount" size="2"/></td>
+					<td class="center" nowrap>{aValue[quantity]}</td>
+					<!--<td class="center" nowrap><input type="text" name="orderCount" size="2"/></td>-->
 		        </tr>
 			</tbody>
 	    </table>

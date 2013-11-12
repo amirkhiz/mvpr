@@ -245,10 +245,69 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	
     	if ($this->req->get('frmCAddition'))
     	{
-    		$cAddition = explode(',', $this->req->get('frmCAddition'));
-	    	$whereCondition .= " AND ca.content_type_mapping_data_id IN (" . implode(',',$cAddition) . ')' ;
+    		$additionQuery = "";
+    		$addition = $this->req->get('frmCAddition');
+    		$addition = substr($addition, 0, -3);
+    		$addition = str_replace("~~~", "/", $addition);
+    		$addition = explode("|||", $addition);
+    		//print_r($addition);
+    		foreach($addition as $key => $value)
+    		{
+    			if($key > 0){
+    				$value = substr($value, 6);
+    			}
+    			$aValue = explode("~~||~~",$value);
+    			$count = count($aValue) - 1;
+    			$id = array_pop($aValue);
+    			$valueStr = "";
+    			foreach($aValue as $key => $value)
+    			{
+    				$valueStr .=  " ca.value = '$value' OR ";
+    			}
+    			$valueStr = substr($valueStr, 0, -3);
+    			$additionQuery .= " (ca.content_type_mapping_id = '$id' and ( $valueStr ) ) or ";
+    		}
+    		$additionQuery = substr($additionQuery, 0, -3);
+    	}
+    		
+    		
+    	
+    	if ($this->req->get('frmPrices'))
+    	{
+    		$aPrices = explode(';', $this->req->get('frmPrices'));
+    		$minPrice = $aPrices['0'];
+    		$maxPrice = $aPrices['1'];
+    		$cur = $this->req->get('frmCur');
+    		$havingCondition .= " (price BETWEEN '{$minPrice}' AND '{$maxPrice}') AND (currency_id = '$cur')";
     	}
     	
+    	
+    	
+    	$query = "SELECT p.*, cm.*, ca.*
+					FROM `content_type_mapping` as cm 
+					join content_type as ct on ct.content_type_id = cm.content_type_id left 
+					join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id 
+					join product as p on p.product_id = ca.product_id 
+					where ";
+    	if($additionQuery != ""){
+    		$query .= $additionQuery . " AND ";
+    	}
+    	
+    	$query .= $havingCondition;
+    	
+    	$query = $query . " group by ca.product_id order by p.date_created ";
+    	 
+    	$limit = $_SESSION['aPrefs']['resPerPage'];
+		$pagerOptions = array(
+			'mode'      => 'Sliding',
+			'delta'     => 8,
+			'perPage'   => 1000,
+			);
+		$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+		$output->aPagedData = $aPagedData;
+    	$output->data = $this->_renderTemplate($output, $proSearchViewTemplate);
+    	//$output->data = $addition;
+    	/* 
     	if ($this->req->get('frmBrands'))
     	{
     		$aBrands = explode(',', $this->req->get('frmBrands'));
@@ -326,6 +385,7 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	
     	$output->products = $result;
     	$output->data = $this->_renderTemplate($output, $proSearchViewTemplate);
+    	*/
     }
     
     function objectToArray( $data )

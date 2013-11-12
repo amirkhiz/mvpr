@@ -1,46 +1,46 @@
-		<table class="table">
+		<table class="table-searching">
 	    	<thead>
 		        <tr>
 		            <th>{translate(#ID#)}</th>
-					<th>{translate(#Title#)}({totalItems}){translate(#No.#)}</th>
+					<th>{translate(#Title#)}</th>
 					<th class="center">{translate(#Img#)}</th>
-					<th class="center"><span class="glyphicon glyphicon-magnet"></span></th>
+					<!--<th class="center"><span class="glyphicon glyphicon-magnet"></span></th>-->
 					<th class="center">{translate(#Price#)}</th>
-					<th class="center">{translate(#Branch#)}</th>
+					<th class="center">{translate(#Model#)}</th>
 					<th class="center">{translate(#Currency#)}</th>
-					<th class="center">{translate(#Tax#)}</th>
+					<th class="center">{translate(#Warranty#)}</th>
+					<th class="center">KDV</th>
 					<th class="center">{translate(#Quantity#)}</th>
-					<th class="center">{translate(#Post#)}</th>
-					<th class="center">{translate(#Order#)}</th>
+					<!--<th class="center">{translate(#Order#)}</th>-->
 		        </tr>
 			</thead>
-			<tbody>
-		        <tr flexy:foreach="products,key,aValue">
+			<tbody id="searchResult">
+		        <tr flexy:foreach="aPagedData[data],key,aValue">
 		            <td nowrap>{aValue[product_id]}</td>
 					<td nowrap>
-						<a href="{makeUrl(#view#,#product#,#product#,products,#frmProductID|product_id#,key)}">
+						<a href="{makeUrl(#view#,#product#,#product#,aPagedData[data],#frmProductID|product_id#,key)}">
 							{aValue[title]}
 						</a>
 					</td>
 					<td class="center" nowrap>
 						{if:aValue[proImgTitle]}
 						<a href="{webRoot}/images/products/{aValue[proImgTitle]}"  data-gallery="">
-							<span class="glyphicon glyphicon-camera"></span>
+							<span style="font-size:15px;" class="glyphicon glyphicon-camera"></span>
 						</a>
 						{else:}
-						<span class="glyphicon glyphicon-ban-circle"></span>
+							<span style="color: rgb(214, 26, 0);" class="glyphicon glyphicon-ban-circle"></span>
 						{end:}
 					</td>
-					<td class="center" nowrap>
+					<!--<td class="center" nowrap>
 						<input type="checkbox" name="compare" value="{aValue[product_id]}"/>
-					</td>
+					</td>-->
 					<td class="center" nowrap>{aValue[price]}</td>
-					<td class="center" nowrap>{aValue[price]}</td>
-					<td class="center" nowrap>{aValue[currency_id]}</td>
-					<td class="center" nowrap>{aValue[tax]}</td>
+					<td class="center" nowrap>{aValue[model]}</td>
+					<td class="center" nowrap>{aValue[curTitle]}</td>
+					<td class="center" nowrap>{aValue[warranty]}</td>
+					<td class="center" nowrap>18</td>
 					<td class="center" nowrap>{aValue[quantity]}</td>
-					<td class="center" nowrap>{aValue[quantity]}</td>
-					<td class="center" nowrap><input type="text" name="orderCount" size="2"/></td>
+					<!--<td class="center" nowrap><input type="text" name="orderCount" size="2"/></td>-->
 		        </tr>
 			</tbody>
 	    </table>

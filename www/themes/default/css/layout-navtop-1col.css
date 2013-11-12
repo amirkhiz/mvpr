@@ -43,6 +43,16 @@ div#nav-main {
 	border-bottom: 1px solid #cccccc;
 }
 
+#proSearchResult{
+	min-height: 500px;
+}
+
+ul.ui-multiselect-checkboxes li label span, .optSelect span{
+	font-size: 12px;
+	font-weight: normal;
+}
+
+
 #brandList{
 	position: absolute; 
 	width: 220px; 
