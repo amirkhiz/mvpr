@@ -690,33 +690,105 @@ class productMgr extends SGL_Manager
     	$productId = $input->productId;
     	
     	$query = "
-    			SELECT pro.*, cur.code AS curCode, cur.title AS curTitle, cur.symbol_left AS curLeft, cur.symbol_right AS curRight
-    			FROM
-    			(
-			    	SELECT p.*, c1.category_id AS `brandId`, c2.category_id AS `optionId`, c3.category_id AS `groupId`, c4.category_id AS `categoryId`, cmd.content_type_mapping_data_id AS cmdId, cm.content_type_mapping_id AS cmId, c.content_type_id AS cId, ca.content_addition_id AS caId,
-			    	c1.title AS `brand`, c2.title AS `option`, c3.title AS `group`, c4.title AS `category`, cmd.title AS cmdTitle, cm.title AS cmTitle, c.type_name AS cTitle
-			    	FROM {$this->conf['table']['product']} AS p
-			    	JOIN {$this->conf['table']['content_addition']} AS ca
-			    	ON ca.product_id = p.product_id
-			    	JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
-			    	ON cmd.content_type_mapping_data_id = ca.content_type_mapping_data_id
-			    	JOIN {$this->conf['table']['content_type_mapping']} AS cm
-			    	ON cm.content_type_mapping_id = cmd.content_type_mapping_id
-			    	JOIN {$this->conf['table']['content_type']} AS c
-			    	ON c.content_type_id = cm.content_type_id
-			    	JOIN {$this->conf['table']['category']} AS c1
-			    	ON c1.category_id = p.category_id
-			    	JOIN {$this->conf['table']['category']} AS c2
-			    	ON c2.category_id = c1.parent_id
-			    	JOIN {$this->conf['table']['category']} AS c3
-			    	ON c3.category_id = c2.parent_id
-			    	JOIN {$this->conf['table']['category']} AS c4
-			    	ON c4.category_id = c3.parent_id
-			    	WHERE p.product_id = {$productId}
-    			) AS pro
-    			JOIN {$this->conf['table']['currency']} AS cur
-    			ON cur.currency_id = pro.currency_id
+    	SELECT p.*, cu.*, c1.title as brandTitle , c2.title as propCat, c2.category_id as propId, c3.title as groupCat, c4.title as categoryCat
+    	FROM {$this->conf['table']['category']} as c1
+    	left join {$this->conf['table']['category']} as c2 on c2.category_id = c1.parent_id
+    	left join {$this->conf['table']['category']} as c3 on c3.category_id = c2.parent_id
+    	left join {$this->conf['table']['category']} as c4 on c4.category_id = c3.parent_id
+    	left join product as p on p.category_id = c1.category_id 
+    	left join currency as cu on cu.currency_id = p.currency_id
+    	where p.product_id = '$productId'
+    	";
+    	 
+    	$cats = $this->dbh->getRow($query);
+    	
+    	$output->cats = $cats;
+    	/*
+    	$query = "
+    				SELECT p.*, p.title as productTitle, cm.*, ca.*, cu.title as curTitle
+					FROM `content_type_mapping` as cm 
+					join content_type as ct on ct.content_type_id = cm.content_type_id left 
+					join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id 
+					product as p on p.product_id = ca.product_id 
+					join currency as cu on cu.currency_id = p.currency_id 
+					where p.product_id = {$productId}
 	    	";
+    	
+    	$query = "select p.* 
+    				from product as p
+    				left join content_addition as ca on ca.product_id = p.product_id 
+    				left join content_type_mapping as cm on cm.content_type_mapping_id = ca.content_type_mapping_id 
+    				left join content_type as ct on ct.content_type_id = cm.content_type_id
+    				where p.product_id = {$productId}
+    	";
+    	*/
+    	/* SELECT pro.*, cur.code AS curCode, cur.title AS curTitle, cur.symbol_left AS curLeft, cur.symbol_right AS curRight
+    	FROM
+    	(
+    			SELECT p.*, 
+    			c1.category_id AS `brandId`, 
+    			c2.category_id AS `optionId`, 
+    			c3.category_id AS `groupId`, 
+    			c4.category_id AS `categoryId`, 
+    			cmd.content_type_mapping_data_id AS cmdId, 
+    			cm.content_type_mapping_id AS cmId, 
+    			c.content_type_id AS cId, 
+    			ca.content_addition_id AS caId,
+    			c1.title AS `brand`, 
+    			c2.title AS `option`, 
+    			c3.title AS `group`, 
+    			c4.title AS `category`, 
+    			cmd.title AS cmdTitle, 
+    			cm.title AS cmTitle, 
+    			c.type_name AS cTitle
+    			FROM {$this->conf['table']['product']} AS p
+    			JOIN {$this->conf['table']['content_addition']} AS ca
+    			ON ca.product_id = p.product_id
+    			JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
+    			ON cmd.content_type_mapping_data_id = ca.content_type_mapping_data_id
+    			JOIN {$this->conf['table']['content_type_mapping']} AS cm
+    			ON cm.content_type_mapping_id = cmd.content_type_mapping_id
+    			JOIN {$this->conf['table']['content_type']} AS c
+    			ON c.content_type_id = cm.content_type_id
+    			JOIN {$this->conf['table']['category']} AS c1
+    			ON c1.category_id = p.category_id
+    			JOIN {$this->conf['table']['category']} AS c2
+    			ON c2.category_id = c1.parent_id
+    			JOIN {$this->conf['table']['category']} AS c3
+    			ON c3.category_id = c2.parent_id
+    			JOIN {$this->conf['table']['category']} AS c4
+    			ON c4.category_id = c3.parent_id
+    			WHERE p.product_id = {
+    		$productId}
+    		) AS pro
+    		JOIN {$this->conf['table']['currency']} AS cur
+    		ON cur.currency_id = pro.currency_id */
+    		 
+    	$query = "SELECT cm.*, ca.* FROM `content_type_mapping` as cm
+	    	join content_type as ct on ct.content_type_id = cm.content_type_id
+	    	left join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id
+	    	where ct.category_id = '{$cats->propId}' and product_id = '$productId'  
+	    	";
+    	 
+    	$limit = $_SESSION['aPrefs']['resPerPage'];
+    	$pagerOptions = array(
+    	'mode'      => 'Sliding',
+    	'delta'     => 8,
+    	'perPage'   => 1000,
+    	);
+    	$aProps = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+    	
+    	
+    	$searchFields = array();
+    	foreach($aProps['data'] as $pKey => $pValue)
+    	{
+    		$ctmId = $pValue['content_type_mapping_id'];
+    		$searchFields[$ctmId]['title'] = $pValue['title'];
+    		$searchFields[$ctmId]['value'][$pValue['value']] = $pValue['value'];
+    	}
+    	
+    	//echo "<pre>"; print_r($searchFields); echo "</pre>";
+    	$output->searchFields = $searchFields;
     	
     	$product =  $this->dbh->getAll($query);
     	
@@ -760,6 +832,9 @@ class productMgr extends SGL_Manager
     	$output->template  = 'productReorder.html';
     	$output->action    = 'reorderUpdate';
     	$productList = DB_DataObject::factory($this->conf['table']['product']);
+    	
+    	
+    	
     	$productList->orderBy('order_id');
     	$result = $productList->find();
     	if ($result > 0) {

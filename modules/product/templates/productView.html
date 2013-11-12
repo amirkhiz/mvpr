@@ -5,16 +5,16 @@
 	<div class="col-lg-7">
 		<div class="panel panel-info pView pDetail">
 			<p>
-				<b>{translate(#Category#)} : </b>{product.category} {product.group} {product.option}<br />
-				<b>{translate(#Brand#)} : </b>{product.brand}<br />
-				<b>{translate(#Price#)} : </b>{product.curLeft} {product.price} {product.curRight}<br />
-				<b>{translate(#Description#)} : </b>{product.description}<br />
+				<b>{translate(#Category#)} : </b>{cats.categoryCat} > {cats.groupCat} > {cats.propCat}<br />
+				<b>{translate(#Brand#)} : </b>{cats.brandTitle}<br />
+				<b>{translate(#Price#)} : </b>{cats.symbol_left} {cats.price} {cats.symbol_right}<br />
+				<b>{translate(#Description#)} : </b>{cats.description}<br />
 			</p>
 		</div>
 		
 		<div class="panel panel-info pViewDetails">
 			<ul class="pOptions">
-				{foreach:pOptions,key,value}
+				{foreach:searchFields,key,value}
 				<li>
 					<span class="glyphicon glyphicon-ok"></span>
 					<b> {value[title]} : </b>
@@ -41,7 +41,7 @@
 	</div>
 	</div>
 	<div class="row productBuyBtn">
-		<a href="#" class="btn btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp; {translate(#Add to basket#)}</a>
+		<a href="{makeUrl(#insert#,#basket#,#product#)}productId/{cats.product_id}" class="btn btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp; {translate(#Add to basket#)}</a>
 	</div>
 </div>
 <div id="blueimp-gallery" class="blueimp-gallery">
