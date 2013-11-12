@@ -137,11 +137,13 @@ class productMgr extends SGL_Manager
 
     function _cmd_list(&$input, &$output)
     {
+    	$this->checkRole();
         SGL::logMessage(null, PEAR_LOG_DEBUG);
-
+		$usrId = SGL_Session::getUId();
         $productList = DB_DataObject::factory($this->conf['table']['product']);
         $user = DB_DataObject::factory($this->conf['table']['user']);
         $productList->joinAdd($user, 'LEFT', 'AS u', 'usr_id');
+        $productList->whereAdd("product.usr_id = '$usrId'");
         $productList->orderBy('order_id');
         $result = $productList->find();
         $aproducts  = array();
@@ -158,6 +160,7 @@ class productMgr extends SGL_Manager
     
     function _cmd_add(&$input, &$output)
     {
+    	$this->checkRole();
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     
     	$output->template   = 'productEdit.html';
@@ -170,6 +173,7 @@ class productMgr extends SGL_Manager
     
     function _cmd_insert(&$input, &$output)
     {
+    	$this->checkRole();
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
     	$usrId = SGL_Session::getUid();
@@ -224,7 +228,10 @@ class productMgr extends SGL_Manager
     
     function _cmd_edit(&$input, &$output)
     {
+    	$this->checkRole();
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	
+    	
     	
     	$productId = $input->productId;
     	$output->isAdd = 0;
@@ -234,7 +241,12 @@ class productMgr extends SGL_Manager
     	$product = DB_DataObject::factory($this->conf['table']['product']);
     	//  get product data
     	$product->get($productId);
-    	
+    	if(SGL_Session::getUId() != $product->usr_id){
+    		$options = array(
+			    'moduleName' => 'default',
+			);
+			SGL_HTTP::redirect($options);
+    	}
     	$query = "
 			SELECT c1.title as brandCat , c2.title as propCat, c2.category_id as propId, c3.title as groupCat, c4.title as categoryCat
 			FROM {$this->conf['table']['category']} as c1 
@@ -278,6 +290,7 @@ class productMgr extends SGL_Manager
     
     function _cmd_update(&$input, &$output)
     {
+    	$this->checkRole();
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     
     	$productId = $input->product->product_id;
@@ -383,6 +396,7 @@ class productMgr extends SGL_Manager
     
     function _cmd_delete(&$input, &$output)
     {
+    	$this->checkRole();
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     
     	if (is_array($input->aDelete)) {
@@ -874,6 +888,15 @@ class productMgr extends SGL_Manager
     	 
     	$proImgIds = implode(',', $result);
     	return  $proImgIds;
+    }
+    
+    function checkRole(){
+    	if(!SGL_Session::getRoleId()){
+    		$options = array(
+		    	'moduleName' => 'default',
+			);
+			SGL_HTTP::redirect($options);
+    	}
     }
 }
 
