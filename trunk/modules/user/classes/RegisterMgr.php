@@ -236,6 +236,7 @@ class RegisterMgr extends SGL_Manager
             'js/scriptaculous/lib/prototype.js',
             'js/scriptaculous/src/effects.js'
         ));
+        
     }
 
     function _cmd_add($input, $output)
@@ -286,6 +287,15 @@ class User_AddUser extends SGL_Observable
         $this->conf = $this->input->getConfig();
         $defaultRoleId = $this->conf['RegisterMgr']['defaultRoleId'];
         $defaultOrgId  = $this->conf['RegisterMgr']['defaultOrgId'];
+        
+        if (SGL_Session::getRoleId() > 0)
+        {
+        	$usrId = SGL_Session::getUid();
+        	$usr = DB_DataObject::factory($this->conf['table']['user']);
+        	$usr->whereAdd('usr_id = ' . $usrId);
+        	$usr->find(true);
+        	$defaultOrgId = $usr->organisation_id;
+        }
 
         $da =  UserDAO::singleton();
         $oUser = $da->getUserById();

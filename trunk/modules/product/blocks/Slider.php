@@ -81,12 +81,18 @@ class Product_Block_Slider extends SGL_Manager
 	function retrieveAll()
 	{
 		$query = "
-				SELECT p.*, pi.title AS image
-        		FROM {$this->conf['table']['product']} AS p
-        		JOIN {$this->conf['table']['product_image']} AS pi
-        		ON pi.product_id = p.product_id
-       			GROUP BY p.product_id
-       			ORDER BY p.product_id DESC
+				SELECT pro.*, cur.symbol_left AS curSymLeft, cur.symbol_right AS curSymRight
+				FROM
+				(
+					SELECT p.*, pi.title AS image
+	        		FROM {$this->conf['table']['product']} AS p
+	        		JOIN {$this->conf['table']['product_image']} AS pi
+	        		ON pi.product_id = p.product_id
+       			) AS pro
+       			JOIN {$this->conf['table']['currency']} AS cur
+       			ON cur.currency_id = pro.currency_id
+       			GROUP BY pro.product_id
+       			ORDER BY pro.last_updated DESC
 			";
 		$aItems = $this->dbh->getAll($query);
 		

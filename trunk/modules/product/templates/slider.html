@@ -62,7 +62,7 @@ jQuery(document).ready(function() {
 		      		<span>{value.title}</span>
 	      		</div>
 	      		<div class="productPrice">
-		      		<span>{translate(#Price#)} : {value.price}  {translate(#Toman#)}</span>
+		      		<span>{translate(#Price#)} : {value.curSymLeft} {value.price} {value.curSymRight:h}</span>
 		      	</div>
 	      		<div class="productDesc">
 	      			<a href="{makeUrl(#view#,#product#,#product#,productsItem,#frmProductID|product_id#,key)}" class="btn btn-danger btn-xs" target="_blank">

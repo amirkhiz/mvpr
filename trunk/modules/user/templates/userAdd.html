@@ -109,6 +109,7 @@
 	
 	<fieldset class="inside" style="padding-left: 10px;">
 		<h4>{translate(#Organisation#)}</h4>
+		{if:isAdmin}
 		<div class="form-group">
             <label class="col-lg-3 control-label">{translate(#Company name#)}:</label>
             <div class="col-lg-7">
@@ -116,6 +117,7 @@
                        name="user[org_name]" value="{user.org_name}" placeholder="{translate(#Company name#)}" />
             </div>
         </div>
+		{end:}
 		<div class="form-group">
             <label class="col-lg-3 control-label">{translate(#Position#)}:</label>
             <div class="col-lg-7">

@@ -25,9 +25,8 @@
 .jcarousel-skin-tango .jcarousel-clip-horizontal {
 	background: #fff;
 	height: 200px;
-	border-top: 5px solid #F86D18;
-	border-bottom: 5px solid #F86D18;
-	border-radius: 8px;
+	border: 1px solid #6E7A8A;
+	border-radius: 3px;
 }
 
 .jcarousel-skin-tango .jcarousel-clip-vertical {
@@ -40,11 +39,12 @@
 }
 
 .jcarousel-skin-tango .jcarousel-item {
-    width: 222px;
-    height: 200px;
+    width: 218px;
+    height: 194px;
     position: relative;
-	border-right: 5px solid #F86D18;
-	border-left: 5px solid #F86D18;
+	border: 3px solid #F86D18;
+	border-radius: 5px;
+	margin: 2px 2px;
 }
 
 .jcarousel-skin-tango .jcarousel-item-horizontal {
@@ -227,7 +227,7 @@
 
 .productDesc {
 	position: absolute;
-	bottom: 18px;
+	bottom: 9px;
 	right: 20px;
 }
 	.productDesc a {
