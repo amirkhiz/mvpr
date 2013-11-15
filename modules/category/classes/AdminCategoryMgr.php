@@ -276,8 +276,17 @@ class AdminCategoryMgr extends SGL_Manager
         $parentSearch = "";
         if(!empty($input->parentId)){
         	$parentSearch = " and c.parent_id = ' " . $input->parentId . " '";
+        	$output->parentId = $input->parentId;
         }
-        
+        echo "<br />";
+        if(!empty($input->categoryId)){
+        	$topestCats = $this->dbh->getRow("select c1.category_id as topId, c2.parent_id as topestId 
+        							from category as c1
+        							join category as c2 on c2.category_id = c1.parent_id    
+        							where c1.parent_id = '" . $input->categoryId . "'");
+        	$parentSearch = " and c.parent_id = ' " . $topestCats->topestId . " '";
+        	$output->parentId = $topestCats->topestId;
+        }
     	$query = " SELECT 
     					c.*, m.title as pTitle 
     				FROM `category` as c left join category as m on c.parent_id = m.category_id
