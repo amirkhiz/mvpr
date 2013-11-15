@@ -11,10 +11,11 @@
 	  <div class="input-group">
 	      <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 	      <input type="text" class="form-control" placeholder="{translate(#Search Title#)}" id="catSearchBox">
-		  <input type="hidden" id="levelBox" value="{levelId}" />
+		  <input type="hidden" id="levelId" value="{levelId}" />
 		  {if:parentLevel}
 		  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-	      <input type="text" class="form-control" placeholder="{translate(searchCategory)}" id="catParentBox" value="{parentBox}">
+	      <input type="text" class="form-control" placeholder="{translate(searchCategory)}" id="parentVal" value="{parentBox}" disabled="true">
+		  <input type="hidden" id="parentId" value="{parentId}" />
 		  {end:}
 	    </div>
 	  </div>

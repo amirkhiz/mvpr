@@ -551,17 +551,19 @@ $(document).ready(function() {
       cancel: 'a',
     });
 	
-	$("#searchBox").keyup(function(){
+	$("#catSearchBox").keyup(function(){
 		searchVal = $(this).val();
-		$url = makeUrl({module: "sms", manager: "sms", action: "searchGroupitemList", searchVal: searchVal});
+		parentId  = $("#parentId").val();
+		levelId   = $("#levelId").val();
+		$url = makeUrl({module: "category", manager: "category", action: "searchCategoryList"});
 		$.ajax({
 	        url: $url,
 	        type: 'POST',
+	        data: {parentId:parentId, levelId:levelId, searchVal:searchVal},
 			cache: false,
 			success: function(data){
-				aData = new Array;
-			    aData = data.split("<!-- ~~||~~ -->");
-			    $("#page-data").html(aData[1]);
+				aData = data.split("<!-- ~~||~~ -->");
+				$("#page-data").html(aData[1]);
 	        }
 		});
 	});
