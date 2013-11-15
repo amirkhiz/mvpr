@@ -8,6 +8,6 @@ create table if not exists slider
    last_updated                   datetime,
    image1		                  varchar(255),
    title                          varchar(255),
-   item_order                     int,
+   order_id                       int,
    primary key (slider_id)
 );

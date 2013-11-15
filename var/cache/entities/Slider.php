@@ -15,7 +15,7 @@ class DataObjects_Slider extends DB_DataObject
     public $last_updated;                    // datetime(19)  binary
     public $image1;                          // string(255)  
     public $title;                           // string(255)  
-    public $order_id;                        // int(11)  
+    public $item_order;                      // int(11)  
 
     /* Static get */
     function staticGet($k,$v=NULL) { return DB_DataObject::staticGet('DataObjects_Slider',$k,$v); }
