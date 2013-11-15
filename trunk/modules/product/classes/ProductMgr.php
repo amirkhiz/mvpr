@@ -468,7 +468,7 @@ class productMgr extends SGL_Manager
 			from {$this->conf['table']['product']} as p 
 			left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
 			left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
-			where p.category_id in ({$categoryId}) order by p.date_created desc
+			where p.category_id in ({$categoryId}) group by p.product_id order by p.date_created desc
     	";
     	
     	$limit = $_SESSION['aPrefs']['resPerPage'];
