@@ -5,7 +5,7 @@
   <div class="topbtns">
 	  <a type="button" href="{makeUrl(#add#,#admincategory#,#category#,##,#frmLevelID|levelId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(btnTitle)}</a>
 	  <a type="button" href="{makeUrl(#reorder#,#admincategory#,#category#,##,#frmLevelID|levelId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
-	  {if:parentLevel}<a type="button" href="{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|parentLevel#)}" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> {translate(#Up#)}</a>{end:}
+	  {if:parentLevel}<a type="button" href="{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|parentLevel#)}frmCategoryID/{parentId}" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> {translate(#Up#)}</a>{end:}
   </div>
 	<div class="col-lg-7">
 	  <div class="input-group">
