@@ -20,6 +20,7 @@ class DataObjects_Product extends DB_DataObject
     public $model;                           // string(255)  
     public $sku;                             // string(255)  
     public $price;                           // real(15)  
+    public $rprice;                          // real(15)  not_null
     public $currency_id;                     // int(11)  not_null
     public $tax;                             // int(11)  
     public $warranty;                        // int(11)  not_null
