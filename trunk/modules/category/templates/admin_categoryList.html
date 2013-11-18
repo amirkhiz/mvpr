@@ -4,7 +4,7 @@
   </div>
   <div class="topbtns">
 	  <a type="button" href="{makeUrl(#add#,#admincategory#,#category#,##,#frmLevelID|levelId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(btnTitle)}</a>
-	  <a type="button" href="{makeUrl(#reorder#,#admincategory#,#category#,##,#frmLevelID|levelId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
+	  <a type="button" href="{makeUrl(#reorder#,#admincategory#,#category#,##,#frmParentId|parentId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
 	  {if:parentLevel}<a type="button" href="{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|parentLevel#)}frmCategoryID/{parentId}" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> {translate(#Up#)}</a>{end:}
   </div>
 	<div class="col-lg-7">
@@ -38,7 +38,7 @@
 						<th>{translate(#Title#)}</th>
 						<th>{translate(parentTitle)}</th>
 						<th>{translate(#Created date#)}</th>
-						<th width="20">{translate(#Status#)}</th>
+						<!--<th width="20">{translate(#Status#)}</th>-->
 			            <th width="20">{translate(#Action#)}</th>
 			        </tr>
 				</thead>
@@ -57,6 +57,7 @@
 						</td>
 						<td class="left">{aValue[pTitle]}</td>
 						<td nowrap>{formatDate(aValue[created_date])}</td>
+						<!--
 						<td nowrap>
 			    			{if:aValue[status]}
 			    				<span class="btn btn-xs btn-primary">&nbsp;&nbsp;{translate(#Active#)}&nbsp;&nbsp;</span>
@@ -64,6 +65,7 @@
 			    				<span class="btn btn-xs btn-danger">{translate(#inactive#)}</span>
 			    			{end:}
 						</td>
+						-->
 		    			<td width="10%" nowrap>
 				            <a href="{makeUrl(#edit#,#admincategory#,#category#,aPagedData[data],#frmCategoryID|category_id#,key)}">
 				                <span class="glyphicon glyphicon-edit"></span>{translate(#edit#)}
