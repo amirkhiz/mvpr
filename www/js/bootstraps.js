@@ -6,6 +6,31 @@ $(document).ready(function() {
 	}
 	*/
 	
+	$("#prodSearchBox").keyup(function(){
+		keywords = $(this).val();
+		if(keywords.length < 2){
+			//return false;
+		}
+		var ajaxurl  = makeUrl({module: "product", action: "ajaxSearch"});
+		$.ajax({
+			url: ajaxurl,
+            type: 'POST',
+            data: {keywords: keywords},
+            async:false,
+			success: function(data){
+            		//$("#prodList").html(data);
+            		//$("#"+levelName+"Inner").html(data);
+            		//console.log("ert");
+            		aData = data.split("<!--~~||~~-->");
+            		$("#prodList").html(aData[1]);
+            		
+            },
+			error: function(){
+				console.log('Error');
+			}
+		});
+	});
+	
 	$("body").click(function(){
 		searchBtnDivClose();
 		searchTxtDivClose();
@@ -52,7 +77,7 @@ $(document).ready(function() {
 	}
 	
 	function catListClose(catId){
-		console.log("#"+catId+"Btn");
+		//console.log("#"+catId+"Btn");
     	$("#"+catId+"Btn")
   	    .animate({
   	        borderTopLeftRadius: 0, 

@@ -141,26 +141,35 @@ class productMgr extends SGL_Manager
         SGL::logMessage(null, PEAR_LOG_DEBUG);
 		$usrId = SGL_Session::getUId();
 		
-        $productList = DB_DataObject::factory($this->conf['table']['product']);
-        $user = DB_DataObject::factory($this->conf['table']['user']);
-        $category = DB_DataObject::factory($this->conf['table']['category']);
-        $productList->joinAdd($user, 'LEFT', 'AS u', 'usr_id');
-        $productList->joinAdd($category, 'left', 'as c', 'category_id');
-        $productList->selectAdd("product.title as ptitle");
-        $productList->whereAdd("product.usr_id = '$usrId'");
-        $productList->orderBy('product.order_id');
-        $result = $productList->find();
-        $aproducts  = array();
-        if ($result > 0) {
-            while ($productList->fetch()) {
-                $productList->title = $productList->title;
-                $aproducts[]        = clone($productList);
-            }
+        $query = "SELECT p . * , c.title AS cTitle, u.username, cu.title as cuTitle
+			FROM {$this->conf['table']['product']} AS p
+			JOIN {$this->conf['table']['user']} AS u ON u.usr_id = p.usr_id 
+			JOIN {$this->conf['table']['category']} as c on c.category_id = p.category_id 
+			JOIN {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id 
+			WHERE p.usr_id =  '$usrId'";
+    	
+    	$limit = $_SESSION['aPrefs']['resPerPage'];
+        $pagerOptions = array(
+            'mode'      => 'Sliding',
+            'delta'     => 8,
+            'perPage'   => 10, 
+
+        );
+        $aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+        if (PEAR::isError($aPagedData)) {
+        	return false;
         }
-        $output->results = $aproducts = $this->objectToArray($aproducts);
+        $output->aPagedData = $aPagedData;
+        $output->totalItems = $aPagedData['totalItems'];
+
+        if (is_array($aPagedData['data']) && count($aPagedData['data'])) {
+        	$output->pager = ($aPagedData['totalItems'] <= $limit) ? false : true;
+        }
+            
+        $output->results = $aPagedData['data'];
         
         //$output->brand = $this->dbh->getOne("select * from {$this->conf['table']['category']} where category_id = ");
-        //echo '<pre>';print_r($aproducts);echo '</pre>';die;
+        #echo '<pre>';print_r($aproducts);echo '</pre>';die;
     
     }
     
