@@ -7,15 +7,20 @@
 					<span class="glyphicon glyphicon-plus"></span> {translate(#New Product#)}
 				</button>
 			</a>
-			<a href="{makeUrl(#reorder#,#product#,#product#)}">
-				<button class="btn btn-info"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</button>
-			</a>
 		</div>
+		
+		<div class="col-lg-7" style="padding-left: 0px;">
+		  	<div class="input-group">
+		      <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+		      <input type="text" class="form-control" placeholder="{translate(#Search#)}" id="prodSearchBox">
+		    </div>
+	  	</div>
 		
 		{msgGet()}
 		<form name="frmProductMgr" method="post" flexy:ignore id="frmProductMgr">
 		    <input type="hidden" name="action" value="delete" />
-						
+			<div id="prodList">
+				<!--~~||~~-->
 		    <table class="table table-bordered selectable">
 		    	<thead>
 			        <tr>
@@ -30,26 +35,28 @@
 						<th>{translate(#Brand#)}</th>
 						<th>{translate(#Price#)}</th>
 						<th>{translate(#Dealers Price#)}</th>
+						<th>{translate(#Currency#)}</th>
 						<th>{translate(#Quantity#)}</th>
 						<th>{translate(#User#)}</th>
 						<th>{translate(#Created#)}</th>
 						<th>{translate(#Updated#)}</th>
-			            <th>{translate(#Action#)}</th>
+			            <th style="width: 30px;">{translate(#Action#)}</th>
 			        </tr>
 				</thead>
 				<tbody>
 			        <tr flexy:foreach="results,key,aValue">
 			            <td align="center"><input type="checkbox" name="frmDelete[]" value="{aValue[product_id]}" /></td>
-						<td nowrap>{aValue[ptitle]}</td>
-						<td nowrap>{aValue[model]}</td>
 						<td nowrap>{aValue[title]}</td>
+						<td nowrap>{aValue[model]}</td>
+						<td nowrap>{aValue[cTitle]}</td>
 						<td nowrap>{aValue[price]}</td>
 						<td nowrap>{aValue[dprice]}</td>
+						<td nowrap>{aValue[cuTitle]}</td>
 						<td nowrap>{aValue[quantity]}</td>
 						<td nowrap>{aValue[username]}</td>
 						<td nowrap>{formatDate(aValue[date_created])}</td>
 						<td nowrap>{formatDate(aValue[last_update])}</td>
-			            <td width="10%" nowrap>
+			            <td nowrap>
 			            <a href="{makeUrl(#edit#,#product#,#product#,results,#frmProductID|product_id#,key)}" />
 			                <span class="glyphicon glyphicon-edit"></span> {translate(#edit#)}
 			            </a> 
@@ -57,7 +64,8 @@
 			        </tr>
 				</tbody>
 		    </table>
-
+			<!--~~||~~-->
+			</div>
 			<div>
 				<button type="submit" class="btn btn-danger" name="Delete" onclick="return confirmSubmit('{translate(#product#)}', 'frmProductMgr')">
 					<span class="glyphicon glyphicon-trash"></span> {translate(#delete selected#)} 

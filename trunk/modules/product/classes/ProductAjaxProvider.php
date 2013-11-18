@@ -206,32 +206,80 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
         }
         $output->data = $this->_renderTemplate($output, 'typeLoad.html');
     	
-    	
-		/*
-    	$query = "
-    			SELECT cm.content_type_mapping_id as cmId, cm.title AS cmTitle, cmd.content_type_mapping_data_id AS cmdID, cmd.title AS cmdTitle
-    			FROM {$this->conf['table']['content_type']} as c
-    			JOIN {$this->conf['table']['content_type_mapping']} AS cm
-    			ON cm.content_type_id = c.content_type_id
-    			JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
-    			ON cmd.content_type_mapping_id = cm.content_type_mapping_id
-				WHERE c.category_id = {$catId}
-                ";
-		$cmData =  $this->dbh->getAll($query);
+    }
+    
+    function ajaxSearch($input, $output)
+    {
+    	$keywords = $this->req->get('keywords');
+    	$usrId = SGL_Session::getUId();
 		
-		$aOptions = array();
-		foreach ($cmData as $key => $value)
+    	$aFields = array("p.title", "c.title", "p.model", "cu.title");
+		
+		$aWords = explode(" ", $keywords);
+
+		$searchQuery = "";
+		
+		foreach($aWords as $wKey => $wValue)
 		{
-			$aOptions[$value->cmId]['title'] = $value->cmTitle;
-			$aOptions[$value->cmId]['ops'][$value->cmdID] = $value->cmdTitle;
+			$searchQuery .= " AND ( ";
+			foreach($aFields as $fKey => $fValue)
+			{
+				$searchQuery .= $fValue . " like '%$wValue%' OR ";
+			}
+			$searchQuery = substr($searchQuery, 0, -3); 
+			$searchQuery .= " )";
 		}
-		//echo '<pre>'; print_r($aOptions); echo '</pre>';
-		
-		$output->aOptions = $aOptions;
-		$output->isMulti = 1;
-    	$output->data = $this->_renderTemplate($output, 'propertySelectbox.html');
-    	*/
     	
+    	$query = "SELECT p . * , c.title AS cTitle, u.username, cu.title as cuTitle
+			FROM {$this->conf['table']['product']} AS p
+			JOIN {$this->conf['table']['user']} AS u ON u.usr_id = p.usr_id 
+			JOIN {$this->conf['table']['category']} as c on c.category_id = p.category_id 
+			JOIN {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id 
+			WHERE p.usr_id =  '$usrId' $searchQuery";
+    	
+    	$limit = $_SESSION['aPrefs']['resPerPage'];
+        $pagerOptions = array(
+            'mode'      => 'Sliding',
+            'delta'     => 8,
+            'perPage'   => 10, 
+
+        );
+        $aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+        if (PEAR::isError($aPagedData)) {
+        	return false;
+        }
+        $output->aPagedData = $aPagedData;
+        $output->totalItems = $aPagedData['totalItems'];
+
+        if (is_array($aPagedData['data']) && count($aPagedData['data'])) {
+        	$output->pager = ($aPagedData['totalItems'] <= $limit) ? false : true;
+        }
+            
+        $output->results = $aPagedData['data'];
+        
+    	
+    	/*
+    	
+        $productList = DB_DataObject::factory($this->conf['table']['product']);
+        $user = DB_DataObject::factory($this->conf['table']['user']);
+        $category = DB_DataObject::factory($this->conf['table']['category']);
+        $productList->joinAdd($user, 'LEFT', 'AS u', 'usr_id');
+        $productList->joinAdd($category, 'left', 'as c', 'category_id');
+        $productList->selectAdd("product.title as ptitle");
+        $productList->whereAdd("product.usr_id = '$usrId' AND ptitle like '%$keywords%'");
+        
+        $productList->orderBy('product.order_id');
+        $result = $productList->find();
+        $aproducts  = array();
+        if ($result > 0) {
+            while ($productList->fetch()) {
+                $productList->title = $productList->title;
+                $aproducts[]        = clone($productList);
+            }
+        }
+        $output->results = $this->objectToArray($aproducts);
+        */
+        $output->data = $this->_renderTemplate($output, 'productList.html');
     }
     
     function search($input, $output)
@@ -283,7 +331,6 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     		if($cur)
     		$havingCondition .= " AND (p.currency_id = '$cur')";
     	}
-    	
     	
     	
     	$query = "SELECT p.*, p.title as productTitle, cm.*, ca.*, cu.title as curTitle
