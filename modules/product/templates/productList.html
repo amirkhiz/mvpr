@@ -1,6 +1,6 @@
 <div class="panel panel-info" style="margin: 10px;">
   	<div class="container">
-  		{if:roleId}
+  		
   		<div class="topbtns">
 			<a type="button" href="{makeUrl(#add#,#product#,#product#)}" class="btn btn-primary">
 				<span class="glyphicon glyphicon-plus"></span> {translate(#New Product#)}
@@ -9,7 +9,7 @@
 				<span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}
 			</a>
 		</div>
-		{end:}
+		
 		{msgGet()}
 		<form name="frmProductMgr" method="post" flexy:ignore id="frmProductMgr">
 		    <input type="hidden" name="action" value="delete" />
@@ -26,6 +26,7 @@
 						<th>{translate(#Model#)}</th>
 						<th>{translate(#Brand#)}</th>
 						<th>{translate(#Price#)}</th>
+						<th>{translate(#Dealers Price#)}</th>
 						<th>{translate(#Quantity#)}</th>
 						<th>{translate(#User#)}</th>
 						<th>{translate(#Created#)}</th>
@@ -40,6 +41,7 @@
 						<td nowrap>{aValue[model]}</td>
 						<td nowrap>brand</td>
 						<td nowrap>{aValue[price]}</td>
+						<td nowrap>{aValue[dprice]}</td>
 						<td nowrap>{aValue[quantity]}</td>
 						<td nowrap>{aValue[username]}</td>
 						<td nowrap>{formatDate(aValue[date_created])}</td>

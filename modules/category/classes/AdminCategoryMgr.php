@@ -96,37 +96,10 @@ class AdminCategoryMgr extends SGL_Manager
         $input->aDelete     = $req->get('frmDelete');
         $input->submitted   = $req->get('submitted');
         $input->category 	= (object)$req->get('category');
-        $input->parentId    = $req->get('frmParentId');
+        $input->parentId    = $req->get('frmParentID');
         $input->categoryId 	= $req->get('frmCategoryID');
         $input->levelId 	= $req->get('frmLevelID');
         $input->items     	= $req->get('_items');
-        
-        /*
-    	if (($input->action == 'insert' or $input->action == 'update') && $input->action != 'reorder' ) {
-            // validate input data
-            if (empty($input->category->question)) {
-                $aErrors['question'] = 'Please fill in a question';
-            }
-            
-    		if (empty($input->category->answer)) {
-                $aErrors['answer'] = 'Please fill in a answer';
-            }
-            
-    	}
-        //  if errors have occured
-        if (isset($aErrors) && count($aErrors)) {
-            SGL::raiseMsg('Please fill in the indicated fields');
-            $input->template = 'categoryEdit.html';
-            $input->error = $aErrors;
-            $this->validated = false;
-            
-        	if ($input->action == 'insert') {
-                $input->pageTitle .= ' :: Add';
-            } elseif ($input->action == 'update') {
-                $input->pageTitle .= ' :: Edit';
-            }
-        }
-        */
     }
 
     function display($output)
@@ -148,10 +121,21 @@ class AdminCategoryMgr extends SGL_Manager
         $output->action    = 'insert';
         $output->wysiwyg   = true;
         
+        if($input->levelId == 1){
+        	$output->parentId = 0; 
+        	$output->parentTitle = SGL_String::translate("Root");
+        	$output->levelId = 1;
+        }else{
+        	$output->parentId = $input->parentId;
+        	$output->levelId = $input->levelId;
+        	$output->parentTitle = $this->dbh->getOne("select title from {$this->conf['table']['category']} where category_id = '{$input->parentId}'");
+        }
+        /*
         $parentLevelId = $input->levelId - 1;
-        
+        echo "<br />";
+        echo $input->parentId;
         $category = DB_DataObject::factory($this->conf['table']['category']);
-        $category->whereAdd("level_id = " . $parentLevelId);
+        $category->whereAdd("parent_id = " . $input->parentId);
         $category->find();
         $aCategories = array();
         while($category->fetch()){
@@ -160,6 +144,8 @@ class AdminCategoryMgr extends SGL_Manager
         $output->categories = $aCategories;
         
         $output->levelId = $input->levelId;
+        $output->parentId = $input->categoryId;
+        */
     }
 
     function _cmd_insert(&$input, &$output)
@@ -203,7 +189,7 @@ class AdminCategoryMgr extends SGL_Manager
 		    'managerName' => 'admincategory',
 		    'action' => 'list',
 		    'frmLevelID' => $category->level_id,
-        	'frmParentId' => $category->parent_id
+        	'frmParentID' => $category->parent_id
 		);
 		SGL_HTTP::redirect($options);
 		
@@ -277,7 +263,7 @@ class AdminCategoryMgr extends SGL_Manager
 		    'managerName' => 'admincategory',
 		    'action' => 'list',
 		    'frmLevelID' => $category->level_id,
-        	'frmParentId' => $category->parent_id
+        	'frmParentID' => $category->parent_id
 		);
 		SGL_HTTP::redirect($options);
     }
@@ -307,6 +293,8 @@ class AdminCategoryMgr extends SGL_Manager
         	$parentSearch = " and c.parent_id = ' " . $topestCats->topestId . " '";
         	$output->parentId = $topestCats->topestId;
         }
+        $output->topper = $this->da->getParentId($input->parentId, 1);
+        $output->parentId = $input->parentId;
     	$query = " SELECT 
     					c.*, m.title as pTitle 
     				FROM `category` as c left join category as m on c.parent_id = m.category_id
@@ -368,7 +356,7 @@ class AdminCategoryMgr extends SGL_Manager
 		    'managerName' => 'admincategory',
 		    'action' => 'list',
 		    'frmLevelID' => $levelId,
-        	'frmParentId' => $parentId
+        	'frmParentID' => $parentId
         	
 		);
 		SGL_HTTP::redirect($options);
@@ -422,7 +410,7 @@ class AdminCategoryMgr extends SGL_Manager
 		    'managerName' => 'admincategory',
 		    'action' => 'list',
 		    'frmLevelID' => $levelId,
-        	'frmParentId' => $parentId
+        	'frmParentID' => $parentId
 		);
 		SGL_HTTP::redirect($options);
     }
