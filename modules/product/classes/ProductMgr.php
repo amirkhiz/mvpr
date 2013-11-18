@@ -140,11 +140,15 @@ class productMgr extends SGL_Manager
     	$this->checkRole();
         SGL::logMessage(null, PEAR_LOG_DEBUG);
 		$usrId = SGL_Session::getUId();
+		
         $productList = DB_DataObject::factory($this->conf['table']['product']);
         $user = DB_DataObject::factory($this->conf['table']['user']);
+        $category = DB_DataObject::factory($this->conf['table']['category']);
         $productList->joinAdd($user, 'LEFT', 'AS u', 'usr_id');
+        $productList->joinAdd($category, 'left', 'as c', 'category_id');
+        $productList->selectAdd("product.title as ptitle");
         $productList->whereAdd("product.usr_id = '$usrId'");
-        $productList->orderBy('order_id');
+        $productList->orderBy('product.order_id');
         $result = $productList->find();
         $aproducts  = array();
         if ($result > 0) {
@@ -154,6 +158,8 @@ class productMgr extends SGL_Manager
             }
         }
         $output->results = $aproducts = $this->objectToArray($aproducts);
+        
+        //$output->brand = $this->dbh->getOne("select * from {$this->conf['table']['category']} where category_id = ");
         //echo '<pre>';print_r($aproducts);echo '</pre>';die;
     
     }
@@ -300,6 +306,7 @@ class productMgr extends SGL_Manager
     	$product->setFrom($input->product);
     	$product->last_updated = SGL_Date::getTime(true);
     	$product->usr_id = SGL_Session::getUid();
+    	$product->category_id	= $input->product->brands;
     	
     	//Delete Product Properties For Update in content addition table
     	$cAddition = DB_DataObject::factory($this->conf['table']['content_addition']);

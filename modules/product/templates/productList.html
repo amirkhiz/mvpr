@@ -2,11 +2,13 @@
   	<div class="container">
   		
   		<div class="topbtns">
-			<a type="button" href="{makeUrl(#add#,#product#,#product#)}" class="btn btn-primary">
-				<span class="glyphicon glyphicon-plus"></span> {translate(#New Product#)}
+			<a href="{makeUrl(#add#,#product#,#product#)}">
+				<button class="btn btn-primary">
+					<span class="glyphicon glyphicon-plus"></span> {translate(#New Product#)}
+				</button>
 			</a>
-			<a type="button" href="{makeUrl(#reorder#,#product#,#product#)}" class="btn btn-info">
-				<span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}
+			<a href="{makeUrl(#reorder#,#product#,#product#)}">
+				<button class="btn btn-info"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</button>
 			</a>
 		</div>
 		
@@ -19,7 +21,8 @@
 			        <tr>
 			            <th width="3%">
 	                        <span class="tipOwner">
-	                            <input type="checkbox" name="checkAll" id="checkAll" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="{translate(#Be Careful!#)}" onClick="javascript:applyToAllCheckboxes('frmProductMgr', 'frmDelete[]', this.checked)" />
+	                            <!--<input type="checkbox" name="checkAll" id="checkAll" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="{translate(#Be Careful!#)}" onClick="javascript:applyToAllCheckboxes('frmProductMgr', 'frmDelete[]', this.checked)" />-->
+								
 	                        </span>
 	                    </th>
 						<th>{translate(#Title#)}</th>
@@ -37,9 +40,9 @@
 				<tbody>
 			        <tr flexy:foreach="results,key,aValue">
 			            <td align="center"><input type="checkbox" name="frmDelete[]" value="{aValue[product_id]}" /></td>
-						<td nowrap>{aValue[title]}</td>
+						<td nowrap>{aValue[ptitle]}</td>
 						<td nowrap>{aValue[model]}</td>
-						<td nowrap>brand</td>
+						<td nowrap>{aValue[title]}</td>
 						<td nowrap>{aValue[price]}</td>
 						<td nowrap>{aValue[dprice]}</td>
 						<td nowrap>{aValue[quantity]}</td>

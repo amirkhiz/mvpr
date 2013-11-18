@@ -223,17 +223,7 @@ class AdminCategoryMgr extends SGL_Manager
         }
         $output->categories = $aCategories;
         $output->parentId = $this->da->getParentId($input->categoryId);
-        
-        /*
-        $topestCats = $this->dbh->getRow("select c1.category_id as topId, c2.parent_id as topestId 
-        							from category as c1
-        							join category as c2 on c2.category_id = c1.parent_id    
-        							where c1.parent_id = '" . $input->categoryId . "'");
-        
-        $output->parenId = $topestCats->topestId; 
-        */
-        
-        //
+        $output->parentTitle = $this->dbh->getOne("select title from {$this->conf['table']['category']} where category_id = '{$output->parentId}'");
         
     }
 
@@ -380,6 +370,8 @@ class AdminCategoryMgr extends SGL_Manager
             }
             $output->aCategorys = $aCategorys;
         }
+        $output->levelId = $categoryList->level_id;
+        $output->parentId = $input->parentId;
     }
     
 	function _cmd_reorderUpdate(&$input, &$output)
