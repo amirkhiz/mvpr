@@ -39,6 +39,8 @@
 // $Id: ManagerTemplate.html,v 1.2 2005/04/17 02:15:02 demian Exp $
 
 require_once 'DB/DataObject.php';
+require_once SGL_MOD_DIR  . '/category/classes/CategoryDAO.php';
+require_once SGL_CORE_DIR . '/Delegator.php';
 /**
  * Type your class description here ...
  *
@@ -50,10 +52,15 @@ class AdminCategoryMgr extends SGL_Manager
 	var $catTree = "";
 	var $aLevelTitle = array(); 
 	
+	
     function __construct()
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
         parent::__construct();
+        
+        $daCategory	= CategoryDAO::singleton();
+    	$this->da	= new SGL_Delegator();
+    	$this->da->add($daCategory);
         
         $this->aLevelTitle = array(
         				1 => "Category",
@@ -191,20 +198,21 @@ class AdminCategoryMgr extends SGL_Manager
                 SGL_ERROR_NOAFFECTEDROWS);
         }
         
-        $options = array(
+		$options = array(
 		    'moduleName' => 'category',
 		    'managerName' => 'admincategory',
 		    'action' => 'list',
-		    'frmLevelID' => $input->levelId
+		    'frmLevelID' => $category->level_id,
+        	'frmParentId' => $category->parent_id
 		);
 		SGL_HTTP::redirect($options);
+		
     }
 
     function _cmd_edit(&$input, &$output)
     {
         SGL::logMessage(null, PEAR_LOG_DEBUG);
         $output->template  = 'categoryEdit.html';
-        
         
         $output->action    = 'update';
         $output->wysiwyg   = true;
@@ -228,6 +236,18 @@ class AdminCategoryMgr extends SGL_Manager
         	$aCategories[$category->category_id] = $category->title;
         }
         $output->categories = $aCategories;
+        $output->parentId = $this->da->getParentId($input->categoryId);
+        
+        /*
+        $topestCats = $this->dbh->getRow("select c1.category_id as topId, c2.parent_id as topestId 
+        							from category as c1
+        							join category as c2 on c2.category_id = c1.parent_id    
+        							where c1.parent_id = '" . $input->categoryId . "'");
+        
+        $output->parenId = $topestCats->topestId; 
+        */
+        
+        //
         
     }
 
@@ -256,7 +276,8 @@ class AdminCategoryMgr extends SGL_Manager
 		    'moduleName' => 'category',
 		    'managerName' => 'admincategory',
 		    'action' => 'list',
-		    'frmLevelID' => $category->level_id
+		    'frmLevelID' => $category->level_id,
+        	'frmParentId' => $category->parent_id
 		);
 		SGL_HTTP::redirect($options);
     }
@@ -322,43 +343,6 @@ class AdminCategoryMgr extends SGL_Manager
             if($input->levelId != 4){
             	$output->childLevel = $input->levelId + 1;
             }
-
-        //  only execute if CRUD option selected
-        /*    
-        $this->dbh->setFetchMode(DB_FETCHMODE_OBJECT);
-            
-		$query = "select * from category where parent_id='$id'";
-	    $res =& $this->dbh->query($query);
-	    $n = '';
-		while($row =& $res->fetchRow()) 
-		{ 
-		    $this->catTree .= '
-		    	<tr>
-		    		<td align="center"><input type="checkbox" name="frmDelete[]" value="'.$row->category_id.'" /></td>
-					<td nowrap>'.$row->category_id.'</td>
-					<td class="left">'.$n.$row->title.'</td>
-					<td nowrap>'.SGL_Output::formatDate($row->created_date).'</td>
-					<td nowrap>';
-		    			if($row->status){
-		    				$this->catTree .= '<span class="btn btn-xs btn-primary">&nbsp;&nbsp;'  .SGL_Output::translate("Active") . '&nbsp;&nbsp;</span>';
-		    			}else{
-		    				$this->catTree .= '<span type="button" class="btn btn-xs btn-danger">' . SGL_Output::translate("inactive") . '</span>';
-		    			}
-	    		$this->catTree .= '
-	    			<td width="10%" nowrap>
-			            <a href="'.SGL_Output::makeUrl("edit","admincategory","category","","frmCategoryID|".$row->category_id).'" />
-			                <span class="glyphicon glyphicon-edit"></span> '. SGL_Output::translate("edit") .'
-			            </a> 
-		            </td>';
-				$this->catTree .= '
-					</td>
-		    	</tr>'; 
-		    $this->multilevel($row->category_id); 
-		} 
-		
-		
-		$output->catTree = $this->catTree;
-		*/
     }
 
     function _cmd_delete(&$input, &$output)
@@ -369,6 +353,7 @@ class AdminCategoryMgr extends SGL_Manager
                 $category = DB_DataObject::factory($this->conf['table']['category']);
                 $category->get($categoryId);
                 $levelId = $category->level_id;
+                $parentId = $category->parent_id;
                 $category->delete();
                 unset($category);
             }
@@ -382,7 +367,9 @@ class AdminCategoryMgr extends SGL_Manager
 		    'moduleName' => 'category',
 		    'managerName' => 'admincategory',
 		    'action' => 'list',
-		    'frmLevelID' => $levelId
+		    'frmLevelID' => $levelId,
+        	'frmParentId' => $parentId
+        	
 		);
 		SGL_HTTP::redirect($options);
     }
@@ -395,7 +382,7 @@ class AdminCategoryMgr extends SGL_Manager
         $output->template  = 'categoryReorder.html';
         $output->action    = 'reorderUpdate';
         $categoryList = DB_DataObject::factory($this->conf['table']['category']);
-        $categoryList->whereAdd("level_id = " . $input->levelId);
+        $categoryList->whereAdd("parent_id = " . $input->parentId);
         $categoryList->orderBy('order_id');
         $result = $categoryList->find();
         if ($result > 0) {
@@ -420,6 +407,7 @@ class AdminCategoryMgr extends SGL_Manager
                 $category->get($categoryId);
                 $category->order_id = $pos;
                 $levelId = $category->level_id;
+                $parentId = $category->parent_id;
                 $success = $category->update();
                 unset($category);
                 $pos++;
@@ -433,7 +421,8 @@ class AdminCategoryMgr extends SGL_Manager
 		    'moduleName' => 'category',
 		    'managerName' => 'admincategory',
 		    'action' => 'list',
-		    'frmLevelID' => $levelId
+		    'frmLevelID' => $levelId,
+        	'frmParentId' => $parentId
 		);
 		SGL_HTTP::redirect($options);
     }
