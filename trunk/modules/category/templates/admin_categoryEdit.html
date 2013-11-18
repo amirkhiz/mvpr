@@ -5,23 +5,35 @@
 <form method="post" flexy:ignore class="form-horizontal" id="form-group">
 	<div class="topbtns">
 		<button type="submit" class="btn btn-primary" name="submitted"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
-	    <button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|levelId#):h}frmParentId/{category.parent_id}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+		{if:category.parent_id}
+	    	<button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|levelId#):h}frmParentID/{category.parent_id}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+		{else:}
+			<button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|levelId#):h}frmParentID/{parentId}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+		{end:}
+		
 	</div>
   {msgGet()}
 	<input type="hidden" name="action" value="{action}" />
 	<input type="hidden" name="category_id" value="{category.category_id}" />
 	<input type="hidden" name="category[level_id]" value="{levelId}" />
 	
-	{if:categories}
 		<div class="form-group">
 	      <label class="col-lg-2 control-label">{translate(#Parent Category#,#ucfirst#)}: </label>
 		  <div class="col-lg-10">
-	      	<select class="form-control chosen" name="category[parent_id]" placeholder="{translate(#Parent category#,#ucfirst#)}">
-				{generateSelect(categories,category.parent_id):h}
-			</select>
+	      	<!--<select class="form-control chosen" name="category[parent_id]" placeholder="{translate(#Parent category#,#ucfirst#)}">-->
+	      		{if:category.parent_id}
+		      		<input type="text" class="form-control" placeholder="{translate(searchCategory)}" value="{parentTitle}" disabled="true">
+			  		<input type="hidden" id="parentId" name="category[parent_id]" value="{parentId}" />
+					<!--{generateSelect(categories,category.parent_id):h}-->
+				{else:}
+					<input type="text" class="form-control" placeholder="{translate(searchCategory)}" value="{parentTitle}" disabled="true">
+			  		<input type="hidden" id="parentId" name="category[parent_id]" value="{parentId}" />
+					<!--{generateSelect(categories,parentId):h}-->
+				{end:}
+			<!--</select>-->
 		  </div>
 	    </div>
-	{end:}
+		
 		<div class="form-group">
 	      <label class="col-lg-2 control-label">{translate(#Title#,#ucfirst#)}: </label>
 		  <div class="col-lg-10">

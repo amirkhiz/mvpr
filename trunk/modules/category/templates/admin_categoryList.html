@@ -3,9 +3,9 @@
     <h3 class="panel-title">{translate(pageTitle)}</h3>
   </div>
   <div class="topbtns">
-	  <a type="button" href="{makeUrl(#add#,#admincategory#,#category#,##,#frmLevelID|levelId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(btnTitle)}</a>
-	  <a type="button" href="{makeUrl(#reorder#,#admincategory#,#category#,##,#frmParentId|parentId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
-	  {if:parentLevel}<a type="button" href="{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|parentLevel#)}frmCategoryID/{parentId}" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> {translate(#Up#)}</a>{end:}
+	  <a type="button" href="{makeUrl(#add#,#admincategory#,#category#,##,#frmLevelID|levelId#)}frmParentID/{parentId}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> {translate(btnTitle)}</a>
+	  <a type="button" href="{makeUrl(#reorder#,#admincategory#,#category#,##,#frmParentID|parentId#)}" class="btn btn-primary"><span class="glyphicon glyphicon-sort"></span> {translate(#Order#)}</a>
+	  {if:parentId}<a type="button" href="{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|parentLevel#)}frmParentID/{topper}" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> {translate(#Up#)}</a>{end:}
   </div>
 	<div class="col-lg-7">
 	  <div class="input-group">
@@ -48,7 +48,7 @@
 						<td nowrap>{aValue[category_id]}</td>
 						<td class="left">
 							{if:childLevel}
-							<a href="{makeUrl(#list#,#admincategory#,#category#,aPagedData[data],#frmParentId|category_id#,key)}frmLevelID/{childLevel}">
+							<a href="{makeUrl(#list#,#admincategory#,#category#,aPagedData[data],#frmParentID|category_id#,key)}frmLevelID/{childLevel}">
 								{aValue[title]}
 							</a>
 							{else:}

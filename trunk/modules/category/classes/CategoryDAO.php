@@ -105,13 +105,15 @@ class CategoryDAO extends SGL_Manager
     			$query = "select parent_id from {$this->conf['table']['category']} where category_id = '$catId'";
     		break;
     		
-    		case "1":
+    		case "2":
     			$query = "select c1.category_id as topId, c2.parent_id 
         							from {$this->conf['table']['category']} as c1
         							join {$this->conf['table']['category']} as c2 on c2.category_id = c1.parent_id    
         							where c1.parent_id = '$catId'";
     		break;
     	}
+    	echo "<br /><br /><br /><br />";
+    	echo $query;
     	
     	$cat = $this->dbh->getRow($query);
     	return $cat->parent_id;
