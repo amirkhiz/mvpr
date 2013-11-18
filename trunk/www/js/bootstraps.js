@@ -1,5 +1,11 @@
 $(document).ready(function() {
 	
+	/*
+	$(document).on("click", ".checkAll", function(){
+		$(this).closest('fieldset').find(':checkbox').prop('checked', this.checked);
+	}
+	*/
+	
 	$("body").click(function(){
 		searchBtnDivClose();
 		searchTxtDivClose();

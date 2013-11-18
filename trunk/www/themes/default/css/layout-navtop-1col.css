@@ -25,6 +25,20 @@ div#nav-main {
     width: 1000px;
 }
 
+
+a:active {
+	
+}
+
+.selectable .ui-selected {
+background: rgb(116, 166, 231);
+color: white;
+}
+
+.selectable .ui-selected a{
+	color: #000;
+}
+
 .table-searching{
 	width: 100%;
 }

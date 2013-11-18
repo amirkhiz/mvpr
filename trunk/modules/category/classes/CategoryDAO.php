@@ -112,9 +112,6 @@ class CategoryDAO extends SGL_Manager
         							where c1.parent_id = '$catId'";
     		break;
     	}
-    	echo "<br /><br /><br /><br />";
-    	echo $query;
-    	
     	$cat = $this->dbh->getRow($query);
     	return $cat->parent_id;
     }

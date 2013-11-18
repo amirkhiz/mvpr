@@ -4,7 +4,7 @@
   </div>
   <div class="topbtns">
 	<button class="btn btn-primary" onclick="javascript:doSub();formSubmit('fm','submitted',1,1)"><span class="glyphicon glyphicon-ok"></span> {translate(#Save#)}</button>
-	<button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#admincategory#,#category#):h}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
+	<button class="btn btn-info" type="button" name="cancel" onClick="document.location.href='{makeUrl(#list#,#admincategory#,#category#,##,#frmLevelID|levelId#):h}frmParentID/{parentId}'"><span class="glyphicon glyphicon-remove"></span> {translate(#Cancel#)}</button>
   </div>
     <form name="fm" method="post" flexy:ignore id="fm">
         <input type="hidden" name="action" value="{action}" /> 
