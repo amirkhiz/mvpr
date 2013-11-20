@@ -80,6 +80,7 @@ class BasketMgr extends SGL_Manager
         $input->basket 		= (object)$req->get('basket');
         $input->basketId 	= $req->get('frmBasketID');
         $input->productId 	= $req->get('productId');
+        $input->basket      = (object)$req->get('basket');
         
     }
 
@@ -110,11 +111,9 @@ class BasketMgr extends SGL_Manager
         SGL_DB::setConnection();
         
         $basket = DB_DataObject::factory($this->conf['table']['basket']);
-        $basket->setFrom($input->productId);
+        $basket->setFrom($input->basket);
         $basket->basket_id = $this->dbh->nextId($this->conf['table']['basket']);
         $basket->usr_id = $usrId;
-        $basket->product_id = $input->productId;
-        $basket->quantity = 1;
         $basket->date_created = SGL_Date::getTime(true);
         $success = $basket->insert();
 
@@ -167,27 +166,18 @@ class BasketMgr extends SGL_Manager
     	$orgId = SGL_Session::getOrganisationId();
         $output->template  = 'basketList.html';
         $output->pageTitle = 'BasketMgr :: List';
-        echo "<br /> not by organisation";
         //  only execute if CRUD option selected
 
         if (true) {
-            $query = "
-            		SELECT 
-            			p.*,
-            			pi.title AS image,
-            			ba.quantity AS basQuantity, ba.date_created AS basCreate,
-            			cur.symbol_left AS curSymLeft, cur.symbol_right AS curSymRight
-            		FROM {$this->conf['table']['product']} AS p
-                    LEFT JOIN {$this->conf['table']['basket']} AS ba
-                    ON p.product_id = ba.product_id
-	        		LEFT JOIN {$this->conf['table']['product_image']} AS pi
-	        		ON pi.product_id = p.product_id
-	       			LEFT JOIN {$this->conf['table']['currency']} AS cur
-	       			ON cur.currency_id = p.currency_id
-                    WHERE ba.usr_id = {$usrId}
-            		GROUP BY p.product_id
-                    ORDER BY ba.date_created
-				";
+            $query = "select b.*, p.title, pi.title as imageUrl, cu.code, p.dprice 
+        			from basket as b
+					left join product as p on p.product_id = b.product_id
+					left join product_image as pi on p.product_id = pi.product_id 
+					left join currency as cu on cu.currency_id = p.currency_id
+					left join usr as u on u.usr_id = p.usr_id 
+					where u.organisation_id = '$orgId' 
+					group by basket_id 
+					order by date_created desc";
 
             $limit = $_SESSION['aPrefs']['resPerPage'];
             $pagerOptions = array(
@@ -224,11 +214,12 @@ class BasketMgr extends SGL_Manager
         //  only execute if CRUD option selected
 
         if (true) {
+        	/*
             $query = "
             		SELECT 
             			p.*,
             			pi.title AS image,
-            			ba.quantity AS basQuantity, ba.date_created AS basCreate,
+            			ba.quantity AS basQuantity, p.quantity as pQuantity, ba.date_created AS basCreate,
             			cur.symbol_left AS curSymLeft, cur.symbol_right AS curSymRight
             		FROM {$this->conf['table']['product']} AS p
                     LEFT JOIN {$this->conf['table']['basket']} AS ba
@@ -241,7 +232,15 @@ class BasketMgr extends SGL_Manager
             		GROUP BY p.product_id
                     ORDER BY ba.date_created
 				";
-
+			*/
+        	$query = "select b.*, p.title, pi.title as imageUrl, cu.code, p.dprice 
+        			from basket as b
+					left join product as p on p.product_id = b.product_id
+					left join product_image as pi on p.product_id = pi.product_id 
+					left join currency as cu on cu.currency_id = p.currency_id
+					where p.usr_id = '$usrId' 
+					group by basket_id 
+					order by date_created desc";
             $limit = $_SESSION['aPrefs']['resPerPage'];
             $pagerOptions = array(
                 'mode'      => 'Sliding',

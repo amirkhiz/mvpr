@@ -312,7 +312,7 @@
 						</div>
 						
 						<div class="tab-pane" id="seo">
-		
+						<!--
 							<div class="form-group">
 								<label class="col-lg-2 control-label">{translate(#SEO#,#ucfirst#)}: </label>
 								<div class="col-lg-10">
@@ -320,25 +320,25 @@
 					      			<span class="help-block">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>
 								</div>
 					    	</div>
-							
+						-->	
 							<div class="form-group">
 								<label class="col-lg-2 control-label">{translate(#Meta Tag Description#,#ucfirst#)}: </label>
 								<div class="col-lg-10">
-					      			<textarea class="form-control" name="product[meta_desc]" placeholder="{translate(#Meta Tag Description#,#ucfirst#)}">{product.meta_desc}</textarea>
+					      			<input type="text" class="form-control" name="product[meta_desc]" placeholder="{translate(#Meta Tag Description#,#ucfirst#)}" value="{product.meta_desc}" />
 								</div>
 					    	</div>
 					    	
 							<div class="form-group">
 								<label class="col-lg-2 control-label">{translate(#Meta Tag Keywords#,#ucfirst#)}: </label>
 								<div class="col-lg-10">
-					      			<textarea class="form-control" name="product[meta_keyword]" placeholder="{translate(#Meta Tag Keywords#,#ucfirst#)}">{product.meta_keyword}</textarea>
+					      			<input type="text" class="form-control" name="product[meta_keyword]" placeholder="{translate(#Meta Tag Keywords#,#ucfirst#)}" value="{product.meta_keyword}" />
 								</div>
 					    	</div>
 					    	
 							<div class="form-group">
 								<label class="col-lg-2 control-label">{translate(#Description#,#ucfirst#)}: </label>
 								<div class="col-lg-10">
-					      			<textarea class="form-control" name="product[description]" placeholder="{translate(#Description#,#ucfirst#)}">{product.description}</textarea>
+					      			<textarea class="form-control wysiwyg" rows="10" id="frmBodyName" name="productDesc" placeholder="{translate(#Description#,#ucfirst#)}">{product.description}</textarea>
 								</div>
 					    	</div>
 		

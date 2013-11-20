@@ -6,6 +6,8 @@
  * @author     Sina Saderi <sina.saderi@gmail.com>
  */
 
+
+
 <?php include('datepicker.css'); ?>
 <?php include('timepicker.css'); ?>
 <?php include('chosen.css'); ?>
@@ -17,11 +19,17 @@
 <?php include('jslider.blue.css'); ?>
 <?php include('jslider.plastic.css'); ?>
 <?php include('jslider.round.css'); ?>
+
+
 <?php include('jslider.round.plastic.css'); ?>
 <?php include('blueimp-gallery.min.css'); ?>
 <?php include('bootstrap-image-gallery.css'); ?>
 <?php include('bootstrap.css'); ?>
+
+
 <?php include('nav.css'); ?>
+
+
 
 
 
@@ -657,17 +665,78 @@ div.block {
 	padding: 20px 10px;
 }
 
-.bigImage {
-	border-bottom: 8px solid #F86D18;
+.pro-desc{
+	color: #808080;
+	text-align: justify;
+	padding: 10px;
 }
+
+.bigImage {
+		padding: 10px;
+		-webkit-box-shadow: 0px 0px 4px rgba(54, 50, 50, 0.66);
+		-moz-box-shadow:    0px 0px 4px rgba(54, 50, 50, 0.66);
+		box-shadow:         0px 0px 4px rgba(54, 50, 50, 0.66);
+}
+
+.pro-title {
+	color: #444444;
+	font-size: 24px;
+	line-height: 40px;
+	font-family: 'Titillium Web', Arial, sans-serif;
+	margin: 10px 0;
+}
+
+.pro-price {
+	color: #c82f2a;
+	float: left;
+	font-family: 'Titillium Web', Arial, sans-serif;
+	font-size: 15px;
+	margin-bottom: 5px; 
+}
+
+.pro-cats{
+	border-top: 1px solid #eeeeee;
+	padding-top: 5px;
+	padding-left: 10px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	font-size: 13px;
+}
+
+.pro-waran{
+	
+}
+
+.li-title{
+	color: #808080;
+}
+
+.pro-cats ul li {
+	list-style: none;
+	line-height: 23px;
+}
+
+.pro-sku {
+	float: right;
+	font-family: 'Titillium Web', Arial, sans-serif;
+}
+
+.pro-sku .sku-title{
+	color: #959595;	
+}
+
+
 .pThumbImgs {
 	padding: 25px 0;
 	overflow: hidden;
 }
 	.pThumbImgs .pThumbImg {
-		border: 1px solid transparent;
-		border-radius: 4px;
-		height: 50px;
+		padding: 5px;
+		-webkit-box-shadow: 0px 0px 2px rgba(54, 50, 50, 0.66);
+		-moz-box-shadow: 0px 0px 2px rgba(54, 50, 50, 0.66);
+		box-shadow: 0px 0px 2px rgba(54, 50, 50, 0.66);
+		margin: 0 3px;
 	}
 
 .pDetail p b {
@@ -682,7 +751,8 @@ div.block {
 	}
 
 .productBuyBtn {
-	color: #fff;
+	margin-left: 10px;
+	margin-bottom: 30px;
 }
 /* Product View End*/
 

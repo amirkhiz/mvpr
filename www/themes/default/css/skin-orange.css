@@ -6,6 +6,7 @@
 body.boxed div.body {
 	border-top:5px solid #F86D18;
 }
+
 .testimonial-name, .service-box.black .circleicon i, .service-box.featured .circleicon i, .service-box:hover i, .footerlogo47, .primarycolor, a, a:hover {
 	color:#F86D18;
 }
@@ -41,8 +42,11 @@ a.next {
 	background-color:#F86D18;
 }
 */
+
 .panel,.panel1 {
-border-left:8px solid #F86D18;
+border-left:2px solid #F86D18;
+padding: 5px;	
+padding-bottom: 0px;
 }
 #filter ul li .selected {
 color: #F86D18 !Important;
