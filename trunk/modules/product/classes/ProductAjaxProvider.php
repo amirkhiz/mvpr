@@ -286,6 +286,7 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
+    	$cats = $this->req->get('frmCategoryID');
     	$whereCondition = '';
     	$havingCondition = '';
     	$fields = '';
@@ -327,8 +328,10 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     		$maxPrice = $aPrices['1'];
     		$havingCondition .= " (price BETWEEN '{$minPrice}' AND '{$maxPrice}')";
     		
-    		$cur = $this->req->get('frmCur');
-    		if($cur)
+    	}
+    	
+    	$cur = $this->req->get('frmCur');
+    	if($cur){
     		$havingCondition .= " AND (p.currency_id = '$cur')";
     	}
     	
@@ -339,14 +342,20 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
 					join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id 
 					join product as p on p.product_id = ca.product_id 
 					join currency as cu on cu.currency_id = p.currency_id 
-					where ";
+					where p.category_id in ($cats) AND ";
     	if($additionQuery != ""){
-    		$query .= $additionQuery . " AND ";
+    		$query .= $additionQuery;
+    	}
+    	if($additionQuery != "" && $havingCondition != ""){
+    		$query .=  " AND " . $havingCondition;
+    	}else if($havingCondition != ""){
+    		$query .=  $havingCondition;
     	}
     	
-    	$query .= $havingCondition;
-    	
-    	$query = $query . " group by ca.product_id order by p.date_created ";
+    	if($additionQuery == "" && $havingCondition == ""){
+    		$query = substr($query, 0, -4);
+    	}
+    	$query .= " group by p.product_id order by p.date_created ";
     	 
     	$limit = $_SESSION['aPrefs']['resPerPage'];
 		$pagerOptions = array(
@@ -357,86 +366,6 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
 		$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
 		$output->aPagedData = $aPagedData;
     	$output->data = $this->_renderTemplate($output, $proSearchViewTemplate);
-    	//$output->data = $addition;
-    	/* 
-    	if ($this->req->get('frmBrands'))
-    	{
-    		$aBrands = explode(',', $this->req->get('frmBrands'));
-    		$whereCondition .= " AND p.category_id IN (" . implode(',',$aBrands) . ')' ;
-    	}
-    	
-    	if ($this->req->get('frmGroups'))
-    	{
-    		$aGroups = explode(',', $this->req->get('frmGroups'));
-    		$catTree = $this->catTree($aGroups);
-    		
-    		$aCatGroups = array();
-    		foreach ($catTree as $value)
-    		{
-    			$aCatGroups[$value->BrandCatID] = $value->BrandCatID;
-    		}
-    		
-    		$whereCondition .= " AND p.category_id IN (" . implode(',',$aCatGroups) . ')' ;
-    	}
-    	
-    	if ($this->req->get('frmCategoryID'))
-    	{
-    		$categoryId = $this->req->get('frmCategoryID');
-    		
-    		$catTree = $this->catTree($categoryId);
-    		
-    		$aCat = array();
-    		foreach ($catTree as $value){
-    			$aCat[] = $value->BrandCatID;
-    		}
-    		
-    		$whereCondition .= " AND p.category_id IN (" . implode(',',$aCat) . ")";
-    	}
-    	
-    	if ($this->req->get('frmPrices'))
-    	{
-    		$aPrices = explode(';', $this->req->get('frmPrices'));
-    		$minPrice = $aPrices['0'];
-    		$maxPrice = $aPrices['1'];
-    		$cur = $this->req->get('frmCur');
-    		$havingCondition .= " AND (tlPrice BETWEEN {$minPrice} AND {$maxPrice})";
-    	}
-    	
-    	$query = "
-    			SELECT p.*, FLOOR(p.price * cu.value) AS tlPrice, cu.symbol_left AS curLeft, cu.symbol_right AS curRight {$fields}
-				FROM {$this->conf['table']['content_addition']} as ca
-				JOIN {$this->conf['table']['product']} AS p
-				ON p.product_id = ca.product_id
-				JOIN {$this->conf['table']['currency']} AS cu 
-				ON p.currency_id = cu.currency_id
-				WHERE 1
-				{$whereCondition}
-				GROUP BY p.product_id
-				HAVING 1
-				{$havingCondition}
-			";
-
-		$result = $this->dbh->getAll($query);
-    	$result = $this->objectToArray($result);
-    	
-    	foreach ($result as $key => $value)
-    	{
-    		$proID = $value['product_id'];
-    		$query = "
-		    		SELECT pi.title AS proImgTitle
-		    		FROM
-		    		{$this->conf['table']['product_image']} AS pi
-		    		WHERE pi.product_id = {$proID}
-	    		";
-    		$proImgs = $this->dbh->getRow($query);
-    		$result[$key]['proImgTitle'] = $proImgs->proImgTitle;
-    	}
-    	
-    	//echo '<pre>'; print_r($result); echo '</pre>';die;
-    	
-    	$output->products = $result;
-    	$output->data = $this->_renderTemplate($output, $proSearchViewTemplate);
-    	*/
     }
     
     function objectToArray( $data )

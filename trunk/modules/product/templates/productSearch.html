@@ -1,4 +1,31 @@
-<div class="panel panel-info searchBox" style="margin: 10px;">
+<div class="panel panel-info">
+<ol class="breadcrumb" style="margin-bottom: 0px;padding-bottom: 6px;">
+	<li>
+  <a href="{webRoot}">Home</a> <span style="color: #999999;margin: 0px 10px;">></span>
+  {if:cats.parentId}
+  	<a href="{makeUrl(#search#,#product#,#product#,##)}frmCategoryID/{cats.parentId}/">{cats.parentTitle}</a> <span style="color: #999999;margin: 0px 10px;">></span>
+  {end:}
+  {if:cats.groupId}
+  	<a href="{makeUrl(#search#,#product#,#product#,##)}frmCategoryID/{cats.groupId}/">{cats.groupTitle}</a> <span style="color: #999999;margin: 0px 10px;">></span>
+  {end:}
+  {if:cats.propId}
+  	<a href="{makeUrl(#search#,#product#,#product#,##)}frmCategoryID/{cats.propId}/">{cats.propTitle}</a> <span style="color: #999999;margin: 0px 10px;">></span>
+  {end:}
+  {if:cats.brandId}
+  	<a href="{makeUrl(#search#,#product#,#product#,##)}frmCategoryID/{cats.brandId}/">{cats.brandTitle}</a> 
+  {end:}
+  {if:childs}
+   <span style="color: #999999;margin: 0px 10px;">></span>
+  <select style="border:0px;" name="childSelect" id="childSelect" flexy:ignore>
+  	<option value="0"> {translate(#Select#)} </option>
+  	{generateSelect(childs):h}
+  </select>
+  {end:}
+  </li>
+</ol>
+</div>
+
+<div class="panel panel-info searchBox">
 	{msgGet()}
 	<div class="container">
 		<form name="frmProductMgr" method="post" flexy:ignore id="proSearchList">
@@ -7,9 +34,9 @@
 			<input type="hidden" name="maxPrice" id="maxPrice" value="{maxPrice}"/>
 			<input type="hidden" name="proSearchViewType" id="proSearchViewType" value="ListView"/>
 			
-			<div class="searchLogo">
+			<h3>
 				<span class="glyphicon glyphicon-search"></span> {translate(#Filter Search#)}
-			</div>
+			</h3>
 			<div class="priceBox">
 				<div class="col-lg-7 priceSlider">
 					<div class="layout-slider">

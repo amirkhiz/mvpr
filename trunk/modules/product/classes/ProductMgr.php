@@ -486,6 +486,56 @@ class productMgr extends SGL_Manager
     	}
     }
     
+    function findChilds($catId)
+    {
+    	return $cats = $this->dbh->getOne("select group_concat(category_id) from {$this->conf['table']['category']} where parent_id in($catId)");
+    }
+    
+    function findCats($catId, $levelId)
+    {
+    	$aCats = array();
+    	if($levelId == 4){
+    		$aCats['chils'] = "";
+    		$aCats['props'] = $this->dbh->getOne("select parent_id from {$this->conf['table']['category']} where category_id = '$catId'");
+    		$aCats['cats'] = $catId;
+    		return $aCats;
+    	}
+    	
+    	if($levelId == 3){
+    		$aCats['childs'] = $this->getChildsArray($catId);
+    		$aCats['props'] = $catId;
+    		$aCats['cats'] = $this->findChilds($catId);
+    		return $aCats;
+    	}
+
+    	if($levelId == 2){
+    		$aCats['childs'] = $this->getChildsArray($catId);
+    		$cat = $this->findChilds($catId);
+    		$aCats['props'] = $cat;
+    		$aCats['cats'] = $this->findChilds($cat);
+    		return $aCats;
+    	}
+    	
+    	if($levelId == 1){
+    		$aCats['childs'] = $this->getChildsArray($catId);
+    		$cat = $this->findChilds($catId);
+    		$cat = $this->findChilds($cat);
+    		$aCats['props'] = $cat;
+    		$aCats['cats'] = $this->findChilds($cat);
+    		return $aCats;
+    	}
+    }
+    
+    function getChildsArray($catId){
+    	$cats = $this->dbh->getAll("select category_id, title from {$this->conf['table']['category']} where parent_id = '$catId'");
+    	$aCats = array();
+    	foreach($cats as $key => $value)
+    	{
+    		$aCats[$value->category_id] = $value->title;
+    	}
+    	return $aCats;
+    }
+    
     
     function _cmd_search(&$input, &$output)
     {
@@ -499,7 +549,11 @@ class productMgr extends SGL_Manager
     	if($categoryId){
     		
 	    	$query = "
-				SELECT c1.title as brandCat , c2.title as propCat, c2.category_id as propId, c3.title as groupCat, c4.title as categoryCat
+				SELECT 
+				c1.title as brandTitle,  c1.category_id as brandId , c1.level_id, 
+				c2.title as propTitle,   c2.category_id as propId, 
+				c3.title as groupTitle,  c3.category_id as groupId,
+				c4.title as parentTitle, c4.category_id as parentId
 				FROM {$this->conf['table']['category']} as c1 
 				left join {$this->conf['table']['category']} as c2 on c2.category_id = c1.parent_id 
 				left join {$this->conf['table']['category']} as c3 on c3.category_id = c2.parent_id 
@@ -508,6 +562,16 @@ class productMgr extends SGL_Manager
 			";
 	    	
 			$cats = $this->dbh->getRow($query);
+			$output->cats = $cats;
+			$aCats = $this->findCats($categoryId, $cats->level_id);
+			$categoryId = $aCats['cats'];
+			$props = $aCats['props'];
+			if(!empty($cats->level_id)){
+				$output->childs = $aCats['childs'];
+			}
+			
+			
+			//echo "<pre>"; print_r($cats); echo "</pre>";
 			
 			##############################################
 			################# load products ##############
@@ -569,7 +633,7 @@ class productMgr extends SGL_Manager
 	    	$query = "SELECT cm.*, ca.* FROM `content_type_mapping` as cm 
 						join content_type as ct on ct.content_type_id = cm.content_type_id
 						left join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id
-						where ct.category_id = '{$cats->propId}'
+						where ct.category_id in ({$props}) 
 						group by ca.value";
 	    	
 	    	$limit = $_SESSION['aPrefs']['resPerPage'];
@@ -590,6 +654,7 @@ class productMgr extends SGL_Manager
 			
 			//echo "<pre>"; print_r($searchFields); echo "</pre>";
 			$output->searchFields = $searchFields;
+			$output->catId = $categoryId;
     	}
     	
     }
