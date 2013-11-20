@@ -659,6 +659,13 @@ class SGL_Output
             return false;
         }
     }
+    
+    function isRole($rid = null){
+    	if (is_null($rid)) {
+            $rid = SGL_Session::getRoleId();
+        }
+        return ($rid && $rid == SGL_Session::getRoleId()) ? true : false;
+    }
 
     /**
      * Returns true if current user or passed role ID is that of an admin.

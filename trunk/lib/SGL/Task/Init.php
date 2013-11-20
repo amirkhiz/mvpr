@@ -287,7 +287,10 @@ class SGL_Task_SetupConstantsStart extends SGL_Task
         define('SGL_UNASSIGNED',                -1);
         define('SGL_GUEST',                     0);
         define('SGL_ADMIN',                     1);
-        define('SGL_MEMBER',                    2);
+        define('SGL_MANAGER',                   2);
+        define('SGL_PRODUCTER',                 3);
+        define('SGL_CONTROLLER',                4);
+        define('SGL_DEALER',                    5);
 
         define('SGL_STATUS_DELETED',            0);
         define('SGL_STATUS_FOR_APPROVAL',       1);

@@ -1,8 +1,10 @@
 <div class="panel panel-info" style="margin: 10px;">
   	<div class="container">
   		<div class="topbtns">
-			<a type="button" href="{makeUrl(#add#,#register#,#user#)}" class="btn btn-primary">
+			<a href="{makeUrl(#add#,#register#,#user#)}">
+				<button class="btn btn-primary">
 				<span class="glyphicon glyphicon-plus"></span> {translate(#New User#)}
+				</button>
 			</a>
 		</div>
 		{msgGet()}
@@ -24,8 +26,8 @@
 	                <tr>
 	                    <th width="3%">
 	                        <span class="tipOwner">
-	                            <span class="tipText" id="becareful">{translate(#Be Careful!#)}</span>
-	                            <input type="checkbox" name="checkAll" id="checkAll" onclick="javascript:applyToAllCheckboxes('users', 'frmDelete[]', this.checked)" />
+	                            <!--<span class="tipText" id="becareful">{translate(#Be Careful!#)}</span>
+	                            <input type="checkbox" name="checkAll" id="checkAll" onclick="javascript:applyToAllCheckboxes('users', 'frmDelete[]', this.checked)" />-->
 	                        </span>
 	                    </th>
 	                    <th width="3%">{translate(#ID#)}</th>
@@ -65,10 +67,11 @@
 	                        {end:}
 	                    </td>
 	                    <td class="center">
-	                        <a type="button" class="btn btn-info btn-xs"
-	                            href="{makeUrl(#requestPasswordReset#,#orgusr#,#user#,aPagedData[data],#frmUserID|usr_id#,key)}">
-                            	<span class="glyphicon glyphicon-refresh"></span>
-								{translate(#reset#)}
+	                        <a href="{makeUrl(#requestPasswordReset#,#orgusr#,#user#,aPagedData[data],#frmUserID|usr_id#,key)}">
+	                        	<button class="btn btn-info btn-xs">
+	                            	<span class="glyphicon glyphicon-refresh"></span>
+									{translate(#reset#)}
+								</button>
 							</a>
 	                    </td>
 						<td width="10%" nowrap>

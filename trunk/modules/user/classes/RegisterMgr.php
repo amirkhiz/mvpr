@@ -175,7 +175,19 @@ class RegisterMgr extends SGL_Manager
             }
 */
             //  check for hacks - only admin user can set certain attributes
-            if ((SGL_Session::getRoleId() != SGL_ADMIN
+            /*echo "Start testing"; 
+            echo "<br />";
+            echo SGL_MANAGER;
+            echo "<br />";
+            echo SGL_Session::getRoleId();
+            echo "<br />";
+            echo count(array_filter(array_flip($req->get('user')), array($this, 'containsDisallowedKeys')));
+            echo "<br />";
+            $disa = array($this, 'containsDisallowedKeys');
+            echo "<pre>"; print_r($disa); echo "</pre>";
+            exit;
+            */
+            if ((SGL_Session::getRoleId() != SGL_ADMIN && SGL_Session::getRoleId() != SGL_MANAGER
                     && count(array_filter(array_flip($req->get('user')), array($this, 'containsDisallowedKeys'))))) {
                 $msg = 'Hack attempted by ' .$_SERVER['REMOTE_ADDR'] . ', IP logged';
                 if (SGL_Session::getRoleId() > SGL_GUEST) {
@@ -247,6 +259,8 @@ class RegisterMgr extends SGL_Manager
         $output->user = DB_DataObject::factory($this->conf['table']['user']);
         $output->user->password_confirm = (isset($input->user->password_confirm)) ?
             $input->user->password_confirm : '';
+            
+        $output->aManagerRoles = array(3 => SGL_String::translate("Product manager"), 4 => SGL_String::translate("Order manager"));
     }
 
     function _cmd_insert($input, $output)
@@ -264,12 +278,22 @@ class RegisterMgr extends SGL_Manager
         }
         //  returns id for new user
         $output->uid = $addUser->run();
-        $options = array(
-		    'moduleName' => 'default',
-		);
-		SGL_HTTP::redirect($options);
-    }
-}
+        if(SGL_Session::getRoleId() == SGL_MANAGER){
+        	$options = array(
+		    	'moduleName' => 'user',
+        		'managerName' => 'orgusr',
+			);
+			SGL_HTTP::redirect($options);
+        }else{
+        	SGL::raiseMsg("authorisation failed");
+	        $options = array(
+			    'moduleName' => 'default',
+	        	'managerName' => 'default',
+			);
+			SGL_HTTP::redirect($options);
+        }
+    } 
+} 
 
 class User_AddUser extends SGL_Observable
 {
@@ -295,6 +319,7 @@ class User_AddUser extends SGL_Observable
         	$usr->whereAdd('usr_id = ' . $usrId);
         	$usr->find(true);
         	$defaultOrgId = $usr->organisation_id;
+        	$defaultRoleId = $this->input->user->role_id;
         }
 
         $da =  UserDAO::singleton();
@@ -306,6 +331,7 @@ class User_AddUser extends SGL_Observable
         if ($this->conf['RegisterMgr']['autoEnable']) {
             $oUser->is_acct_active = 1;
         }
+        
         $oUser->role_id = $defaultRoleId;
         $oUser->organisation_id = $defaultOrgId;
         $oUser->date_created = $oUser->last_updated = SGL_Date::getTime();

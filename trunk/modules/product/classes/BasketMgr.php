@@ -62,6 +62,7 @@ class BasketMgr extends SGL_Manager
             'update'    	=> array('update', 'redirectToDefault'),
             'list'      	=> array('list'),
             'delete'    	=> array('delete', 'redirectToDefault'),
+        	'orders'		=> array('orders'),
         );
     }
 
@@ -156,7 +157,60 @@ class BasketMgr extends SGL_Manager
                 SGL_ERROR_NOAFFECTEDROWS);
         }    
     }
+    
+    function _cmd_orders(&$input, &$output)
+    {
 
+    	SGL::logMessage(null, PEAR_LOG_DEBUG);
+    	
+    	$usrId = SGL_Session::getUid();
+    	$orgId = SGL_Session::getOrganisationId();
+        $output->template  = 'basketList.html';
+        $output->pageTitle = 'BasketMgr :: List';
+        echo "<br /> not by organisation";
+        //  only execute if CRUD option selected
+
+        if (true) {
+            $query = "
+            		SELECT 
+            			p.*,
+            			pi.title AS image,
+            			ba.quantity AS basQuantity, ba.date_created AS basCreate,
+            			cur.symbol_left AS curSymLeft, cur.symbol_right AS curSymRight
+            		FROM {$this->conf['table']['product']} AS p
+                    LEFT JOIN {$this->conf['table']['basket']} AS ba
+                    ON p.product_id = ba.product_id
+	        		LEFT JOIN {$this->conf['table']['product_image']} AS pi
+	        		ON pi.product_id = p.product_id
+	       			LEFT JOIN {$this->conf['table']['currency']} AS cur
+	       			ON cur.currency_id = p.currency_id
+                    WHERE ba.usr_id = {$usrId}
+            		GROUP BY p.product_id
+                    ORDER BY ba.date_created
+				";
+
+            $limit = $_SESSION['aPrefs']['resPerPage'];
+            $pagerOptions = array(
+                'mode'      => 'Sliding',
+                'delta'     => 8,
+                'perPage'   => 10, 
+
+            );
+            $aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+            if (PEAR::isError($aPagedData)) {
+                return false;
+            }
+            $output->aPagedData = $aPagedData;
+            $output->totalItems = $aPagedData['totalItems'];
+
+            if (is_array($aPagedData['data']) && count($aPagedData['data'])) {
+                $output->pager = ($aPagedData['totalItems'] <= $limit) ? false : true;
+            }
+            //echo "<pre>"; print_r($aPagedData['data']); echo "</pre>";
+        }
+    }
+    
+    
     function _cmd_list(&$input, &$output)
     {
 
