@@ -92,6 +92,8 @@ class productMgr extends SGL_Manager
         $input->productId   = $req->get('frmProductID');
         $input->items     	= $req->get('_items');
         $input->product     = (object)$req->get('product');
+        $input->productDesc = $req->get('productDesc', $allowTags = true);
+        
         $input->pImages     = $req->get('pImages');
         $input->pDelImg 	= $req->get('pDeletedImg');
         
@@ -245,6 +247,7 @@ class productMgr extends SGL_Manager
     	$product->last_updated 	= $product->date_created = SGL_Date::getTime(true);
     	$product->status	 	= 1;
     	$product->order_id 		= $maxItemOrder + 1;
+    	$product->description = $input->productDesc;
     
     	$proImgIds = $this->getProImgArr($input->pImages, $productId);
     	$product->product_image_id = $proImgIds;
@@ -279,9 +282,8 @@ class productMgr extends SGL_Manager
     	$this->checkRole();
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
-    	
-    	
     	$productId = $input->productId;
+    	$output->wysiwyg = true;
     	$output->isAdd = 0;
     	$output->template  = 'productEdit.html';
     	$output->action    = 'update';
@@ -320,6 +322,7 @@ class productMgr extends SGL_Manager
 			FROM {$this->conf['table']['product']} AS p
 			JOIN {$this->conf['table']['product_image']} AS pi
 			ON pi.product_id = p.product_id
+			where p.product_id = '$productId'
 			";
 		$aProImgs =  $this->dbh->getAll($query);
 		$aImgs = array();
@@ -340,7 +343,7 @@ class productMgr extends SGL_Manager
     {
     	$this->checkRole();
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
-    
+    	
     	$productId = $input->product->product_id;
     	
     	$product = DB_DataObject::factory($this->conf['table']['product']);
@@ -348,6 +351,7 @@ class productMgr extends SGL_Manager
     	$product->setFrom($input->product);
     	$product->last_updated = SGL_Date::getTime(true);
     	$product->usr_id = SGL_Session::getUid();
+    	$product->description = $input->productDesc;
     	$product->category_id	= $input->product->brands;
     	
     	//Delete Product Properties For Update in content addition table
@@ -578,7 +582,7 @@ class productMgr extends SGL_Manager
 			##############################################
 	    	
 	    	$query = "
-		    	select p.*, pi.title as proImgTitle, cu.title as curTitle, c.title as brand
+		    	select p.*, REPLACE(p.title, ' ', '-') as seoTitle, pi.title as proImgTitle, cu.title as curTitle, c.title as brand
 				from {$this->conf['table']['product']} as p 
 				left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
 				left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
@@ -593,6 +597,7 @@ class productMgr extends SGL_Manager
 				'perPage'   => 1000,
 				);
 			$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+			
 			$output->aPagedData = $aPagedData;
 			
 			####################################
@@ -663,14 +668,18 @@ class productMgr extends SGL_Manager
     function _cmd_view(&$input, &$output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
-    	
+		    	
     	$output->pageTitle = $this->pageTitle . ' :: View';
     	$output->template  = 'productView.html';
     	
     	$productId = $input->productId;
     	
     	$query = "
-    	SELECT p.*, cu.*, c1.title as brandTitle , c2.title as propCat, c2.category_id as propId, c3.title as groupCat, c4.title as categoryCat
+    	SELECT p.*, cu.*, 
+    	c1.title as brandTitle,  c1.category_id as brandId,
+		c2.title as propTitle,   c2.category_id as propId, 
+		c3.title as groupTitle,  c3.category_id as groupId,
+		c4.title as parentTitle, c4.category_id as parentId
     	FROM {$this->conf['table']['category']} as c1
     	left join {$this->conf['table']['category']} as c2 on c2.category_id = c1.parent_id
     	left join {$this->conf['table']['category']} as c3 on c3.category_id = c2.parent_id
@@ -683,73 +692,14 @@ class productMgr extends SGL_Manager
     	$cats = $this->dbh->getRow($query);
     	
     	$output->cats = $cats;
-    	/*
-    	$query = "
-    				SELECT p.*, p.title as productTitle, cm.*, ca.*, cu.title as curTitle
-					FROM `content_type_mapping` as cm 
-					join content_type as ct on ct.content_type_id = cm.content_type_id left 
-					join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id 
-					product as p on p.product_id = ca.product_id 
-					join currency as cu on cu.currency_id = p.currency_id 
-					where p.product_id = {$productId}
-	    	";
     	
-    	$query = "select p.* 
-    				from product as p
-    				left join content_addition as ca on ca.product_id = p.product_id 
-    				left join content_type_mapping as cm on cm.content_type_mapping_id = ca.content_type_mapping_id 
-    				left join content_type as ct on ct.content_type_id = cm.content_type_id
-    				where p.product_id = {$productId}
-    	";
-    	*/
-    	/* SELECT pro.*, cur.code AS curCode, cur.title AS curTitle, cur.symbol_left AS curLeft, cur.symbol_right AS curRight
-    	FROM
-    	(
-    			SELECT p.*, 
-    			c1.category_id AS `brandId`, 
-    			c2.category_id AS `optionId`, 
-    			c3.category_id AS `groupId`, 
-    			c4.category_id AS `categoryId`, 
-    			cmd.content_type_mapping_data_id AS cmdId, 
-    			cm.content_type_mapping_id AS cmId, 
-    			c.content_type_id AS cId, 
-    			ca.content_addition_id AS caId,
-    			c1.title AS `brand`, 
-    			c2.title AS `option`, 
-    			c3.title AS `group`, 
-    			c4.title AS `category`, 
-    			cmd.title AS cmdTitle, 
-    			cm.title AS cmTitle, 
-    			c.type_name AS cTitle
-    			FROM {$this->conf['table']['product']} AS p
-    			JOIN {$this->conf['table']['content_addition']} AS ca
-    			ON ca.product_id = p.product_id
-    			JOIN {$this->conf['table']['content_type_mapping_data']} AS cmd
-    			ON cmd.content_type_mapping_data_id = ca.content_type_mapping_data_id
-    			JOIN {$this->conf['table']['content_type_mapping']} AS cm
-    			ON cm.content_type_mapping_id = cmd.content_type_mapping_id
-    			JOIN {$this->conf['table']['content_type']} AS c
-    			ON c.content_type_id = cm.content_type_id
-    			JOIN {$this->conf['table']['category']} AS c1
-    			ON c1.category_id = p.category_id
-    			JOIN {$this->conf['table']['category']} AS c2
-    			ON c2.category_id = c1.parent_id
-    			JOIN {$this->conf['table']['category']} AS c3
-    			ON c3.category_id = c2.parent_id
-    			JOIN {$this->conf['table']['category']} AS c4
-    			ON c4.category_id = c3.parent_id
-    			WHERE p.product_id = {
-    		$productId}
-    		) AS pro
-    		JOIN {$this->conf['table']['currency']} AS cur
-    		ON cur.currency_id = pro.currency_id */
-    		 
-    	$query = "SELECT cm.*, ca.* FROM `content_type_mapping` as cm
+    	$query = "SELECT cm.*, ca.*
+    		FROM `content_type_mapping` as cm
 	    	join content_type as ct on ct.content_type_id = cm.content_type_id
 	    	left join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id
-	    	where ct.category_id = '{$cats->propId}' and product_id = '$productId'  
+	    	where ct.category_id = '{$cats->propId}' and ca.product_id = '$productId'
 	    	";
-    	 
+    	
     	$limit = $_SESSION['aPrefs']['resPerPage'];
     	$pagerOptions = array(
     	'mode'      => 'Sliding',
@@ -767,7 +717,6 @@ class productMgr extends SGL_Manager
     		$searchFields[$ctmId]['value'][$pValue['value']] = $pValue['value'];
     	}
     	
-    	//echo "<pre>"; print_r($searchFields); echo "</pre>";
     	$output->searchFields = $searchFields;
     	
     	$product =  $this->dbh->getAll($query);
@@ -786,14 +735,55 @@ class productMgr extends SGL_Manager
 			    	SELECT pi.title AS proImgTitle
 			    	FROM
 			    	{$this->conf['table']['product_image']} AS pi
-			    	WHERE pi.product_id = {$productId}
+			    	WHERE pi.product_id = '{$productId}'
 	    		";
 			
 	    	$aProImgs = $this->objectToArray($this->dbh->getAll($query));
 	    	
 	    	//echo '<pre>';print_r($aProImgs);echo '</pre>';die;
 	    	
-	    	$output->product 	= $product['0'];
+	    	$query = "select p.*, cu.title as cuTitle
+	    				from 
+	    				product as p
+	    				left join category as c on c.category_id = p.category_id
+	    				left join currency as cu on cu.currency_id = p.currency_id 
+	    				where p.product_id = '{$productId}'    
+	    				";
+	    	
+	    	$product = $this->dbh->getRow($query);
+	    	//print_r($product);
+	    	
+	    	$output->product 	= $product;
+	    	
+	    	if(SGL_Session::getRoleId() && $product->dprice){
+	    		$output->isRoleDprice = 1;
+	    	}else{
+	    		$output->isRoleDprice = 0;
+	    	}
+	    	
+	    	$aDim = array(
+        		1 => 'Centimeter',
+        		2 => 'Millimeter',
+        		3 => 'Inch',
+        	);
+        	
+        	$aWeight = array(
+        		1 => 'Kilogram',
+        		2 => 'Gram',
+        		3 => 'Pound',
+        		4 => 'Ounce',
+        	);
+        	
+	    	$demi = "";
+	    	$demi .= ($product->dim_l != "") ? $product->dim_l . " X " : "";
+	    	$demi .= ($product->dim_w != "") ? $product->dim_w . " X " : "";
+	    	$demi .= ($product->dim_h != "") ? $product->dim_h . " "  : "";
+	    	$output->demi = $demi . $aDim[$product->dim_id];
+	    	
+	    	$output->weight = ($product->weight != "") ? $product->weight . " " . $aWeight[$product->weight_id] : "";
+	    	$output->currKeys = ($product->meta_keyword != "") ? ", " . $product->meta_keyword : "";
+	    	$output->currDesc = ($product->meta_desc != "") ? ":: " . $product->meta_desc : "";
+	    	
 	    	$output->pOptions 	= $aOptList;
 	    	$output->proImages 	= $aProImgs;
     	}else{

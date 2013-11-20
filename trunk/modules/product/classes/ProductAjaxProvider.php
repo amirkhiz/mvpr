@@ -336,7 +336,7 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	}
     	
     	
-    	$query = "SELECT p.*, p.title as productTitle, cm.*, ca.*, cu.title as curTitle, c.title as brand
+    	$query = "SELECT p.*, p.title as productTitle, REPLACE(p.title, ' ', '-') as seoTitle, cm.*, ca.*, cu.title as curTitle, c.title as brand
 					FROM `content_type_mapping` as cm 
 					join content_type as ct on ct.content_type_id = cm.content_type_id left 
 					join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id 

@@ -8,8 +8,8 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset={charset}" />
     <meta http-equiv="Content-Language" content="{currLang}" />
-    <meta name="keywords" content="{conf[site][keywords]}" />
-    <meta name="description" content="{conf[site][description]}" />
+    <meta name="keywords" content="{conf[site][keywords]} {currKeys}" />
+    <meta name="description" content="{conf[site][description]} {currDesc}" />
     <meta name="rating" content="General" />
     <meta name="generator" content="Seagull PHP Framework" />
     <meta flexy:if="!conf[debug][production]" name="robots" content="noindex,nofollow" />
@@ -84,10 +84,46 @@
 		});
 	</script>
 	
+	{if:wysiwyg}
+    {if:wysiwyg_fck}
+    <script type="text/javascript" src="{webRoot}/wysiwyg/fckeditor/fckeditor.js"></script>
+    <script type="text/javascript">
+        var oFCKEditors = new Array;
+
+        /* initalises an instance of FCK and returns the object. */
+        function fck_add(id)
+        {
+            i = oFCKEditors.length;
+            oFCKEditors[i] = new FCKeditor(id, '100%', 300);
+            oFCKEditors[i].ToolbarSet = 'Basic' ;
+            oFCKEditors[i].BasePath = SGL_JS_WEBROOT + "/wysiwyg/fckeditor/";
+            oFCKEditors[i].Config["CustomConfigurationsPath"] = SGL_JS_WEBROOT + "/js/SglFckconfig.js"  ;
+            oFCKEditors[i].ReplaceTextarea();
+        }
+        function fck_init()
+        {
+            if( document.getElementsByTagName ) {
+                areas = document.getElementsByTagName('textarea');
+
+                for( var i=0; i<areas.length; i++ ){
+                    if( areas[i].className.match("wysiwyg") ) {
+                        fck_add(areas[i].id);
+                    }
+                    else if( areas[i].id.match('frmBodyName') ) {
+                        /* fallback for old templates */
+                        fck_add('frmBodyName');
+                    }
+               }
+            }
+        }
+    </script>
+    {end:}
+    {end:}
+	
     <script type="text/javascript" src="{webRoot}/themes/{theme}/js/mainPublic.js"></script>
     <script type="text/javascript" src="{webRoot}/themes/{theme}/js/hack-IE-hover.js"></script>
 	
-	<link href='http://fonts.googleapis.com/css?family=Arvo|Amarante|Allerta' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Arvo|Amarante|Allerta|Titillium+Web|Quicksand' rel='stylesheet' type='text/css'>
 	
 </head>
 

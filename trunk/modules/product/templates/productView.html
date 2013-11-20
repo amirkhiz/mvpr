@@ -1,31 +1,62 @@
-<h1>{product.title}</h1>
 {msgGet()}
 <div class="container">
 	<div class="row">
 	<div class="col-lg-7">
-		<div class="panel panel-info pView pDetail">
-			<p>
-				<b>{translate(#Category#)} : </b>{cats.categoryCat} > {cats.groupCat} > {cats.propCat}<br />
-				<b>{translate(#Brand#)} : </b>{cats.brandTitle}<br />
-				<b>{translate(#Price#)} : </b>{cats.symbol_left} {cats.price} {cats.symbol_right}<br />
-				<b>{translate(#Description#)} : </b>{cats.description}<br />
-			</p>
-		</div>
+		<div class="pro-title" style="font-family: 'Quicksand', sans-serif;">{product.title}</div>
+		{if:isRoleDprice}
+			<div class="pro-price"><span style="color: #c0c0c0; text-decoration: line-through; margin-right: 3px;">{product.price} </span> {product.dprice} {product.cuTitle}<span style="color: #c0c0c0;"> + KDV (18%)</span></div>
+		{else:}
+			<div class="pro-price">{product.price} {product.cuTitle}<span style="color: #c0c0c0;"> + KDV (18%)</span></div>
+		{end:}
+		<div class="pro-sku"><span class="sku-title">SKU: </span>{product.sku}</div>
+		<div style="clear: both;"><!-- --></div>
 		
-		<div class="panel panel-info pViewDetails">
+		<div class="pro-cats" style="background: #f0f0f0;">
+			<ul>
+				<li>
+					<span class="li-title">{translate(#Category#)} : </span>
+				  	<a href="{makeUrl(#search#,#product#,#product#,##)}frmCategoryID/{cats.parentId}/">{cats.parentTitle}</a> <span style="color: #999999;margin: 0px 10px;">></span>
+				  	<a href="{makeUrl(#search#,#product#,#product#,##)}frmCategoryID/{cats.groupId}/">{cats.groupTitle}</a> <span style="color: #999999;margin: 0px 10px;">></span>
+				  	<a href="{makeUrl(#search#,#product#,#product#,##)}frmCategoryID/{cats.propId}/">{cats.propTitle}</a>
+				</li>
+				<li>
+					<span class="li-title">{translate(#Brand#)} : </span><a href="{makeUrl(#search#,#product#,#product#,##)}frmCategoryID/{cats.brandId}/">{cats.brandTitle}</a>
+				<li>
+				<li>
+					<span class="li-title">{translate(#Model#)} : </span>{product.model}</a>
+				<li>
+				<li>
+					<div class="pro-waran"><span class="li-title">{translate(#Warranty#)}: </span>{product.warranty} {translate(#Months#)}</div>
+				</li>
+			</ul>
+		</div>
+		<div class="pro-cats" style="background-color: #f0f0f0;">
 			<ul class="pOptions">
+				{if:demi}
+				<li>
+					<span class="li-title"> {translate(#Dimensions#)} :</span> 
+					<span style="color: #555555;">{demi} </span>
+				</li>
+				{end:}
+				
+				{if:weight}
+				<li>
+					<span class="li-title"> {translate(#Weight#)} :</span> 
+					<span style="color: #555555;">{weight} </span>
+				</li>
+				{end:}
+				
 				{foreach:searchFields,key,value}
 				<li>
-					<span class="glyphicon glyphicon-ok"></span>
-					<b> {value[title]} : </b>
-					<i flexy:foreach="value[value],k,v">{v},</i><br />
+					<span class="li-title"> {value[title]} :</span> 
+					<span style="color: #555555;" flexy:foreach="value[value],k,v">{v} , </span>
 				</li>
 				{end:}
 			</ul>
 		</div>
+		<div class="pro-desc">{product.description:h}</div>
 	</div>
 	<div class="col-lg-5">
-		<div class="panel panel-info pImage">
 			<div class="bigImage">
 				<img src="{webRoot}/images/products/{proImages[0][proImgTitle]}" width="100%"/>
 			</div>
@@ -37,12 +68,19 @@
 				</div>
 			</div>
 			<div class="clearfix"><!-- clear and fix --></div>
-		</div>
 	</div>
 	</div>
-	<div class="row productBuyBtn">
-		<a href="{makeUrl(#insert#,#basket#,#product#)}productId/{cats.product_id}" class="btn btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp; {translate(#Add to basket#)}</a>
-	</div>
+	
+
+	
+	<form class="form-inline productBuyBtn" role="form" action="{makeUrl(#insert#,#basket#,#product#)}" method="post">
+	  <div class="form-group">
+	    <input type="hidden" name="basket[product_id]" value="{cats.product_id}" />
+	    <input type="text" size="2" maxlength="5" class="form-control" name="basket[quantity]" value="1" />
+	  </div>
+	  <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp; {translate(#Add to basket#)}</button>
+	</form>
+	
 </div>
 <div id="blueimp-gallery" class="blueimp-gallery">
     <!-- The container for the modal slides -->
