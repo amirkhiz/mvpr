@@ -93,6 +93,7 @@
 		        <tr>
 		            <th>{translate(#ID#)}</th>
 					<th>{translate(#Title#)}</th>
+					<th>{translate(#Brand#)}</th>
 					<th class="center">{translate(#Img#)}</th>
 					<!--<th class="center"><span class="glyphicon glyphicon-magnet"></span></th>-->
 					<th class="center">{translate(#Price#)}</th>
@@ -112,6 +113,7 @@
 							{aValue[title]}
 						</a>
 					</td>
+					<td nowrap>{aValue[brand]}</td>
 					<td class="center" nowrap>
 						{if:aValue[proImgTitle]}
 						<a href="{webRoot}/images/products/{aValue[proImgTitle]}"  data-gallery="">

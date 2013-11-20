@@ -336,12 +336,13 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	}
     	
     	
-    	$query = "SELECT p.*, p.title as productTitle, cm.*, ca.*, cu.title as curTitle
+    	$query = "SELECT p.*, p.title as productTitle, cm.*, ca.*, cu.title as curTitle, c.title as brand
 					FROM `content_type_mapping` as cm 
 					join content_type as ct on ct.content_type_id = cm.content_type_id left 
 					join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id 
 					join product as p on p.product_id = ca.product_id 
 					join currency as cu on cu.currency_id = p.currency_id 
+					join category as c on c.category_id = p.category_id
 					where p.category_id in ($cats) AND ";
     	if($additionQuery != ""){
     		$query .= $additionQuery;
@@ -355,7 +356,7 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	if($additionQuery == "" && $havingCondition == ""){
     		$query = substr($query, 0, -4);
     	}
-    	$query .= " group by p.product_id order by p.date_created ";
+    	$query .= " group by p.product_id order by p.date_created desc";
     	 
     	$limit = $_SESSION['aPrefs']['resPerPage'];
 		$pagerOptions = array(

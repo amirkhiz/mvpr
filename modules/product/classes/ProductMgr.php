@@ -578,10 +578,11 @@ class productMgr extends SGL_Manager
 			##############################################
 	    	
 	    	$query = "
-		    	select p.*, pi.title as proImgTitle, cu.title as curTitle
+		    	select p.*, pi.title as proImgTitle, cu.title as curTitle, c.title as brand
 				from {$this->conf['table']['product']} as p 
 				left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
 				left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
+				left join {$this->conf['table']['category']} as c on c.category_id = p.category_id 
 				where p.category_id in ({$categoryId}) group by p.product_id order by p.date_created desc
 	    	";
 	    	
