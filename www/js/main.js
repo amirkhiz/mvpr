@@ -18,6 +18,15 @@ $(document).ready(function() {
 		$(this).parent().fadeOut(300,function(){$(this).remove();});
 	});
 	
+	
+	$(document).on("change", "#childSelect", function(){
+		catId = $(this).val();
+		if(catId == 0){return false;}
+		var url  = makeUrl({module: "product", action: "search", frmCategoryID:catId});
+		console.log(url);
+		document.location = url;
+	});
+	
 	$("#addImg").click(function(){
 		var imgTag = '<div class="form-group">';
 		imgTag += $("#imgHtml").html();
@@ -102,14 +111,17 @@ $(document).ready(function() {
 		
 		var catId = $('#catId').val();
 
+		/*
 		if (aSelected.length != 0)
 			var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup, frmViewType:proSearchViewType});
-			
+
 		else if (aGroup.length != 0)
 			var ajaxurl  = makeUrl({module: "product", action: "search", frmPrices:prices, frmCur:currency, frmGroups: aGroup, frmViewType:proSearchViewType});
 		else
 			var ajaxurl  = makeUrl({module: "product", action: "search", frmCategoryID:catId, frmPrices:prices, frmCur:currency, frmBrands:aBrand, frmGroups: aGroup, frmViewType:proSearchViewType});
-		//console.log(ajaxurl); return false;
+			*/
+		var ajaxurl  = makeUrl({module: "product", action: "search", frmCAddition:aSelected, frmCategoryID:catId, frmPrices:prices, frmCur:currency, frmViewType:proSearchViewType});
+		console.log(ajaxurl); 
 		$.ajax({
 			url: ajaxurl,
 			cache: false,
