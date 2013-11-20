@@ -106,10 +106,7 @@ class OrgUsrMgr extends SGL_Manager
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
     	
     	$usrId = SGL_Session::getUid();
-    	$usr = DB_DataObject::factory($this->conf['table']['user']);
-    	$usr->whereAdd('usr_id = ' . $usrId);
-    	$usr->find(true);
-    	$usrOrgId = $usr->organisation_id;
+    	$usrOrgId = SGL_Session::getOrganisationId();
     	
     	//echo '<pre>';print_r($usr->organisation_id);echo '</pre>';die;
     	
@@ -132,7 +129,7 @@ class OrgUsrMgr extends SGL_Manager
 	    		ON u.organisation_id = o.organisation_id
 	    		JOIN {$this->conf['table']['role']} r
 	    		ON r.role_id = u.role_id
-	    		WHERE u.organisation_id = {$usrOrgId}
+	    		WHERE u.organisation_id = {$usrOrgId} and u.role_id in (3,4)
     			$orderBy_query";
     	} else {
     		$query = "
@@ -168,7 +165,7 @@ class OrgUsrMgr extends SGL_Manager
     function _cmd_edit($input, $output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
-    
+    	
     	$output->pageTitle = $this->pageTitle . ' :: Edit';
     	$output->template = 'userAdd.html';
     	$oUser = $this->da->getUserById($input->userID);
@@ -177,6 +174,17 @@ class OrgUsrMgr extends SGL_Manager
     	$output->user->email_orig = $oUser->email;
     	$output->user->birth_date = date("d.m.Y", strtotime($output->user->birth_date));
     	$output->user->categories = explode(",", $output->user->categories);
+    	
+    	if((SGL_Session::getRoleId()) != SGL_MANAGER || SGL_Session::getOrganisationId() != $oUser->organisation_id){
+    		SGL::raiseMsg("authorisation failed");
+	        $options = array(
+			    'moduleName' => 'default',
+	        	'managerName' => 'default',
+			);
+			SGL_HTTP::redirect($options);
+    	}
+    	
+    	$output->aManagerRoles = array(3 => SGL_String::translate("Product manager"), 4 => SGL_String::translate("Order manager"));
     }
     
     function _cmd_update($input, $output)
@@ -250,7 +258,7 @@ class OrgUsrMgr extends SGL_Manager
     function _cmd_requestPasswordReset($input, $output)
     {
     	SGL::logMessage(null, PEAR_LOG_DEBUG);
-    
+    	
     	if (isset($this->conf['tuples']['demoMode'])
     			&& $this->conf['tuples']['demoMode'] == true
     			&& $input->userID == 1) {
@@ -262,6 +270,16 @@ class OrgUsrMgr extends SGL_Manager
     	$output->template = 'userPasswordReset.html';
     	$oUser = $this->da->getUserById($input->userID);
     	$output->user = $oUser;
+    	
+    	if((SGL_Session::getRoleId()) != SGL_MANAGER || SGL_Session::getOrganisationId() != $oUser->organisation_id){
+    		SGL::raiseMsg("authorisation failed");
+	        $options = array(
+			    'moduleName' => 'default',
+	        	'managerName' => 'default',
+			);
+			SGL_HTTP::redirect($options);
+    	}
+    	
     }
     
     function _cmd_resetPassword($input, $output)

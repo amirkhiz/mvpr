@@ -73,8 +73,9 @@ class productMgr extends SGL_Manager
             'list'          => array('list'),
         	'search'        => array('search'),
         	'view'       	=> array('view'),
+        	'productslist'	=> array('productslist'),
         );
-        
+
     }
 
     function validate($req, &$input)
@@ -134,7 +135,39 @@ class productMgr extends SGL_Manager
     	
     	$output->roleId = SGL_Session::getRoleId() == false;
     }
+    
+    function _cmd_productslist(&$input, &$output)
+    {
+        SGL::logMessage(null, PEAR_LOG_DEBUG);
+		$usrId = SGL_Session::getUId();
+		$orgId = SGL_Session::getOrganisationId();
+        $query = "SELECT p . * , c.title AS cTitle, u.username, cu.title as cuTitle
+			FROM {$this->conf['table']['product']} AS p
+			JOIN {$this->conf['table']['user']} AS u ON u.usr_id = p.usr_id 
+			JOIN {$this->conf['table']['category']} as c on c.category_id = p.category_id 
+			JOIN {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id 
+			WHERE u.organisation_id =  '$orgId'";
+    	
+    	$limit = $_SESSION['aPrefs']['resPerPage'];
+        $pagerOptions = array(
+            'mode'      => 'Sliding',
+            'delta'     => 8,
+            'perPage'   => 10, 
 
+        );
+        $aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+        if (PEAR::isError($aPagedData)) {
+        	return false;
+        }
+        $output->aPagedData = $aPagedData;
+        $output->totalItems = $aPagedData['totalItems'];
+
+        if (is_array($aPagedData['data']) && count($aPagedData['data'])) {
+        	$output->pager = ($aPagedData['totalItems'] <= $limit) ? false : true;
+        }
+        $output->results = $aPagedData['data'];
+    }
+    
     function _cmd_list(&$input, &$output)
     {
     	$this->checkRole();
@@ -463,237 +496,102 @@ class productMgr extends SGL_Manager
     	##############################################
     	#############  load breadcrambs ##############
     	##############################################
-    	
-    	$query = "
-			SELECT c1.title as brandCat , c2.title as propCat, c2.category_id as propId, c3.title as groupCat, c4.title as categoryCat
-			FROM {$this->conf['table']['category']} as c1 
-			left join {$this->conf['table']['category']} as c2 on c2.category_id = c1.parent_id 
-			left join {$this->conf['table']['category']} as c3 on c3.category_id = c2.parent_id 
-			left join {$this->conf['table']['category']} as c4 on c4.category_id = c3.parent_id 
-			where c1.category_id = '{$categoryId}'
-		";
-    	
-		$cats = $this->dbh->getRow($query);
-		
-		##############################################
-		################# load products ##############
-		##############################################
-    	
-    	$query = "
-	    	select p.*, pi.title as proImgTitle, cu.title as curTitle
-			from {$this->conf['table']['product']} as p 
-			left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
-			left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
-			where p.category_id in ({$categoryId}) group by p.product_id order by p.date_created desc
-    	";
-    	
-    	$limit = $_SESSION['aPrefs']['resPerPage'];
-		$pagerOptions = array(
-			'mode'      => 'Sliding',
-			'delta'     => 8,
-			'perPage'   => 1000,
-			);
-		$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
-		$output->aPagedData = $aPagedData;
-		
-		####################################
-		#####    load currency types #######
-		####################################
-    	
-		$currency = DB_DataObject::factory($this->conf['table']['currency']);
-		$currency->find();
-		
-		$aCur = array();
-		while ($currency->fetch())
-		{
-			$aCur[$currency->currency_id] = $currency->title;
-		}
-		$output->aCur = $aCur;
-    	
-		
-		####################################
-		#####     Min and Max prices #######
-		####################################
-		
-		$query = "
-	    	select min(p.price) as minPrice, max(p.price) as maxPrice
-			from {$this->conf['table']['product']} as p 
-			left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
-			left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
-			where p.category_id in ({$categoryId}) order by p.date_created desc
-    	";
-		
-		$prices = $this->dbh->getRow($query);
-		$output->minPrice = $prices->minPrice;
-    	$output->maxPrice = $prices->maxPrice;
-    	
-    	
-    	############################################
-    	########### load product properties ########
-    	############################################
-    	
-    	$query = "SELECT cm.*, ca.* FROM `content_type_mapping` as cm 
-					join content_type as ct on ct.content_type_id = cm.content_type_id
-					left join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id
-					where ct.category_id = '{$cats->propId}'
-					group by ca.value";
-    	
-    	$limit = $_SESSION['aPrefs']['resPerPage'];
-		$pagerOptions = array(
-			'mode'      => 'Sliding',
-			'delta'     => 8,
-			'perPage'   => 1000,
-			);
-		$aProps = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
-		
-		$searchFields = array();
-		foreach($aProps['data'] as $pKey => $pValue)
-		{
-			$ctmId = $pValue['content_type_mapping_id'];
-			$searchFields[$ctmId]['title'] = $pValue['title'];
-			$searchFields[$ctmId]['ops'][$pValue['value']] = $pValue['value'];
-		}
-		
-		//echo "<pre>"; print_r($searchFields); echo "</pre>";
-		$output->searchFields = $searchFields;
-		
-    	/*
-    	foreach($props as $pKey => $pValue)
-    	{
-    		echo $pValue;
-    		echo "<br />";
-    	}
-    	*/
-    	
-    	/*
-    	$catTree = $this->catTree($categoryId);
-    	$aCats = array();
-    	$aOptions = array();
-    	$aBrands = array();
-    	foreach ($catTree as $key => $value)
-    	{
-    		#$aCats[$value->ParentCatID]['title'] = $value->ParentCatTitle;
-    		#$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['title'] = $value->GroupCatTitle;
-    		#$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['title'] = $value->OptionCatTitle;
-    		#$aCats[$value->ParentCatID]['groups'][$value->GroupCatID]['options'][$value->OptionCatID]['brands'][$value->BrandCatID] = $value->BrandCatTitle; 
+    	if($categoryId){
     		
-    		$aGroups['group']['title'] = SGL_String::translate('Groups');;
-    		$aGroups['group']['ops'][$value->GroupCatID] = $value->GroupCatTitle;
-    		$aOptions[] = $value->OptionCatID;
-    		$aBrands[] = $value->BrandCatID;
-    	}
-    	
-    	$propertyRes = $this->proPropertySearch($aOptions);
-    	
-    	$searchFields = array();
-    	$proCounter = array();
-    	$aProductId = array();
-		foreach ($propertyRes as $key => $value)
-		{
-			
-			$proCounter[$value->cmdId]['title'] = $value->cmdTitle;
-			$proCounter[$value->cmdId]['count']++ ;
-			
-			$searchFields[$value->cmId]['title'] = $value->cmTitle;
-			$searchFields[$value->cmId]['ops'][$value->cmdId] = $value->cmdTitle . '(' .$proCounter[$value->cmdId]['count'] . ')';
-			
-			$aProductId[$value->product_id] = $value->product_id;
-			
-		}
-		$query = "
-				SELECT 
-					pro.*, 
-					FLOOR(minmax.minPrice) AS minPrice, FLOOR(minmax.maxPrice) AS maxPrice, 
-					cat.title AS catTitle
-				FROM 
-				(
-				     SELECT p.*, (p.price * cu.value) AS tlPrice
-				     FROM {$this->conf['table']['product']} AS p
-				     JOIN {$this->conf['table']['currency']} AS cu 
-				     ON p.currency_id = cu.currency_id
-				     WHERE p.product_id IN (" . implode(',',$aProductId) . ") AND p.category_id IN (" . implode(',',$aBrands) . ")
-				) AS pro,
-				(
-				     SELECT MIN(pr.price * cur.value) AS minPrice, MAX(pr.price * cur.value) AS maxPrice
-				     FROM {$this->conf['table']['product']} AS pr
-				     JOIN {$this->conf['table']['currency']} AS cur
-				     ON pr.currency_id = cur.currency_id
-				     WHERE pr.product_id IN (" . implode(',',$aProductId) . ") AND pr.category_id IN (" . implode(',',$aBrands) . ")
-				) AS minmax,
-				{$this->conf['table']['category']} AS cat
-				WHERE cat.category_id = pro.category_id
-				ORDER BY pro.product_id
+	    	$query = "
+				SELECT c1.title as brandCat , c2.title as propCat, c2.category_id as propId, c3.title as groupCat, c4.title as categoryCat
+				FROM {$this->conf['table']['category']} as c1 
+				left join {$this->conf['table']['category']} as c2 on c2.category_id = c1.parent_id 
+				left join {$this->conf['table']['category']} as c3 on c3.category_id = c2.parent_id 
+				left join {$this->conf['table']['category']} as c4 on c4.category_id = c3.parent_id 
+				where c1.category_id = '{$categoryId}'
 			";
-		
-		$limit = $_SESSION['aPrefs']['resPerPage'];
-		$pagerOptions = array(
-			'mode'      => 'Sliding',
-			'delta'     => 8,
-			'perPage'   => 1000,
+	    	
+			$cats = $this->dbh->getRow($query);
 			
-			);
-		$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
-			if (PEAR::isError($aPagedData)) {
-			$options = array(
-			    'moduleName' => 'default',
-			);
-			SGL_HTTP::redirect($options);
-		}
-		
-		$brandCounter = array();
-		$aBrand = array();
-		foreach ($aPagedData['data'] as $key => $value)
-		{
-			$brandCounter[$value['category_id']]['title'] = $value['catTitle'];
-			$brandCounter[$value['category_id']]['count']++ ;
-				
-			$aBrand['10']['title'] = SGL_String::translate('Brands');
-			$aBrand['10']['ops'][$value['category_id']] = $value['catTitle'] . '(' .$brandCounter[$value['category_id']]['count'] . ')';
+			##############################################
+			################# load products ##############
+			##############################################
+	    	
+	    	$query = "
+		    	select p.*, pi.title as proImgTitle, cu.title as curTitle
+				from {$this->conf['table']['product']} as p 
+				left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
+				left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
+				where p.category_id in ({$categoryId}) group by p.product_id order by p.date_created desc
+	    	";
+	    	
+	    	$limit = $_SESSION['aPrefs']['resPerPage'];
+			$pagerOptions = array(
+				'mode'      => 'Sliding',
+				'delta'     => 8,
+				'perPage'   => 1000,
+				);
+			$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+			$output->aPagedData = $aPagedData;
 			
-			$proID = $value['product_id'];
+			####################################
+			#####    load currency types #######
+			####################################
+	    	
+			$currency = DB_DataObject::factory($this->conf['table']['currency']);
+			$currency->find();
+			
+			$aCur = array();
+			while ($currency->fetch())
+			{
+				$aCur[$currency->currency_id] = $currency->title;
+			}
+			$output->aCur = $aCur;
+	    	
+			
+			####################################
+			#####     Min and Max prices #######
+			####################################
+			
 			$query = "
-					SELECT pi.title AS proImgTitle
-					FROM
-						{$this->conf['table']['product_image']} AS pi
-					WHERE pi.product_id = {$proID}
-				";
-			$proImgs = $this->dbh->getRow($query);
-			$aPagedData['data'][$key]['proImgTitle'] = $proImgs->proImgTitle;
-		}
-		//echo '<pre>'; print_r($aPagedData['data']); echo '</pre>';die;
-		
-		array_unshift($searchFields, $aBrand['10']);
-		
-		$output->aPagedData = $aPagedData;
-		$output->totalItems = $aPagedData['totalItems'];
-
-		if (is_array($aPagedData['data']) && count($aPagedData['data'])) {
-			$output->pager = ($aPagedData['totalItems'] <= $limit) ? false : true;
-		}
-		
-		$currency = DB_DataObject::factory($this->conf['table']['currency']);
-		$currency->find();
-		
-		$aCur = array();
-		while ($currency->fetch())
-		{
-			$aCur[$currency->currency_id] = $currency->code;
-		}
-    	
-    	$output->pageTitle 		= $this->pageTitle . ' :: Reorder';
-    	$output->template  		= 'productSearch.html';
-    	$output->catId			= $input->categoryId;
-    	$output->products 		= $productcs;
-    	$output->minPrice 		= $aPagedData['data']['0']['minPrice'];
-		$output->maxPrice 		= $aPagedData['data']['0']['maxPrice'];
-    	$output->aCur 			= $aCur;
-    	if (self::$catLevel === '1'){
-    		$output->searchFields = $aGroups;
-    	}else{
-    		$output->searchFields = $searchFields;
+		    	select min(p.price) as minPrice, max(p.price) as maxPrice
+				from {$this->conf['table']['product']} as p 
+				left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
+				left join {$this->conf['table']['currency']} as cu on cu.currency_id = p.currency_id
+				where p.category_id in ({$categoryId}) order by p.date_created desc
+	    	";
+			
+			$prices = $this->dbh->getRow($query);
+			$output->minPrice = $prices->minPrice;
+	    	$output->maxPrice = $prices->maxPrice;
+	    	
+	    	
+	    	############################################
+	    	########### load product properties ########
+	    	############################################
+	    	
+	    	$query = "SELECT cm.*, ca.* FROM `content_type_mapping` as cm 
+						join content_type as ct on ct.content_type_id = cm.content_type_id
+						left join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id
+						where ct.category_id = '{$cats->propId}'
+						group by ca.value";
+	    	
+	    	$limit = $_SESSION['aPrefs']['resPerPage'];
+			$pagerOptions = array(
+				'mode'      => 'Sliding',
+				'delta'     => 8,
+				'perPage'   => 1000,
+				);
+			$aProps = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
+			
+			$searchFields = array();
+			foreach($aProps['data'] as $pKey => $pValue)
+			{
+				$ctmId = $pValue['content_type_mapping_id'];
+				$searchFields[$ctmId]['title'] = $pValue['title'];
+				$searchFields[$ctmId]['ops'][$pValue['value']] = $pValue['value'];
+			}
+			
+			//echo "<pre>"; print_r($searchFields); echo "</pre>";
+			$output->searchFields = $searchFields;
     	}
-    	*/
-    	//echo '<pre>'; print_r($output->searchFields); echo '</pre>';die;
+    	
     }
     
     function _cmd_view(&$input, &$output)
@@ -981,13 +879,22 @@ class productMgr extends SGL_Manager
     	return  $proImgIds;
     }
     
-    function checkRole(){
+    function checkRole($roles = array(0)){
     	if(!SGL_Session::getRoleId()){
     		$options = array(
 		    	'moduleName' => 'default',
 			);
 			SGL_HTTP::redirect($options);
     	}
+    	/*
+    	if(!(in_array($roles, SGL_Session::getRoleId()))){
+    		$options = array(
+		    	'moduleName' => 'default',
+			);
+			SGL_HTTP::redirect($options);
+    	}
+    	*/
+    
     }
 }
 
