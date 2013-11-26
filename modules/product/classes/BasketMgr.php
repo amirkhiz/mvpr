@@ -200,7 +200,6 @@ class BasketMgr extends SGL_Manager
         }
     }
     
-    
     function _cmd_list(&$input, &$output)
     {
 
