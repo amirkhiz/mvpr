@@ -72,7 +72,7 @@
 	</div>
 	
 
-	
+	{if:isAuthenticated()}
 	<form class="form-inline productBuyBtn" role="form" action="{makeUrl(#insert#,#basket#,#product#)}" method="post">
 	  <div class="form-group">
 	    <input type="hidden" name="basket[product_id]" value="{cats.product_id}" />
@@ -80,6 +80,7 @@
 	  </div>
 	  <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp; {translate(#Add to basket#)}</button>
 	</form>
+	{end:}
 	
 </div>
 <div id="blueimp-gallery" class="blueimp-gallery">

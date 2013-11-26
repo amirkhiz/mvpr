@@ -6,7 +6,12 @@
 					<th>{translate(#Brand#)}</th>
 					<th class="center">{translate(#Img#)}</th>
 					<!--<th class="center"><span class="glyphicon glyphicon-magnet"></span></th>-->
-					<th class="center">{translate(#Price#)}</th>
+					{if:isAuthenticated()}
+						<th class="center">{translate(#EN USR Price#)}</th>
+						<th class="center">{translate(#DLR Price#)}
+					{else:}
+						<th class="center">{translate(#Price#)}</th>
+					{end:}
 					<th class="center">{translate(#Model#)}</th>
 					<th class="center">{translate(#Currency#)}</th>
 					<th class="center">{translate(#Warranty#)}</th>
@@ -19,7 +24,7 @@
 		        <tr flexy:foreach="aPagedData[data],key,aValue">
 		            <td nowrap>{aValue[product_id]}</td>
 					<td nowrap>
-						<a href="{makeUrl(#view#,#product#,#product#,aPagedData[data],#frmProductID|product_id#,key)}{aValue[seoTitle]}">
+						<a href="{makeUrl(#view#,#product#,#product#,aPagedData[data],#frmProductID|product_id#,key)}{aValue[seoTitle]}/">
 							{aValue[productTitle]}
 						</a>
 					</td>
@@ -37,6 +42,9 @@
 						<input type="checkbox" name="compare" value="{aValue[product_id]}"/>
 					</td>-->
 					<td class="center" nowrap>{aValue[price]}</td>
+					{if:isAuthenticated()}
+						<td class="center" nowrap>{aValue[dprice]}</td>
+					{end:}
 					<td class="center" nowrap>{aValue[model]}</td>
 					<td class="center" nowrap>{aValue[curTitle]}</td>
 					<td class="center" nowrap>{aValue[warranty]}</td>
