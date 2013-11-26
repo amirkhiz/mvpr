@@ -597,7 +597,7 @@ class productMgr extends SGL_Manager
 				'perPage'   => 1000,
 				);
 			$aPagedData = SGL_DB::getPagedData($this->dbh, $query, $pagerOptions);
-			
+			//echo "<pre>"; print_r($aPagedData); echo "</pre>";
 			$output->aPagedData = $aPagedData;
 			
 			####################################

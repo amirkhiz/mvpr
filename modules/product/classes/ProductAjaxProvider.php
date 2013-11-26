@@ -336,13 +336,15 @@ class ProductAjaxProvider extends SGL_AjaxProvider2
     	}
     	
     	
-    	$query = "SELECT p.*, p.title as productTitle, REPLACE(p.title, ' ', '-') as seoTitle, cm.*, ca.*, cu.title as curTitle, c.title as brand
+    	$query = "SELECT p.*, p.title as productTitle, REPLACE(p.title, ' ', '-') as seoTitle, pi.title as proImgTitle, cm.*, ca.*, cu.title as curTitle, c.title as brand
 					FROM `content_type_mapping` as cm 
 					join content_type as ct on ct.content_type_id = cm.content_type_id left 
 					join content_addition as ca on ca.content_type_mapping_id = cm.content_type_mapping_id 
 					join product as p on p.product_id = ca.product_id 
+					left join {$this->conf['table']['product_image']} as pi on pi.product_id = p.product_id 
 					join currency as cu on cu.currency_id = p.currency_id 
 					join category as c on c.category_id = p.category_id
+					
 					where p.category_id in ($cats) AND ";
     	if($additionQuery != ""){
     		$query .= $additionQuery;

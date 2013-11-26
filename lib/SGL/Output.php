@@ -694,6 +694,7 @@ class SGL_Output
     {
         $rid = SGL_Session::getRoleId();
         return ($rid == SGL_GUEST) ? false : true;
+        
     }
 
     function addOnLoadEvent($event, $bOnReady = false)
