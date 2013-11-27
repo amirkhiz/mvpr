@@ -110,13 +110,23 @@ class TypeMgr extends SGL_Manager
         
         $output->inputTypes = $this->da->inputTypeArray();
         
+        
+        $cType = DB_DataObject::factory($this->conf['table']['content_type']);
+        $cType->find();
+        $aContentTypes = array();
+        while($cType->fetch()){
+        	$aContentTypes[] = $cType->category_id;
+        }
+        
         $category = DB_DataObject::factory($this->conf['table']['category']);
         
         $category->whereAdd("level_id = 3");
         $category->find();
         $aCategories = array();
         while($category->fetch()){
-        	$aCategories[$category->category_id] = $category->title;
+            if(!in_array($category->category_id, $aContentTypes)){
+        	    $aCategories[$category->category_id] = $category->title;
+        	}
         }
         $output->categories = $aCategories;
         
